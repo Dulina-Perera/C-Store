@@ -1,0 +1,129 @@
+* Only REG_CUSTs own carts.
+* Thus, JWT authentication occurs prior to accessing the cart. (For both ADMINs & REG_CUSTs.)
+
+For what do REG_CUSTs access their cart?
+    1. To get cart items.
+        * Why?
+            * When a customer arrives at the CART PAGE & the front end has no records on what variants
+              (with what amount) are in the cart, the front end has to retrieve those records.
+
+        * How?
+            * Send a request to GET_CART_ITEM.
+                * To retrieve cart items, the backend needs the customer identifier & it will be retrieved from the JWT
+                  token.
+
+            * The backend will send a JSON array like following.
+                [
+                    {
+                        "variantId": 153,
+                        "count": 7
+                    },
+                    {
+                        "variantId": 167,
+                        "count": 1
+                    }
+                ]
+
+        * It is essential to call REFRESH_CART after a successful execution of this method as this method only returns
+          what's in the cart without checking for consistency with the inventory.
+
+
+
+
+
+    2. To add a variant to the cart.
+        * Why?
+            * To facilitate the purpose of a cart: which is to accumulate variants till purchase.
+
+        * How?
+            * Send a request to ADD_VARIANT describing the properties of the variant & variant count as follows.
+                [
+                    "propertyIds": [
+                        136,
+                        138,
+                        140
+                    ],
+                    "count": 5
+                ]
+
+            * The backend will send a JSON object like following.
+                {
+                    "variantId": 153,
+                    "count": 5
+                }
+
+        * Note that this method won't check for consistency between the variant count requested by the customer &
+          the variant count in the inventory.
+          (It is not necessary since it will be handled in the CART PAGE before checking out the cart.)
+
+
+
+
+
+    3. To update a cart item.
+        * Why?
+            * To update (increase or decrease variant count) the variants already in the cart.
+
+        * Updating a cart item can be one of two types.
+            i.   Increase the variant count.
+            ii.  Decrease the variant count. (Removing the variant is the same as decreasing the variant count to 0.)
+
+        * How?
+            * Send a request to UPDATE_VARIANT as follows.
+                {
+                    "variantId": 153,
+                    "newCount": 7
+                }
+
+            * The backend will send back the same JSON object to the frontend upon successful update.
+
+        * Note that this method won't check for consistency between the variant count requested by the customer &
+          the variant count in the inventory.
+          (It is not necessary since it will be handled in the CART PAGE before checking out the cart.)
+
+
+
+
+
+    4. To remove a cart item.
+        This is just a special case of updating a cart item where variant count is decreased to 0.
+
+
+
+
+
+    5. Refresh the cart.
+        * Why?
+            * According to our design, adding variants to the cart does not deduct the stock count of the variant.
+            * So, the front end needs to check for the consistency of the variant count in the cart & the variant count
+              in the inventory when,
+                i.   Customer visits the CART PAGE & the front end has records on what variants (with what amount) are in
+                     the cart.
+                ii.  Customer is in the CART PAGE & the front end has records on what variants (with what amount) are in
+                     the cart.
+                        * Here, the front end needs to check regularly till the customer leaves the page.
+                iii. Customer attempts to proceed to CHECKOUT PAGE.
+                        * Here, if both counts are consistent with each other, call the CREATE_PLACED_ORDER controller
+                          method before visiting the CHECKOUT PAGE.
+
+        * How?
+            * Send a request to REFRESH_CART controller method with a JSON array like following.
+                [
+                    {
+                        "variantId": 153,
+                        "count": 7
+                    },
+                    {
+                        "variantId": 167,
+                        "count": 1
+                    }
+                ]
+
+            * If the two counts are consistent with each other, the backend will send nothing.
+            * Otherwise, it will send a JSON array like following.
+                [
+                    {
+                        "variantId": 153,
+                        "availableCount": 4
+                    }
+                ]
