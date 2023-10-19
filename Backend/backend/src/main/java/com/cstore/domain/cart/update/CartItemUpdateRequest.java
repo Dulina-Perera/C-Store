@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder @AllArgsConstructor @NoArgsConstructor
-public class CartRefreshment {
+public class CartItemUpdateRequest {
     private Long variantId;
-    private Integer count;
+    private Integer newCount;
 }

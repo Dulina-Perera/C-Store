@@ -35,7 +35,9 @@ public class SecurityConfiguration {
             )
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(
-                    "api/v1/auth/**",
+                    "/api/v1/**",
+
+                    /*"/api/v1/auth/**",
 
                     "/api/v1/categories/base",
                     "/api/v1/categories/{category_id}/sub",
@@ -43,7 +45,7 @@ public class SecurityConfiguration {
 
                     "/api/v1/products/browse",
                     "/api/v1/products/browse/{product_name}",
-                    "/api/v1/products/select/{product_id}",
+                    "/api/v1/products/select/{product_id}",*/
 
                     "/v2/api-docs",
                     "/v3/api-docs",

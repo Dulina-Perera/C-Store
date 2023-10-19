@@ -17,7 +17,8 @@ public class InventoryDaoImpl implements InventoryDao {
 
         return jdbcTemplate.queryForObject(
             sql,
-            Integer.class
+            Integer.class,
+            variantId
         );
     }
 }

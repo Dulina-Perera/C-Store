@@ -12,7 +12,7 @@ public interface ProductDao {
 
     List<Product> findAll() throws DataAccessException;
 
-    Optional<Product> findById(Long productId);
+    Optional<Product> findById(Long productId) throws DataAccessException;
 
     List<Product> findByName(String productName) throws DataAccessException;
 

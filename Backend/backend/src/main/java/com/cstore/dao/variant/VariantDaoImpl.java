@@ -2,6 +2,7 @@ package com.cstore.dao.variant;
 
 import com.cstore.model.product.Variant;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -39,16 +40,20 @@ public class VariantDaoImpl implements VariantDao {
     }
 
     @Override
-    public List<Variant> findByProperty(Long propertyId) {
-        String sql = "SELECT DISTINCT `variant_id`, `weight` " +
-                     "FROM `varies_on` NATURAL LEFT OUTER JOIN `variant` " +
-                     "WHERE `property_id` = ?;";
+    public List<Variant> findByPropertyId(
+        Long propertyId
+    ) throws DataAccessException {
+
+        String sql = "SELECT DISTINCT * " +
+                     "FROM \"varies_on\" NATURAL RIGHT OUTER JOIN \"variant\" " +
+                     "WHERE \"property_id\" = ?;";
 
         return jdbcTemplate.query(
-                sql,
-                preparedStatement -> preparedStatement.setLong(1, propertyId),
-                new BeanPropertyRowMapper<>(Variant.class)
+            sql,
+            preparedStatement -> preparedStatement.setLong(1, propertyId),
+            new BeanPropertyRowMapper<>(Variant.class)
         );
+
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.cstore.domain.cart.update;
 
-import com.cstore.dto.CartItem_;
+import com.cstore.dto.VariantProperiesDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "api/cart/{user_id}")
+@RequestMapping(path = "/api/v1/carts/{user_id}")
 @Tag(name = "Update Cart")
 public class CartUpdatingController {
 
@@ -20,6 +20,16 @@ public class CartUpdatingController {
     @Autowired
     public CartUpdatingController(CartUpdatingService cartUpdatingService) {
         this.cartUpdatingService = cartUpdatingService;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "")
+    public List<CartItemDto> getItems(
+        @PathVariable(name = "user_id", required = true)
+        Long userId
+    ) {
+
+        return cartUpdatingService.getItems(userId);
+
     }
 
     @Operation(
@@ -39,10 +49,16 @@ public class CartUpdatingController {
         },
         summary = "Adds a variant to the cart."
     )
-    @RequestMapping(method = RequestMethod.GET, path = "/add")
-    public Long addVariant(@PathVariable(name = "user_id", required = true) Long userId,
-                           @RequestBody(required = true) CartItem_ cartItem_) {
-        return cartUpdatingService.addVariant(userId, cartItem_);
+    @RequestMapping(method = RequestMethod.POST, path = "/add")
+    public Long addVariant(
+        @PathVariable(name = "user_id", required = true)
+        Long userId,
+        @RequestBody(required = true)
+        VariantProperiesDto properties
+    ) {
+
+        return cartUpdatingService.addVariant(userId, properties);
+
     }
 
     @Operation(
@@ -60,18 +76,24 @@ public class CartUpdatingController {
         },
         summary = "Removes a variant from the cart."
     )
-    @RequestMapping(method = RequestMethod.DELETE, path = "/remove/{variant_id}")
-    public void removeVariant(@PathVariable(name = "user_id", required = true) Long userId,
-                              @PathVariable(name = "variant_id", required = true) Long variantId) {
-        cartUpdatingService.removeVariant(userId, variantId);
+    @RequestMapping(method = RequestMethod.PUT, path = "/update")
+    public CartItemDto updateVariant(
+        @PathVariable(name = "user_id", required = true)
+        Long userId,
+        @RequestBody(required = true)
+        CartItemUpdateRequest request
+    ) {
+        return cartUpdatingService.updateVariant(userId, request);
     }
 
-    @RequestMapping(method = RequestMethod.POST, path = "/refresh")
-    public List<CartRefreshment> refreshCart(
+    @RequestMapping(method = RequestMethod.GET, path = "/refresh")
+    public List<CartItemDto> refresh(
         @PathVariable(name = "user_id", required = true) Long userId,
-        @RequestBody(required = true) List<CartRefreshment> cartItems
+        @RequestBody(required = true) List<CartItemDto> cartItems
     ) {
-        return cartUpdatingService.refreshCart(userId, cartItems);
+
+        return cartUpdatingService.refresh(userId, cartItems);
+
     }
 
 }

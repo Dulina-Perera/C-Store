@@ -952,13 +952,13 @@ INSERT INTO "cart" ("user_id", "total_price") VALUES
 -- ---------------------------------------------------------------------------------------------------------------------
 -- "cart_item" table
 
-INSERT INTO "cart_item" ("user_id", "variant_id", "quantity") VALUES
+INSERT INTO "cart_item" ("user_id", "variant_id", "count") VALUES
 	(1, 1, 2),
 	(2, 3, 1),
 	(3, 5, 3);
 
--- SELECT *
--- FROM "cart_item";
+SELECT *
+FROM "cart_item";
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- "order" table

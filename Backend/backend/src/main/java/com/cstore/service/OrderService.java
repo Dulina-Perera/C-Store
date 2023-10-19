@@ -1,7 +1,7 @@
 package com.cstore.service;
 
 import com.cstore.dao.order.OrderDao;
-import com.cstore.dao.ordercontact.OrderContactDao;
+import com.cstore.dao.order.contact.OrderContactDao;
 import com.cstore.dto.OrderDTO;
 import com.cstore.exception.NoSuchOrderException;
 import com.cstore.model.order.Order;

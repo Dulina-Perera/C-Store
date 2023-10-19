@@ -15,6 +15,7 @@ DROP FUNCTION IF EXISTS "customer_order_report";
 DROP FUNCTION IF EXISTS "count_stocks";
 DROP FUNCTION IF EXISTS "categories_from_product";
 
+DROP PROCEDURE IF EXISTS "add_to_cart";
 
 DROP VIEW IF EXISTS "leaf_category";
 DROP VIEW IF EXISTS "root_category";
@@ -224,12 +225,12 @@ CREATE TABLE "cart" (
 -- Contains
 DROP TABLE IF EXISTS "cart_item";
 CREATE TABLE "cart_item" (
-                             "user_id"    BIGINT,
-                             "variant_id" BIGINT,
-                             "quantity"   INTEGER,
-                             PRIMARY KEY ("user_id", "variant_id"),
-                             FOREIGN KEY ("user_id") REFERENCES "cart" ("user_id") ON DELETE CASCADE,
-                             FOREIGN KEY ("variant_id") REFERENCES "variant" ("variant_id") ON DELETE CASCADE
+     "user_id"    BIGINT,
+     "variant_id" BIGINT,
+     "count"   INTEGER,
+     PRIMARY KEY ("user_id", "variant_id"),
+     FOREIGN KEY ("user_id") REFERENCES "cart" ("user_id") ON DELETE CASCADE,
+     FOREIGN KEY ("variant_id") REFERENCES "variant" ("variant_id") ON DELETE CASCADE
 );
 
 -- Order
@@ -337,15 +338,39 @@ WHERE "category_id" IN (SELECT DISTINCT "sub_category_id"
 
 
 ------------------------------------------------------------------------------------------------------------------------
+-- PROCEDURES-----------------------------------------------------------------------------------------------------------
+
+
+CREATE OR REPLACE PROCEDURE "add_to_cart"(u_id BIGINT, v_id BIGINT, cnt INTEGER) AS $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1
+        FROM cart_item
+        WHERE user_id = u_id AND variant_id = v_id
+    ) THEN
+        INSERT INTO cart_item (user_id, variant_id, count)
+        VALUES (u_id, v_id, cnt);
+    ELSE
+        UPDATE cart_item
+        SET count = count + cnt
+        WHERE user_id = u_id AND variant_id = v_id;
+    END IF;
+END
+$$ LANGUAGE plpgsql;
+
+-- CALL "add_to_cart"(1, 1, 7);
+
+
+------------------------------------------------------------------------------------------------------------------------
 -- FUNCTIONS------------------------------------------------------------------------------------------------------------
 
 
 CREATE OR REPLACE FUNCTION "categories_from_product"(p_id BIGINT)
     RETURNS TABLE (
-                      "category_id"          BIGINT,
-                      "category_name"        VARCHAR (40),
-                      "category_description" VARCHAR
-                  ) AS $$
+        "category_id"          BIGINT,
+        "category_name"        VARCHAR (40),
+        "category_description" VARCHAR
+    ) AS $$
 BEGIN
     RETURN QUERY
         SELECT DISTINCT c.*

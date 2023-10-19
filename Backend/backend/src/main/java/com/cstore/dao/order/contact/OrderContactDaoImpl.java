@@ -1,4 +1,4 @@
-package com.cstore.dao.ordercontact;
+package com.cstore.dao.order.contact;
 
 import com.cstore.model.order.Order;
 import com.cstore.model.order.OrderContact;

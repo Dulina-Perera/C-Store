@@ -1,7 +1,11 @@
 package com.cstore.dao.cart;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 
 @Repository
 public class CartDaoImpl implements CartDao {
@@ -12,10 +16,23 @@ public class CartDaoImpl implements CartDao {
     }
 
     @Override
-    public int addToCart(Long userId, Long variantId, Integer quantity) {
-        String sql = "INSERT INTO `cart_item` VALUES (?, ?, ?);";
+    public int addToCart(
+        Long userId,
+        Long variantId,
+        Integer quantity
+    ) throws DataAccessException {
 
-        return jdbcTemplate.update( sql, userId, variantId, quantity);
+        String sql = "CALL \"add_to_cart\"(?, ?, ?);";
+
+        return jdbcTemplate.update(
+            sql,
+            preparedStatement -> {
+                preparedStatement.setLong(1, userId);
+                preparedStatement.setLong(2, variantId);
+                preparedStatement.setInt(3, quantity);
+            }
+        );
+
     }
 
     @Override
