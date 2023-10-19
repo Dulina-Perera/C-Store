@@ -1,6 +1,6 @@
 package com.cstore.domain.product.browse;
 
-import com.cstore.domain.category.browse.ProductDto;
+import com.cstore.dto.product.ProductCard;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -30,7 +30,7 @@ public class ProductBrowsingController {
            @ApiResponse(
                content = @Content(
                    mediaType = "application/json",
-                   array = @ArraySchema(schema = @Schema(implementation = ProductDto.class))
+                   array = @ArraySchema(schema = @Schema(implementation = ProductCard.class))
                ),
                description = "Success",
                responseCode = "200"
@@ -39,7 +39,7 @@ public class ProductBrowsingController {
         summary = "Returns all products (with properties of non-monetary value)."
     )
     @RequestMapping(method = RequestMethod.GET, path = "")
-    public List<ProductDto> getAllProducts() throws SQLException {
+    public List<ProductCard> getAllProducts() throws SQLException {
         return productService.getAllProducts();
     }
 
@@ -49,7 +49,7 @@ public class ProductBrowsingController {
                     @ApiResponse(
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = ProductDto.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = ProductCard.class))
                             ),
                             description = "Success",
                             responseCode = "200"
@@ -58,7 +58,7 @@ public class ProductBrowsingController {
             summary = "Returns all products (with properties of non-monetary value) matching a given name."
     )
     @RequestMapping(method = RequestMethod.GET, path = "/{product_name}")
-    public List<ProductDto> getProductByName(@PathVariable(name = "product_name", required = true) String productName) throws SQLException {
+    public List<ProductCard> getProductByName(@PathVariable(name = "product_name", required = true) String productName) throws SQLException {
         return productService.getProductByName(productName);
     }
 }

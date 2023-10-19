@@ -1,4 +1,4 @@
-package com.cstore.domain.category.browse;
+package com.cstore.dto.product;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,10 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class ProductDto {
+@Builder @AllArgsConstructor @NoArgsConstructor
+public class ProductCard {
     private Long productId;
     private String productName;
     private BigDecimal basePrice;

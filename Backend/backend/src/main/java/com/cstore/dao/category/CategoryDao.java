@@ -1,6 +1,7 @@
 package com.cstore.dao.category;
 
 import com.cstore.model.category.Category;
+import org.springframework.dao.DataAccessException;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +21,7 @@ public interface CategoryDao {
 
     List<Category> findAllRootCategories();
 
-    List<Category> findAllDirectSubCategories(Long categoryId);
+    List<Category> findAllDirectSubCategories(Long categoryId) throws DataAccessException;
 
     List<Category> findByProductId(Long productId);
 }

@@ -1,5 +1,6 @@
 package com.cstore.domain.category.browse;
 
+import com.cstore.dto.product.ProductCard;
 import com.cstore.model.category.Category;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -18,13 +19,13 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "/api/v1/categories/browse")
+@RequestMapping(path = "/api/v1/categories")
 @Tag(name = "Browse Categories", description = "Provides controller methods for browsing categories.")
 public class CategoryBrowsingController {
     private final CategoryBrowsingService categoryBrowsingService;
 
     @Operation(
-        method = "getAllBaseCategories",
+        method = "getRootCategories",
         responses = {
             @ApiResponse(
                 content = @Content(
@@ -38,12 +39,15 @@ public class CategoryBrowsingController {
         summary = "Returns all the base categories."
     )
     @RequestMapping(method = RequestMethod.GET, path = "/base")
-    public List<Category> getAllRootCategories() {
-        return categoryBrowsingService.getAllRootCategories();
+    public List<Category> getRootCategories(
+    ) {
+
+        return categoryBrowsingService.getRootCategories();
+
     }
 
     @Operation(
-        method = "getAllDirectSubCategories",
+        method = "getChildCategories",
         responses = {
             @ApiResponse(
                  content = @Content(
@@ -56,27 +60,37 @@ public class CategoryBrowsingController {
         },
         summary = "Returns all sub categories, given the category identifier."
     )
-    @RequestMapping(method = RequestMethod.GET, path = "/{id}/sub")
-    public List<Category> getAllDirectSubCategories(@PathVariable(name = "id", required = true) Long categoryId) throws SQLException {
-        return categoryBrowsingService.getAllDirectSubCategories(categoryId);
+    @RequestMapping(method = RequestMethod.GET, path = "/{category_id}/sub")
+    public List<Category> getChildCategories(
+        @PathVariable(name = "category_id", required = true)
+        Long categoryId
+    ) {
+
+        return categoryBrowsingService.getChildCategories(categoryId);
+
     }
 
     @Operation(
-            method = "getAllProductsBelongingToCategory",
-            responses = {
-                    @ApiResponse(
-                            content = @Content(
-                                    mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = ProductDto.class))
-                            ),
-                            description = "Success",
-                            responseCode = "200"
-                    )
-            },
-            summary = "Returns all products (with properties of non-monetary value) belonging to a category, given the category identifier."
+	    method = "getProductsByCategory",
+	    responses = {
+            @ApiResponse(
+                content = @Content(
+                    mediaType = "application/json",
+                    array = @ArraySchema(schema = @Schema(implementation = ProductCard.class))
+                ),
+                description = "Success",
+                responseCode = "200"
+            )
+        },
+        summary = "Returns all products (with properties of non-monetary value) belonging to a category, given the category identifier."
     )
-    @RequestMapping(method = RequestMethod.GET, path = "/{id}/products")
-    public List<ProductDto> getAllProductsBelongingToCategory(@PathVariable(name = "id") Long categoryId) throws SQLException {
-        return categoryBrowsingService.getAllProductsBelongingToCategory(categoryId);
+    @RequestMapping(method = RequestMethod.GET, path = "/{category_id}/products")
+    public List<ProductCard> getProductsByCategory(
+        @PathVariable(name = "category_id")
+        Long categoryId
+    ) {
+
+        return categoryBrowsingService.getProductsByCategory(categoryId);
+
     }
 }

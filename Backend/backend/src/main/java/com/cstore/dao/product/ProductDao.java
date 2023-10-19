@@ -1,6 +1,7 @@
 package com.cstore.dao.product;
 
 import com.cstore.model.product.Product;
+import org.springframework.dao.DataAccessException;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -17,7 +18,7 @@ public interface ProductDao {
 
     Product save(Product product);
 
-    List<Product> findAllByCategoryId(Long categoryId) throws SQLException;
+    List<Product> findByCategoryId(Long categoryId) throws DataAccessException;
 
-    Integer countStocks(Long productId);
+    Integer countStocks(Long productId) throws DataAccessException;
 }

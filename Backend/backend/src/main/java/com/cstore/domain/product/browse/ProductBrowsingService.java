@@ -3,7 +3,7 @@ package com.cstore.domain.product.browse;
 import com.cstore.dao.product.ProductDao;
 import com.cstore.dao.property.PropertyDao;
 import com.cstore.dao.varieson.VariesOnDao;
-import com.cstore.domain.category.browse.ProductDto;
+import com.cstore.dto.product.ProductCard;
 import com.cstore.model.product.Product;
 import com.cstore.model.product.Property;
 import lombok.RequiredArgsConstructor;
@@ -24,18 +24,18 @@ public class ProductBrowsingService {
     private final VariesOnDao variesOnDao;
 
 
-    public List<ProductDto> getAllProducts() throws SQLException {
-        List<ProductDto> productDtos = new ArrayList<ProductDto>();
+    public List<ProductCard> getAllProducts() throws SQLException {
+        List<ProductCard> productCards = new ArrayList<ProductCard>();
 
         List<Product> products = productDao.findAll();
         for (Product product : products) {
-            ProductDto productDTO = new ProductDto();
+            ProductCard productCard = new ProductCard();
 
-            productDTO.setProductId(product.getProductId());
-            productDTO.setProductName(product.getProductName());
-            productDTO.setBasePrice(product.getBasePrice());
-            productDTO.setBrand(product.getBrand());
-            productDTO.setImageUrl(product.getImageUrl());
+            productCard.setProductId(product.getProductId());
+            productCard.setProductName(product.getProductName());
+            productCard.setBasePrice(product.getBasePrice());
+            productCard.setBrand(product.getBrand());
+            productCard.setImageUrl(product.getImageUrl());
 
             Map<String, List<String>> propertyMap = new HashMap<>();
             List<Property> properties = propertyDao.findByProductId(product.getProductId());
@@ -52,26 +52,26 @@ public class ProductBrowsingService {
                     }
                 }
             }
-            productDTO.setProperties(propertyMap);
+            productCard.setProperties(propertyMap);
 
-            productDtos.add(productDTO);
+            productCards.add(productCard);
         }
 
-        return productDtos;
+        return productCards;
     }
 
-    public List<ProductDto> getProductByName(String productName) throws SQLException {
-        List<ProductDto> productDtos = new ArrayList<ProductDto>();
+    public List<ProductCard> getProductByName(String productName) throws SQLException {
+        List<ProductCard> productCards = new ArrayList<ProductCard>();
 
         List<Product> products = productDao.findByName(productName);
         for (Product product : products) {
-            ProductDto productDTO = new ProductDto();
+            ProductCard productCard = new ProductCard();
 
-            productDTO.setProductId(product.getProductId());
-            productDTO.setProductName(product.getProductName());
-            productDTO.setBasePrice(product.getBasePrice());
-            productDTO.setBrand(product.getBrand());
-            productDTO.setImageUrl(product.getImageUrl());
+            productCard.setProductId(product.getProductId());
+            productCard.setProductName(product.getProductName());
+            productCard.setBasePrice(product.getBasePrice());
+            productCard.setBrand(product.getBrand());
+            productCard.setImageUrl(product.getImageUrl());
 
             Map<String, List<String>> propertyMap = new HashMap<>();
             List<Property> properties = propertyDao.findByProductId(product.getProductId());
@@ -88,11 +88,11 @@ public class ProductBrowsingService {
                     }
                 }
             }
-            productDTO.setProperties(propertyMap);
+            productCard.setProperties(propertyMap);
 
-            productDtos.add(productDTO);
+            productCards.add(productCard);
         }
 
-        return productDtos;
+        return productCards;
     }
 }

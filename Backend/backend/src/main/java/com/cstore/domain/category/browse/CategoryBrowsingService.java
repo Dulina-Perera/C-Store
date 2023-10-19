@@ -3,6 +3,7 @@ package com.cstore.domain.category.browse;
 import com.cstore.dao.category.CategoryDao;
 import com.cstore.dao.product.ProductDao;
 import com.cstore.dao.property.PropertyDao;
+import com.cstore.dto.product.ProductCard;
 import com.cstore.model.category.Category;
 import com.cstore.model.product.Product;
 import com.cstore.model.product.Property;
@@ -24,47 +25,53 @@ public class CategoryBrowsingService {
     private final ProductDao productDao;
     private final PropertyDao propertyDao;
 
-    public List<Category> getAllRootCategories() {
+    public List<Category> getRootCategories() {
+
         return categoryDao.findAllRootCategories();
+
     }
 
-    public List<Category> getAllDirectSubCategories(Long categoryId) {
+    public List<Category> getChildCategories(Long categoryId) {
+
         return categoryDao.findAllDirectSubCategories(categoryId);
+
     }
 
-    public List<ProductDto> getAllProductsBelongingToCategory(Long categoryId) throws SQLException {
-        List<ProductDto> productDtos = new ArrayList<ProductDto>();
+    public List<ProductCard> getProductsByCategory(Long categoryId) {
 
-        List<Product> products = productDao.findAllByCategoryId(categoryId);
+        List<ProductCard> productCards = new ArrayList<ProductCard>();
+
+        List<Product> products = productDao.findByCategoryId(categoryId);
         for (Product product : products) {
-            ProductDto productDTO = new ProductDto();
-
-            productDTO.setProductId(product.getProductId());
-            productDTO.setProductName(product.getProductName());
-            productDTO.setBasePrice(product.getBasePrice());
-            productDTO.setBrand(product.getBrand());
-            productDTO.setImageUrl(product.getImageUrl());
+            ProductCard productCard = ProductCard
+                .builder()
+                .productId(product.getProductId())
+                .productName(product.getProductName())
+                .basePrice(product.getBasePrice())
+                .brand(product.getBrand())
+                .imageUrl(product.getImageUrl())
+                .build();
 
             Map<String, List<String>> propertyMap = new HashMap<>();
-            List<Property> properties = propertyDao.findByProductId(product.getProductId());
-            for (Property property : properties) {
-                if (property.getPriceIncrement().compareTo(new BigDecimal("0")) == 0) {
-                    if (propertyMap.containsKey(property.getPropertyName())) {
-                        propertyMap.get(property.getPropertyName()).add(property.getValue());
-                    } else {
-                        List<String> propertyValues = new ArrayList<>() {{
-                            add(property.getValue());
-                        }};
 
-                        propertyMap.put(property.getPropertyName(), propertyValues);
-                    }
+            List<Property> properties = propertyDao.findUnmarketableProperties(product.getProductId());
+            for (Property property : properties) {
+                if (propertyMap.containsKey(property.getPropertyName())) {
+                    propertyMap.get(property.getPropertyName()).add(property.getValue());
+                } else {
+                    List<String> propertyValues = new ArrayList<>() {{
+                        add(property.getValue());
+                    }};
+
+                    propertyMap.put(property.getPropertyName(), propertyValues);
                 }
             }
-            productDTO.setProperties(propertyMap);
+            productCard.setProperties(propertyMap);
 
-            productDtos.add(productDTO);
+            productCards.add(productCard);
         }
 
-        return productDtos;
+        return productCards;
+
     }
 }

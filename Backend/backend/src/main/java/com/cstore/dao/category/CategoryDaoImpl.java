@@ -3,8 +3,10 @@ package com.cstore.dao.category;
 import com.cstore.model.category.Category;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.Parameter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -100,6 +102,7 @@ public class CategoryDaoImpl implements CategoryDao {
 
     @Override
     public Category delete(Long categoryId) {
+
         String sql = "WITH deleted_category AS ( " +
                      "    DELETE FROM \"category\" " +
                      "    WHERE \"category_id\" = ? " +
@@ -113,12 +116,14 @@ public class CategoryDaoImpl implements CategoryDao {
             new BeanPropertyRowMapper<>(Category.class),
             categoryId
         );
+
     }
 
     @Override
+    public List<Category> findByProductId(
+        Long productId
+    ) throws DataAccessException {
 
-    @Comment("This method is perfect.")
-    public List<Category> findByProductId(Long productId) {
         String sql = "SELECT * " +
                      "FROM \"categories_from_product\"(?);";
 
@@ -127,10 +132,13 @@ public class CategoryDaoImpl implements CategoryDao {
             preparedStatement -> preparedStatement.setLong(1, productId),
             new BeanPropertyRowMapper<>(Category.class)
         );
+
     }
 
     @Override
-    public List<Category> findAllRootCategories() {
+    public List<Category> findAllRootCategories(
+    ) throws DataAccessException {
+
         String sql = "SELECT * " +
                      "FROM \"root_category\";";
 
@@ -138,20 +146,25 @@ public class CategoryDaoImpl implements CategoryDao {
             sql,
             new BeanPropertyRowMapper<>(Category.class)
         );
+
     }
 
     @Override
-    public List<Category> findAllDirectSubCategories(Long categoryId) {
+    public List<Category> findAllDirectSubCategories(
+        Long categoryId
+    ) throws DataAccessException {
+
         String sql = "SELECT * " +
-                "FROM category " +
-                "WHERE category_id IN (SELECT sub_category_id " +
-                "FROM sub_category " +
-                "WHERE category_id = ?);";
+                     "FROM \"category\" " +
+                     "WHERE \"category_id\" IN (SELECT \"sub_category_id\" " +
+                                               "FROM \"sub_category\" " +
+                                               "WHERE \"category_id\" = ?);";
 
         return jdbcTemplate.query(
-                sql,
-                preparedStatement -> preparedStatement.setLong(1, categoryId),
-                new BeanPropertyRowMapper<>(Category.class)
+            sql,
+            preparedStatement -> preparedStatement.setLong(1, categoryId),
+            new BeanPropertyRowMapper<>(Category.class)
         );
+
     }
 }

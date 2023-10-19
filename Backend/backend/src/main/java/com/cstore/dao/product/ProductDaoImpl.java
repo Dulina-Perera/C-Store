@@ -1,11 +1,13 @@
 package com.cstore.dao.product;
 
+import com.cstore.model.category.Category;
 import com.cstore.model.product.Product;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.Comment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -18,7 +20,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-
 @RequiredArgsConstructor
 public class ProductDaoImpl implements ProductDao {
     private final JdbcTemplate jdbcTemplate;
@@ -197,42 +198,33 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public List<Product> findAllByCategoryId(Long categoryId) throws SQLException {
-        List<Product> products = new ArrayList<>();
-        String sql = "SELECT `product_id`, `product_name`, `base_price`, `brand`, `description`, `image_url` " +
-                     "FROM `product` NATURAL RIGHT OUTER JOIN `belongs_to` " +
-                     "WHERE `category_id` = ?;";
+    public List<Product> findByCategoryId(
+        Long categoryId
+    ) throws DataAccessException {
 
-        Connection connection = DriverManager.getConnection(url, username, password);
-        PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        preparedStatement.setLong(1, categoryId);
+        String sql = "SELECT * " +
+                     "FROM \"products_from_category\"(?);";
 
-        ResultSet resultSet = preparedStatement.executeQuery();
-        while (resultSet.next()) {
-            Product product = new Product();
+        return jdbcTemplate.query(
+            sql,
+            preparedStatement -> preparedStatement.setLong(1, categoryId),
+            new BeanPropertyRowMapper<>(Product.class)
+        );
 
-            product.setProductId(resultSet.getLong("product_id"));
-            product.setProductName(resultSet.getString("product_name"));
-            product.setBasePrice(resultSet.getBigDecimal("base_price"));
-            product.setBrand(resultSet.getString("brand"));
-            product.setDescription(resultSet.getString("description"));
-            product.setImageUrl(resultSet.getString("image_url"));
-
-            products.add(product);
-        }
-
-        resultSet.close();
-        preparedStatement.close();
-        connection.close();
-        return products;
     }
 
     @Override
+    public Integer countStocks(
+        Long productId
+    ) throws DataAccessException {
 
-    @Comment("This method is perfect.")
-    public Integer countStocks(Long productId) {
-        String sql = "SELECT count_stocks(?);";
+        String sql = "SELECT \"count_stocks\"(?);";
 
-        return jdbcTemplate.queryForObject(sql, Integer.class, productId);
+        return jdbcTemplate.queryForObject(
+            sql,
+            Integer.class,
+            productId
+        );
     }
+
 }
