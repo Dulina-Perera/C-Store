@@ -22,10 +22,11 @@ import java.util.List;
 
 @RequiredArgsConstructor
 public class ProductBrowsingController {
-    private final ProductBrowsingService productService;
+
+    private final ProductBrowsingService service;
 
     @Operation(
-        method = "getAllProducts",
+        method = "getProducts",
         responses = {
            @ApiResponse(
                content = @Content(
@@ -39,8 +40,11 @@ public class ProductBrowsingController {
         summary = "Returns all products (with properties of non-monetary value)."
     )
     @RequestMapping(method = RequestMethod.GET, path = "")
-    public List<ProductCard> getAllProducts() throws SQLException {
-        return productService.getAllProducts();
+    public List<ProductCard> getProducts(
+    ) {
+
+        return service.getProducts();
+
     }
 
     @Operation(
@@ -58,7 +62,13 @@ public class ProductBrowsingController {
             summary = "Returns all products (with properties of non-monetary value) matching a given name."
     )
     @RequestMapping(method = RequestMethod.GET, path = "/{product_name}")
-    public List<ProductCard> getProductByName(@PathVariable(name = "product_name", required = true) String productName) throws SQLException {
-        return productService.getProductByName(productName);
+    public List<ProductCard> getProductsByName(
+        @PathVariable(name = "product_name", required = true)
+        String productName
+    ) {
+
+        return service.getProductsByName(productName);
+
     }
+
 }

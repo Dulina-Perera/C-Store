@@ -23,10 +23,11 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 public class CategoryDaoImpl implements CategoryDao {
+
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public List<Category> findAll() {
+    public List<Category> findAll() throws DataAccessException {
         String sql = "SELECT * " +
                 "FROM category;";
 
@@ -167,4 +168,5 @@ public class CategoryDaoImpl implements CategoryDao {
         );
 
     }
+
 }

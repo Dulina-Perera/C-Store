@@ -22,19 +22,32 @@ import java.util.Optional;
 @Repository
 @RequiredArgsConstructor
 public class ProductDaoImpl implements ProductDao {
+
     private final JdbcTemplate jdbcTemplate;
 
     String url = "jdbc:mysql://localhost:3306/cstore";
     String username = "cadmin";
     String password = "cstore_GRP28_CSE21";
 
-    Logger logger = LoggerFactory.getLogger(ProductDaoImpl.class);
+    @Override
+    public List<Product> findAll(
+    ) throws DataAccessException {
+
+        String sql = "SELECT * " +
+                     "FROM \"product\";";
+
+        return jdbcTemplate.query(
+            sql,
+            new BeanPropertyRowMapper<>(Product.class)
+        );
+
+    }
 
     @Override
     public Optional<Product> findProduct(Product unknown) throws SQLException {
         String sql = "SELECT * " +
-                     "FROM `product` " +
-                     "WHERE `product_name` = ? AND `base_price` = ? AND `brand` = ? AND `description` = ? AND `image_url` = ?;";
+            "FROM `product` " +
+            "WHERE `product_name` = ? AND `base_price` = ? AND `brand` = ? AND `description` = ? AND `image_url` = ?;";
 
         Connection connection = DriverManager.getConnection(url, username, password);
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -56,65 +69,6 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public List<Product> findAll() {
-        Connection connection = null;
-        Statement statement = null;
-        ResultSet resultSet = null;
-
-        try {
-            connection = DriverManager.getConnection(url, username, password);
-            List<Product> products = new ArrayList<Product>();
-            String sql = "SELECT * " +
-                         "FROM `product`;";
-
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery(sql);
-            while (resultSet.next()) {
-                Product product = new Product();
-
-                product.setProductId(resultSet.getLong("product_id"));
-                product.setProductName(resultSet.getString("product_name"));
-                product.setBasePrice(resultSet.getBigDecimal("base_price"));
-                product.setBrand(resultSet.getString("brand"));
-                product.setDescription(resultSet.getString("description"));
-                product.setImageUrl(resultSet.getString("image_url"));
-
-                products.add(product);
-            }
-
-            return products;
-        }
-        catch (SQLException sqe) {
-            logger.error("Error while fetching data.", sqe);
-            return new ArrayList<>();
-        } finally {
-            if (resultSet != null) {
-                try {
-                    resultSet.close();
-                } catch (SQLException e) {
-                    logger.error("Error closing Result Set.", e);
-                }
-            }
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (SQLException e) {
-                    logger.error("Error closing Statement.", e);
-                }
-            }
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    logger.error("Error closing Connection.", e);
-                }
-            }
-        }
-    }
-
-    @Override
-
-    @Comment("This method is perfect.")
     public Optional<Product> findById(Long productId) {
         String sql = "SELECT * " +
                      "FROM \"product\" " +
@@ -134,36 +88,19 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public List<Product> findByName(String productName) throws SQLException {
-        List<Product> products = new ArrayList<>();
+    public List<Product> findByName(
+        String productName
+    ) throws DataAccessException {
+
         String sql = "SELECT * " +
-                     "FROM `product` " +
-                     "WHERE `product_name` LIKE ?;";
+                     "FROM \"search_products_by_name\"(?);";
 
-        Connection connection = DriverManager.getConnection(url, username, password);
-        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        return jdbcTemplate.query(
+            sql,
+            preparedStatement -> preparedStatement.setString(1, productName),
+            new BeanPropertyRowMapper<>(Product.class)
+        );
 
-        preparedStatement.setString(1, "%" + productName + "%");
-        ResultSet resultSet = preparedStatement.executeQuery();
-
-        while (resultSet.next()) {
-            Product product = new Product();
-
-            product.setProductId(resultSet.getLong("product_id"));
-            product.setProductName(resultSet.getString("product_name"));
-            product.setBasePrice(resultSet.getBigDecimal("base_price"));
-            product.setBrand(resultSet.getString("brand"));
-            product.setDescription(resultSet.getString("description"));
-            product.setImageUrl(resultSet.getString("image_url"));
-
-            products.add(product);
-        }
-
-        resultSet.close();
-        preparedStatement.close();
-        connection.close();
-
-        return products;
     }
 
     @Override
@@ -226,5 +163,6 @@ public class ProductDaoImpl implements ProductDao {
             productId
         );
     }
+
 
 }

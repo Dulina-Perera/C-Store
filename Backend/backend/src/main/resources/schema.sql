@@ -4,15 +4,17 @@ DROP TRIGGER IF EXISTS "update_variant" ON "varies_on";
 DROP FUNCTION IF EXISTS "update_variant";
 
 DROP FUNCTION IF EXISTS "unmarketable_properties";
-DROP FUNCTION IF EXISTS "products_with_most_sales";
-DROP FUNCTION IF EXISTS "quarters_with_most_interest";
+DROP FUNCTION IF EXISTS "search_products_by_name";
 DROP FUNCTION IF EXISTS "rank_categories_by_orders";
-DROP FUNCTION IF EXISTS "customer_order_report";
+DROP FUNCTION IF EXISTS "quarters_with_most_interest";
 DROP FUNCTION IF EXISTS "properties_from_product";
-DROP FUNCTION IF EXISTS "count_stocks";
-DROP FUNCTION IF EXISTS "images_from_product";
-DROP FUNCTION IF EXISTS "categories_from_product";
+DROP FUNCTION IF EXISTS "products_with_most_sales";
 DROP FUNCTION IF EXISTS "products_from_category";
+DROP FUNCTION IF EXISTS "images_from_product";
+DROP FUNCTION IF EXISTS "customer_order_report";
+DROP FUNCTION IF EXISTS "count_stocks";
+DROP FUNCTION IF EXISTS "categories_from_product";
+
 
 DROP VIEW IF EXISTS "leaf_category";
 DROP VIEW IF EXISTS "root_category";
@@ -72,13 +74,13 @@ CREATE TABLE "image" (
 -- WholeProduct
 DROP TABLE IF EXISTS "product";
 CREATE TABLE "product" (
-                           "product_id"   BIGSERIAL,
-                           "product_name" VARCHAR (100),
-                           "base_price"   NUMERIC (10, 2) DEFAULT 0,
-                           "brand"        VARCHAR (40),
-                           "description"  VARCHAR,
-                           "image_url"    VARCHAR (100),
-                           PRIMARY KEY ("product_id")
+    "product_id"   BIGSERIAL,
+    "product_name" VARCHAR (100),
+    "base_price"   NUMERIC (10, 2) DEFAULT 0,
+    "brand"        VARCHAR (40),
+    "description"  VARCHAR,
+    "image_url"    VARCHAR (100),
+    PRIMARY KEY ("product_id")
 );
 
 -- WholeProduct Image
@@ -439,10 +441,10 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION "products_with_most_sales"(y SMALLINT, q CHAR (2))
     RETURNS TABLE(
-                     "product_id"     BIGINT,
-                     "total_sales"    INTEGER,
-                     "total_earnings" NUMERIC (10, 2)
-                 ) AS $$
+        "product_id"     BIGINT,
+        "total_sales"    INTEGER,
+        "total_earnings" NUMERIC (10, 2)
+    ) AS $$
 BEGIN
     RETURN QUERY
         SELECT vo."product_id",
@@ -454,6 +456,9 @@ BEGIN
         ORDER BY ("total_sales", "total_earnings") DESC;
 END
 $$ LANGUAGE plpgsql;
+
+-- SELECT *
+-- FROM products_with_most_sales(2022, 'Q1');
 
 ------------------------------------------------------------------------------------------------------------------------
 
@@ -501,6 +506,28 @@ $$ LANGUAGE plpgsql;
 
 -- SELECT *
 -- FROM "time_period_with_most_interest"(1);
+
+------------------------------------------------------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION "search_products_by_name"(p_name VARCHAR (100))
+    RETURNS TABLE (
+        "product_id"   BIGINT,
+        "product_name" VARCHAR (100),
+        "base_price"   NUMERIC (10, 2),
+        "brand"        VARCHAR (40),
+        "description"  VARCHAR,
+        "image_url"    VARCHAR (100)
+    ) AS $$
+BEGIN
+    RETURN QUERY
+        SELECT *
+        FROM "product" AS p
+        WHERE p."product_name" LIKE CONCAT('%', p_name, '%');
+END
+$$ LANGUAGE plpgsql;
+
+-- SELECT *
+-- FROM "search_product_by_name"('phone');
 
 ------------------------------------------------------------------------------------------------------------------------
 

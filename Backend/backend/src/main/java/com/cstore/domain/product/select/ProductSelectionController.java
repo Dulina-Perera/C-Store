@@ -17,13 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(path = "api/v1/products/select")
 @Tag(name = "Select Product", description = "Provides controller methods for selecting products.")
-
 @RequiredArgsConstructor
 public class ProductSelectionController {
     private final ProductSelectionService productSelectionService;
 
-
-    @RequestMapping(method = RequestMethod.GET, path = "/{product_id}")
     @Operation(
         description = """
             Should be invoked when a product is selected.
@@ -40,10 +37,14 @@ public class ProductSelectionController {
             )
         }
     )
+    @RequestMapping(method = RequestMethod.GET, path = "/{product_id}")
     public SelectedProduct getProductById(
         @PathVariable(name = "product_id", required = true)
         Long productId
     ) {
+
         return productSelectionService.getProductById(productId);
+
     }
+
 }

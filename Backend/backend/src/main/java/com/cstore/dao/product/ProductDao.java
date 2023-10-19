@@ -10,11 +10,11 @@ import java.util.Optional;
 public interface ProductDao {
     Optional<Product> findProduct(Product unknown) throws SQLException;
 
-    List<Product> findAll();
+    List<Product> findAll() throws DataAccessException;
 
     Optional<Product> findById(Long productId);
 
-    List<Product> findByName(String productName) throws SQLException;
+    List<Product> findByName(String productName) throws DataAccessException;
 
     Product save(Product product);
 
