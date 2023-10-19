@@ -28,6 +28,7 @@ public class ProductSelectionService {
     private final PropertyDao propertyDao;
 
     public SelectedProduct getProductById(Long productId) {
+
         Optional<Product> tempProduct = productDao.findById(productId);
         if (tempProduct.isEmpty()) {
             throw new NoSuchProductException("Product with id " + productId + " not found.");
@@ -66,4 +67,5 @@ public class ProductSelectionService {
             .stockCount(stockCount)
             .build();
     }
+
 }

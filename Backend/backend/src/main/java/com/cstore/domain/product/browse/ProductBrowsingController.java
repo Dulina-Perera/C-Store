@@ -1,6 +1,6 @@
 package com.cstore.domain.product.browse;
 
-import com.cstore.domain.category.browse.ProductDto;
+import com.cstore.dto.product.ProductCard;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -22,15 +22,16 @@ import java.util.List;
 
 @RequiredArgsConstructor
 public class ProductBrowsingController {
-    private final ProductBrowsingService productService;
+
+    private final ProductBrowsingService service;
 
     @Operation(
-        method = "getAllProducts",
+        method = "getProducts",
         responses = {
            @ApiResponse(
                content = @Content(
                    mediaType = "application/json",
-                   array = @ArraySchema(schema = @Schema(implementation = ProductDto.class))
+                   array = @ArraySchema(schema = @Schema(implementation = ProductCard.class))
                ),
                description = "Success",
                responseCode = "200"
@@ -39,8 +40,11 @@ public class ProductBrowsingController {
         summary = "Returns all products (with properties of non-monetary value)."
     )
     @RequestMapping(method = RequestMethod.GET, path = "")
-    public List<ProductDto> getAllProducts() throws SQLException {
-        return productService.getAllProducts();
+    public List<ProductCard> getProducts(
+    ) {
+
+        return service.getProducts();
+
     }
 
     @Operation(
@@ -49,7 +53,7 @@ public class ProductBrowsingController {
                     @ApiResponse(
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = ProductDto.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = ProductCard.class))
                             ),
                             description = "Success",
                             responseCode = "200"
@@ -58,7 +62,13 @@ public class ProductBrowsingController {
             summary = "Returns all products (with properties of non-monetary value) matching a given name."
     )
     @RequestMapping(method = RequestMethod.GET, path = "/{product_name}")
-    public List<ProductDto> getProductByName(@PathVariable(name = "product_name", required = true) String productName) throws SQLException {
-        return productService.getProductByName(productName);
+    public List<ProductCard> getProductsByName(
+        @PathVariable(name = "product_name", required = true)
+        String productName
+    ) {
+
+        return service.getProductsByName(productName);
+
     }
+
 }

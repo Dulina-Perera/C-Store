@@ -46,7 +46,10 @@ public class PropertyDaoImpl implements PropertyDao {
     }
 
     @Override
-    public List<Property> findByProductId(Long productId) {
+    public List<Property> findByProductId(
+        Long productId
+    ) throws DataAccessException {
+
         String sql = "SELECT * " +
                      "FROM \"properties_from_product\"(?);";
 
@@ -55,6 +58,7 @@ public class PropertyDaoImpl implements PropertyDao {
                 preparedStatement -> preparedStatement.setLong(1, productId),
                 new BeanPropertyRowMapper<>(Property.class)
         );
+
     }
 
     @Override
@@ -85,5 +89,21 @@ public class PropertyDaoImpl implements PropertyDao {
         }
 
         return property;
+    }
+
+    @Override
+    public List<Property> findUnmarketableProperties(
+        Long productId
+    ) throws DataAccessException {
+
+        String sql = "SELECT * " +
+                     "FROM \"unmarketable_properties\"(?)";
+
+        return jdbcTemplate.query(
+            sql,
+            preparedStatement -> preparedStatement.setLong(1, productId),
+            new BeanPropertyRowMapper<>(Property.class)
+        );
+
     }
 }
