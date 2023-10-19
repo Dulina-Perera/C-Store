@@ -1,7 +1,7 @@
 package com.cstore.service;
 
 import com.cstore.dto.WarehouseDTO;
-import com.cstore.exception.WarehouseNotFoundException;
+import com.cstore.exception.NoSuchWarehouseException;
 import com.cstore.model.warehouse.Warehouse;
 import com.cstore.model.warehouse.WarehouseContact;
 import com.cstore.repository.WarehouseContactRepository;
@@ -49,7 +49,7 @@ public class WarehouseService {
         Optional<Warehouse> tempWarehouse = warehouseRepository.findById(warehouseId);
 
         if (tempWarehouse.isEmpty()) {
-            throw new WarehouseNotFoundException("Warehouse with id " + warehouseId + " does not exist.");
+            throw new NoSuchWarehouseException("Warehouse with id " + warehouseId + " does not exist.");
         }
         Warehouse warehouse = tempWarehouse.get();
 

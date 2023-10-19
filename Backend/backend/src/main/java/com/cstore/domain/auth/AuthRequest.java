@@ -1,4 +1,4 @@
-package com.cstore.domain.user.authentication;
+package com.cstore.domain.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,10 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class SignInRequest {
+@Builder @AllArgsConstructor @NoArgsConstructor
+public class AuthRequest {
     private String email;
     private String password;
 }

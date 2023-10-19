@@ -1,9 +1,10 @@
-package com.cstore.domain.user.authentication;
+package com.cstore.domain.auth;
 
 import com.cstore.dao.user.UserDao;
 import com.cstore.dao.user.address.UserAddressDao;
 import com.cstore.dao.user.contact.UserContactDao;
 import com.cstore.dto.UserAddressDto;
+import com.cstore.exception.NoSuchUserException;
 import com.cstore.model.user.*;
 import com.cstore.service.JwtService;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class AuthenticationService {
+public class AuthService {
     private final UserDao userDao;
     private final UserAddressDao userAddressDao;
     private final UserContactDao userContactDao;
@@ -24,26 +25,26 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public JwtAuthenticationResponse signUp(SignUpRequest signUpRequest) {
+    public Jwt register(RegisterRequest request) {
         User user = new User();
 
         user.setRole(Role.REG_CUST);
         user = userDao.saveUser(user);
 
-        RegisteredUser registeredUser = RegisteredUser
+        RegisteredUser regUser = RegisteredUser
             .builder()
             .userId(user.getUserId())
-            .firstName(signUpRequest.getFirstName())
-            .lastName(signUpRequest.getLastName())
-            .email(signUpRequest.getEmail())
-            .password(passwordEncoder.encode(signUpRequest.getPassword()))
+            .firstName(request.getFirstName())
+            .lastName(request.getLastName())
+            .email(request.getEmail())
+            .password(passwordEncoder.encode(request.getPassword()))
             .enabled(true)
             .locked(false)
             .build();
 
-        registeredUser = userDao.saveRegisteredUser(registeredUser);
+        regUser = userDao.saveRegUser(regUser);
 
-        for (UserAddressDto userAddressDto : signUpRequest.getAddresses()) {
+        for (UserAddressDto userAddressDto : request.getAddresses()) {
             UserAddress userAddress = UserAddress
                 .builder()
                 .user(user)
@@ -57,42 +58,39 @@ public class AuthenticationService {
             userAddressDao.save(userAddress);
         }
 
-        for (Integer telephoneNumber : signUpRequest.getTelephoneNumbers()) {
-            UserContactId userContactId = new UserContactId();
-
-            userContactId.setUserId(user.getUserId());
-            userContactId.setTelephoneNumber(telephoneNumber);
+        for (Integer telephoneNumber : request.getTelephoneNumbers()) {
+            UserContactId userContactId = UserContactId
+                .builder()
+                .userId(user.getUserId())
+                .telephoneNumber(telephoneNumber)
+                .build();
 
             userContactDao.save(new UserContact(userContactId, user));
         }
 
-        String jwt = jwtService.generateToken(registeredUser);
-        return JwtAuthenticationResponse
+        String jwt = jwtService.buildToken(regUser);
+        return Jwt
             .builder()
             .token(jwt)
             .build();
     }
 
-    public JwtAuthenticationResponse signIn(SignInRequest signInRequest) {
+    public Jwt authenticate(AuthRequest request) {
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
-                signInRequest.getEmail(),
-                signInRequest.getPassword()
+                request.getEmail(),
+                request.getPassword()
             )
         );
 
-        RegisteredUser user = userDao
-            .findRegUserByEmail(signInRequest.getEmail())
-            .orElseThrow(() -> new IllegalArgumentException("Invalid email."));
+        RegisteredUser regUser = userDao
+            .findRegUserByEmail(request.getEmail())
+            .orElseThrow(() -> new NoSuchUserException("User with email " + request.getEmail() + "not found."));
 
-        if (passwordEncoder.matches(signInRequest.getPassword(), user.getPassword())) {
-            String jwt = jwtService.generateToken(user);
-            return JwtAuthenticationResponse
-                .builder()
-                .token(jwt)
-                .build();
-        } else {
-            throw new IllegalArgumentException("Invalid password.");
-        }
+        String jwt = jwtService.buildToken(regUser);
+        return Jwt
+            .builder()
+            .token(jwt)
+            .build();
     }
 }

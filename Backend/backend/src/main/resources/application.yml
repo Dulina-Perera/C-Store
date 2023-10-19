@@ -33,6 +33,6 @@ spring:
         classpath:data.sql
 
 token:
-  expiration-ms: 36000000
+  expiration: 36000000
   secret:
     key: ${SECRET_KEY}

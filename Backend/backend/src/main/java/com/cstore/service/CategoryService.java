@@ -2,7 +2,7 @@ package com.cstore.service;
 
 import com.cstore.dao.category.CategoryDao;
 import com.cstore.exception.CategoryAlreadyExistsException;
-import com.cstore.exception.CategoryNotFoundException;
+import com.cstore.exception.NoSuchCategoryException;
 import com.cstore.model.category.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,7 +35,7 @@ public class CategoryService {
         Optional<Category> category = categoryDao.findById(categoryId);
 
         if (category.isEmpty()) {
-            throw new CategoryNotFoundException("Category with id " + categoryId + " not found.");
+            throw new NoSuchCategoryException("Category with id " + categoryId + " not found.");
         }
         return category.get();
     }
@@ -62,7 +62,7 @@ public class CategoryService {
         }
     }
 
-    public Category updateCategory(Long categoryId, Map<String, Object> newDetails) throws CategoryNotFoundException, SQLException {
+    public Category updateCategory(Long categoryId, Map<String, Object> newDetails) throws NoSuchCategoryException, SQLException {
         Category category = getCategoryById(categoryId);
 
         if (newDetails.get("categoryName") != null) {

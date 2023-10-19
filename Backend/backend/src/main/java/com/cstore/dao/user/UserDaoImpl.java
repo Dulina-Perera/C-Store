@@ -77,8 +77,8 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public RegisteredUser saveRegisteredUser(RegisteredUser registeredUser) {
-        String sql = "INSERT INTO \"registered_user\" VALUES(?, ?, ?, ?, ?);";
+    public RegisteredUser saveRegUser(RegisteredUser registeredUser) {
+        String sql = "INSERT INTO \"registered_user\" VALUES(?, ?, ?, ?, ?, ?, ?);";
 
         jdbcTemplate.update(
             connection -> {
@@ -89,6 +89,8 @@ public class UserDaoImpl implements UserDao {
                 ps.setString(3, registeredUser.getPassword());
                 ps.setString(4, registeredUser.getFirstName());
                 ps.setString(5, registeredUser.getLastName());
+                ps.setBoolean(6, registeredUser.getLocked());
+                ps.setBoolean(7, registeredUser.getEnabled());
 
                 return ps;
             }

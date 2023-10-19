@@ -3,7 +3,7 @@ package com.cstore.service;
 import com.cstore.dao.order.OrderDao;
 import com.cstore.dao.ordercontact.OrderContactDao;
 import com.cstore.dto.OrderDTO;
-import com.cstore.exception.OrderNotFoundException;
+import com.cstore.exception.NoSuchOrderException;
 import com.cstore.model.order.Order;
 import com.cstore.model.order.OrderContact;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +61,7 @@ public class OrderService {
         Optional<Order> order = orderDao.findById(orderId);
 
         if (order.isEmpty()) {
-            throw new OrderNotFoundException("Order with id " + orderId + " not found.");
+            throw new NoSuchOrderException("Order with id " + orderId + " not found.");
         } else {
             return convert(order.get());
         }

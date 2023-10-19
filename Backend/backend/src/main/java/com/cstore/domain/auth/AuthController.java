@@ -1,57 +1,54 @@
-package com.cstore.domain.user.authentication;
+package com.cstore.domain.auth;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/auth")
 @Tag(
     name = "Sign in & Sign up",
     description = "Provides controller methods for signing in & signing up."
 )
-
 @RequiredArgsConstructor
-public class AuthenticationController {
-    private final AuthenticationService authenticationService;
+public class AuthController {
+    private final AuthService authService;
 
     @Operation(
-        method = "signUp",
+        method = "register",
         responses = {
             @ApiResponse(
                 content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = JwtAuthenticationResponse.class)
+                    schema = @Schema(implementation = Jwt.class)
                 ),
                 description = "Success",
                 responseCode = "200"
             )
         },
-        summary = "Signs up a user to the system."
+        summary = "Registers a user to the system."
     )
     @RequestMapping(
         method = RequestMethod.POST,
-        path = "/signup"
+        path = "/register"
     )
-    public JwtAuthenticationResponse signUp(
-        @RequestBody(required = true)
-        SignUpRequest request
-    ) {
-        return authenticationService.signUp(request);
+    public ResponseEntity<Jwt> register(@RequestBody(required = true) RegisterRequest request) {
+        return ResponseEntity.ok(authService.register(request));
     }
 
     @Operation(
-        method = "signIn",
+        method = "authenticate",
         responses = {
             @ApiResponse(
                 content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = JwtAuthenticationResponse.class)
+                    schema = @Schema(implementation = Jwt.class)
                 ),
                 description = "Success",
                 responseCode = "200"
@@ -61,12 +58,12 @@ public class AuthenticationController {
     )
     @RequestMapping(
         method = RequestMethod.POST,
-        path = "/signin"
+        path = "/authenticate"
     )
-    public JwtAuthenticationResponse signIn(
+    public ResponseEntity<Jwt> authenticate(
         @RequestBody(required = true)
-        SignInRequest request
+        AuthRequest request
     ) {
-        return authenticationService.signIn(request);
+        return ResponseEntity.ok(authService.authenticate(request));
     }
 }

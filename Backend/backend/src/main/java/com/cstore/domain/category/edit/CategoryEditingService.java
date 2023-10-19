@@ -2,7 +2,7 @@ package com.cstore.domain.category.edit;
 
 import com.cstore.dao.category.CategoryDao;
 import com.cstore.exception.CategoryAlreadyExistsException;
-import com.cstore.exception.CategoryNotFoundException;
+import com.cstore.exception.NoSuchCategoryException;
 import com.cstore.model.category.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,7 +34,7 @@ public class CategoryEditingService {
         if (category.isPresent()) {
             return category.get();
         }
-        throw new CategoryNotFoundException("Category with id " + categoryId + " not found.");
+        throw new NoSuchCategoryException("Category with id " + categoryId + " not found.");
     }
 
     public Long addNewCategory(Category category) {
@@ -45,7 +45,7 @@ public class CategoryEditingService {
         throw new CategoryAlreadyExistsException("Category already exists.");
     }
 
-    public Category updateCategory(Long categoryId, Map<String, Object> newDetails) throws CategoryNotFoundException {
+    public Category updateCategory(Long categoryId, Map<String, Object> newDetails) throws NoSuchCategoryException {
         Category category = getCategoryById(categoryId);
 
         if (newDetails.get("categoryName") != null) {
@@ -58,7 +58,7 @@ public class CategoryEditingService {
         return categoryDao.update(category);
     }
 
-    public Category deleteCategory(Long categoryId) throws CategoryNotFoundException {
+    public Category deleteCategory(Long categoryId) throws NoSuchCategoryException {
         Category category = getCategoryById(categoryId);
 
         return categoryDao.delete(categoryId);

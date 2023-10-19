@@ -147,8 +147,8 @@ CREATE TABLE "warehouse" (
 -- Warehouse Contact
 DROP TABLE IF EXISTS "warehouse_contact";
 CREATE TABLE "warehouse_contact" (
-	  "telephone_number" VARCHAR (12),
-	  "warehouse_id"     BIGINT,
+	"telephone_number" VARCHAR (12),
+	"warehouse_id"     BIGINT,
     PRIMARY KEY ("telephone_number"),
 	FOREIGN KEY ("warehouse_id") REFERENCES "warehouse" ("warehouse_id") ON DELETE CASCADE
 );
@@ -156,21 +156,21 @@ CREATE TABLE "warehouse_contact" (
 -- Inventory
 DROP TABLE IF EXISTS "inventory";
 CREATE TABLE "inventory" (
-                             "warehouse_id" BIGINT,
-                             "variant_id"   BIGINT,
-                             "sku"          VARCHAR(20),
-                             "count"        INTEGER,
-                             PRIMARY KEY ("warehouse_id", "variant_id"),
-                             FOREIGN KEY ("warehouse_id") REFERENCES "warehouse" ("warehouse_id") ON DELETE CASCADE,
-                             FOREIGN KEY ("variant_id") REFERENCES "variant" ("variant_id") ON DELETE CASCADE
+    "warehouse_id" BIGINT,
+    "variant_id"   BIGINT,
+    "sku"          VARCHAR(20),
+    "count"        INTEGER,
+    PRIMARY KEY ("warehouse_id", "variant_id"),
+    FOREIGN KEY ("warehouse_id") REFERENCES "warehouse" ("warehouse_id") ON DELETE CASCADE,
+    FOREIGN KEY ("variant_id") REFERENCES "variant" ("variant_id") ON DELETE CASCADE
 );
 
 -- User
 DROP TABLE IF EXISTS "user";
 CREATE TABLE "user" (
-                        "user_id" BIGSERIAL,
-                        "role"    VARCHAR (10) CHECK ("role" IN ('GUEST_CUST', 'REG_CUST', 'ADMIN')),
-                        PRIMARY KEY ("user_id")
+    "user_id" BIGSERIAL,
+    "role"    VARCHAR (10) CHECK ("role" IN ('GUEST_CUST', 'REG_CUST', 'ADMIN')),
+    PRIMARY KEY ("user_id")
 );
 
 -- Registered User

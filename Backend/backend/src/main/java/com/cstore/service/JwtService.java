@@ -19,12 +19,16 @@ import javax.crypto.SecretKey;
 @Service
 public class JwtService {
     @Value("${token.secret.key}")
-    private static String jwtSecretKey;
+    private String jwtSecretKey;
 
-    @Value("${token.expiration-ms}")
-    private static Long jwtExpirationMs;
+    @Value("${token.expiration}")
+    private Long jwtExpiration;
 
-    private String generateToken(
+    public String buildToken(UserDetails userDetails) {
+        return generateToken(new HashMap<>(), userDetails);
+    }
+
+    public String generateToken(
         Map<String, Object> extraClaims,
         UserDetails userDetails
     ) {
@@ -33,7 +37,7 @@ public class JwtService {
             .claims(extraClaims)
             .subject(userDetails.getUsername())
             .issuedAt(new Date(System.currentTimeMillis()))
-            .expiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
+            .expiration(new Date(System.currentTimeMillis() + jwtExpiration))
             .signWith(getSigningKey(), Jwts.SIG.HS256)
             .compact();
     }

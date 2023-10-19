@@ -1,4 +1,4 @@
-package com.cstore.domain.user.authentication;
+package com.cstore.domain.auth;
 
 import com.cstore.dto.UserAddressDto;
 import lombok.*;
@@ -6,10 +6,8 @@ import lombok.*;
 import java.util.List;
 
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class SignUpRequest {
+@Builder @AllArgsConstructor @NoArgsConstructor
+public class RegisterRequest {
     private String firstName;
     private String lastName;
     private String email;

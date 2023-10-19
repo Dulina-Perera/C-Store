@@ -12,5 +12,5 @@ public interface UserDao {
 
     User saveUser(User user);
 
-    RegisteredUser saveRegisteredUser(RegisteredUser registeredUser);
+    RegisteredUser saveRegUser(RegisteredUser registeredUser);
 }
