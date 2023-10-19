@@ -19,12 +19,15 @@ import javax.crypto.SecretKey;
 @Service
 public class JwtService {
     @Value("${token.secret.key}")
-    String jwtSecretKey;
+    private static String jwtSecretKey;
 
     @Value("${token.expiration-ms}")
-    Long jwtExpirationMs;
+    private static Long jwtExpirationMs;
 
-    private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+    private String generateToken(
+        Map<String, Object> extraClaims,
+        UserDetails userDetails
+    ) {
         return Jwts
             .builder()
             .claims(extraClaims)
@@ -49,9 +52,12 @@ public class JwtService {
             .getPayload();
     }
 
-    private <T> T extractClaim(String token, Function<Claims, T> claimsResolvers) {
+    private <T> T extractClaim(
+        String token,
+        Function<Claims, T> claimsResolver
+    ) {
         final Claims claims = extractAllClaims(token);
-        return claimsResolvers.apply(claims);
+        return claimsResolver.apply(claims);
     }
 
     private Date extractExpiration(String token) {
@@ -66,9 +72,12 @@ public class JwtService {
         return generateToken(new HashMap<>(), userDetails);
     }
 
-    public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String userName = extractUsername(token);
-        return (userName.equals(userDetails.getUsername())) && !isTokenExpired(token);
+    public boolean isTokenValid(
+        String token,
+        UserDetails userDetails
+    ) {
+        final String userId = extractUsername(token);
+        return (userId.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }
 
     private boolean isTokenExpired(String token) {

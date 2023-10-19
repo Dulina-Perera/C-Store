@@ -52,7 +52,7 @@ public class RegisteredUser implements UserDetails {
 
     @Override
     public String getUsername() {
-        return getEmail();
+        return getUserId().toString();
     }
 
     @Override

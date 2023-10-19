@@ -82,7 +82,7 @@ public class AuthenticationService {
         );
 
         RegisteredUser user = userDao
-            .findByEmail(signInRequest.getEmail())
+            .findRegUserByEmail(signInRequest.getEmail())
             .orElseThrow(() -> new IllegalArgumentException("Invalid email."));
 
         if (passwordEncoder.matches(signInRequest.getPassword(), user.getPassword())) {

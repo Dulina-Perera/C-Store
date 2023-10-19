@@ -2,8 +2,6 @@ package com.cstore.dao.user;
 
 import com.cstore.model.user.RegisteredUser;
 import com.cstore.model.user.User;
-import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -22,8 +20,25 @@ public class UserDaoImpl implements UserDao {
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    @Transactional
-    public Optional<RegisteredUser> findByEmail(String email) {
+    public Optional<RegisteredUser> findRegUserById(Long id) {
+        try {
+            String sql = "SELECT * " +
+                         "FROM \"registered_user\" " +
+                         "WHERE \"user_id\" = ?";
+
+            RegisteredUser registeredUser = jdbcTemplate.queryForObject(
+                sql,
+                new BeanPropertyRowMapper<>(RegisteredUser.class),
+                id
+            );
+            return Optional.ofNullable(registeredUser);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<RegisteredUser> findRegUserByEmail(String email) {
         try {
             String sql = "SELECT * " +
                          "FROM \"registered_user\" " +

@@ -147,10 +147,10 @@ CREATE TABLE "warehouse" (
 -- Warehouse Contact
 DROP TABLE IF EXISTS "warehouse_contact";
 CREATE TABLE "warehouse_contact" (
-                                     "telephone_number" VARCHAR (12),
-                                     "warehouse_id"     BIGINT,
-                                     PRIMARY KEY ("telephone_number"),
-                                     FOREIGN KEY ("warehouse_id") REFERENCES "warehouse" ("warehouse_id") ON DELETE CASCADE
+	  "telephone_number" VARCHAR (12),
+	  "warehouse_id"     BIGINT,
+    PRIMARY KEY ("telephone_number"),
+	FOREIGN KEY ("warehouse_id") REFERENCES "warehouse" ("warehouse_id") ON DELETE CASCADE
 );
 
 -- Inventory
@@ -176,15 +176,15 @@ CREATE TABLE "user" (
 -- Registered User
 DROP TABLE IF EXISTS "registered_user";
 CREATE TABLE "registered_user" (
-                                   "user_id"     BIGINT,
-                                   "email"       VARCHAR (60) NOT NULL UNIQUE,
-                                   "password"    VARCHAR (60) NOT NULL,
-                                   "first_name"  VARCHAR (20),
-                                   "last_name"   VARCHAR (20),
-                                   "locked"      BOOLEAN NOT NULL,
-                                   "enabled"     BOOLEAN NOT NULL,
-                                   PRIMARY KEY ("user_id"),
-                                   FOREIGN KEY ("user_id") REFERENCES "user" ("user_id") ON DELETE CASCADE
+     "user_id"     BIGINT,
+     "email"       VARCHAR (60) NOT NULL UNIQUE,
+     "password"    VARCHAR (60) NOT NULL,
+     "first_name"  VARCHAR (20),
+     "last_name"   VARCHAR (20),
+     "locked"      BOOLEAN NOT NULL,
+     "enabled"     BOOLEAN NOT NULL,
+     PRIMARY KEY ("user_id"),
+     FOREIGN KEY ("user_id") REFERENCES "user" ("user_id") ON DELETE CASCADE
 );
 
 -- User Contact
@@ -327,7 +327,7 @@ SELECT *
 FROM "category"
 WHERE "category_id" IN (SELECT DISTINCT "sub_category_id"
                         FROM sub_category) AND "category_id" NOT IN (SELECT DISTINCT "category_id"
-                                                                     FROM sub_category);
+	                                FROM sub_category);
 
 -- SELECT *
 -- FROM "leaf_category";
