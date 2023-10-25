@@ -1,6 +1,6 @@
 package com.cstore.controller;
 
-import com.cstore.dto.OrderDTO;
+import com.cstore.dto.OrderDto;
 import com.cstore.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,12 +19,12 @@ public class OrderController {
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "")
-    public List<OrderDTO> getAllOrders() {
+    public List<OrderDto> getAllOrders() {
         return orderService.getAllOrders();
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/{order_id}")
-    public OrderDTO getOrderById(@PathVariable(name = "order_id", required = true) Long orderId) {
+    public OrderDto getOrderById(@PathVariable(name = "order_id", required = true) Long orderId) {
         return orderService.getOrderById(orderId);
     }
 

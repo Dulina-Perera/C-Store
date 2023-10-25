@@ -2,7 +2,7 @@ package com.cstore.service;
 
 import com.cstore.dao.order.OrderDao;
 import com.cstore.dao.order.contact.OrderContactDao;
-import com.cstore.dto.OrderDTO;
+import com.cstore.dto.OrderDto;
 import com.cstore.exception.NoSuchOrderException;
 import com.cstore.model.order.Order;
 import com.cstore.model.order.OrderContact;
@@ -26,38 +26,40 @@ public class OrderService {
         this.orderDao = orderDao;
     }
 
-    private OrderDTO convert(Order order) {
+    private OrderDto convert(Order order) {
         List<OrderContact> orderContacts = orderContactDao.findByOrder(order);
-        OrderDTO orderDTO = new OrderDTO();
         List<Integer> telephoneNumbers = new ArrayList<>();
 
-        orderDTO.setOrderId(order.getOrderId());
-        orderDTO.setDate(order.getDate());
-        orderDTO.setTotalPayment(order.getTotalPayment());
-        orderDTO.setPaymentMethod(order.getPaymentMethod());
-        orderDTO.setDeliveryMethod(order.getDeliveryMethod());
-        orderDTO.setEmail(order.getEmail());
-        orderDTO.setStreetNumber(order.getStreetNumber());
-        orderDTO.setStreetName(order.getStreetName());
-        orderDTO.setCity(order.getCity());
-        orderDTO.setZipCode(order.getZipcode());
+        OrderDto orderDto = OrderDto
+            .builder()
+            .orderId(order.getOrderId())
+            .date(order.getDate())
+            .totalPayment(order.getTotalPayment())
+            .paymentMethod(order.getPaymentMethod())
+            .deliveryMethod(order.getDeliveryMethod())
+            .email(order.getEmail())
+            .streetNumber(order.getStreetNumber())
+            .streetName(order.getStreetName())
+            .city(order.getCity())
+            .zipCode(order.getZipcode())
+            .build();
 
         for (OrderContact orderContact : orderContacts) {
             telephoneNumbers.add(orderContact.getOrderContactId().getTelephoneNumber());
         }
-        orderDTO.setTelephoneNumbers(telephoneNumbers);
+        orderDto.setTelephoneNumbers(telephoneNumbers);
 
-        return orderDTO;
+        return orderDto;
     }
 
-    public List<OrderDTO> getAllOrders() {
+    public List<OrderDto> getAllOrders() {
         return orderDao.findAll()
                 .stream()
                 .map(this::convert)
                 .collect(Collectors.toList());
     }
 
-    public OrderDTO getOrderById(Long orderId) {
+    public OrderDto getOrderById(Long orderId) {
         Optional<Order> order = orderDao.findById(orderId);
 
         if (order.isEmpty()) {

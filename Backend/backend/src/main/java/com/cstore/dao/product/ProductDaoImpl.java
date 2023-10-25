@@ -72,7 +72,6 @@ public class ProductDaoImpl implements ProductDao {
     public Optional<Product> findById(
         Long productId
     ) throws DataAccessException {
-
         String sql = "SELECT * " +
                      "FROM \"product\" " +
                      "WHERE \"product_id\" = ?;";
@@ -88,7 +87,6 @@ public class ProductDaoImpl implements ProductDao {
         } catch (NullPointerException e) {
             return Optional.empty();
         }
-
     }
 
     @Override

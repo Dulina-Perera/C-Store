@@ -1,20 +1,33 @@
 package com.cstore.model.order;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.time.Instant;
 
-@Entity
-@Table(name = "`order`", schema = "cstore")
+@Entity @Table(name = "`order`", schema = "cstore")
+@Builder @AllArgsConstructor @NoArgsConstructor
+@Getter @Setter
+@ToString
 public class Order {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "order_id", nullable = false)
+    @Id @Column(
+        name = "order_id",
+        nullable = false
+    )
+    @GeneratedValue(
+        generator = "orderIdGenerator",
+        strategy = GenerationType.SEQUENCE
+    )
+    @SequenceGenerator(
+        name = "orderIdGenerator",
+        allocationSize = 1, initialValue = 1
+    )
     private Long orderId;
 
     @Column(name = "date")
-    private Instant date;
+    private Timestamp date;
 
     @Column(name = "total_payment", precision = 12, scale = 2)
     private BigDecimal totalPayment;
@@ -39,84 +52,4 @@ public class Order {
 
     @Column(name = "zipcode")
     private Integer zipcode;
-
-    public Long getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
-    }
-
-    public Instant getDate() {
-        return date;
-    }
-
-    public void setDate(Instant date) {
-        this.date = date;
-    }
-
-    public BigDecimal getTotalPayment() {
-        return totalPayment;
-    }
-
-    public void setTotalPayment(BigDecimal totalPayment) {
-        this.totalPayment = totalPayment;
-    }
-
-    public String getPaymentMethod() {
-        return paymentMethod;
-    }
-
-    public void setPaymentMethod(String paymentMethod) {
-        this.paymentMethod = paymentMethod;
-    }
-
-    public String getDeliveryMethod() {
-        return deliveryMethod;
-    }
-
-    public void setDeliveryMethod(String deliveryMethod) {
-        this.deliveryMethod = deliveryMethod;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getStreetNumber() {
-        return streetNumber;
-    }
-
-    public void setStreetNumber(String streetNumber) {
-        this.streetNumber = streetNumber;
-    }
-
-    public String getStreetName() {
-        return streetName;
-    }
-
-    public void setStreetName(String streetName) {
-        this.streetName = streetName;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public Integer getZipcode() {
-        return zipcode;
-    }
-
-    public void setZipcode(Integer zipcode) {
-        this.zipcode = zipcode;
-    }
 }

@@ -10,8 +10,14 @@ import java.math.BigDecimal;
 @Builder @AllArgsConstructor @NoArgsConstructor
 @ToString
 public class Product {
-    @Id @Column(name = "product_id", nullable = false)
-    @GeneratedValue(generator = "productIdGenerator", strategy = GenerationType.SEQUENCE)
+    @Id @Column(
+        name = "product_id",
+        nullable = false
+    )
+    @GeneratedValue(
+        generator = "productIdGenerator",
+        strategy = GenerationType.SEQUENCE
+    )
     @SequenceGenerator(
         name = "productIdGenerator", sequenceName = "productIdSequence",
         allocationSize = 1, initialValue = 1
