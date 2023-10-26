@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
+@Tag(name = "Edit Products")
 @RestController
 @RequestMapping(path = "/api/v1/products")
-@Tag(name = "Edit Products")
 @RequiredArgsConstructor
 public class ProductEditingController {
     private final ProductEditingService serv;

@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "/cstore/api/warehouses")
 public class WarehouseController {
-    private final InventoryService inventoryService;
+    /*private final InventoryService inventoryService;
     private final WarehouseService warehouseService;
 
     @Autowired
@@ -37,5 +37,5 @@ public class WarehouseController {
     @RequestMapping(method = RequestMethod.GET, path = "{warehouse_id}/products")
     public List<WarehouseVariantDTO> checkInventory(@PathVariable(name = "warehouse_id", required = true) Long warehouseId) {
         return inventoryService.getWarehouseVariants(warehouseId);
-    }
+    }*/
 }

@@ -15,6 +15,7 @@ DROP FUNCTION IF EXISTS "customer_order_report";
 DROP FUNCTION IF EXISTS "count_stocks";
 DROP FUNCTION IF EXISTS "categories_from_product";
 
+DROP PROCEDURE IF EXISTS "stock";
 DROP PROCEDURE IF EXISTS "add_to_cart";
 
 DROP VIEW IF EXISTS "leaf_category";
@@ -157,12 +158,12 @@ CREATE TABLE "warehouse_contact" (
 	FOREIGN KEY ("warehouse_id") REFERENCES "warehouse" ("warehouse_id") ON DELETE CASCADE
 );
 
--- Inventory
+-- Inventory_
 DROP TABLE IF EXISTS "inventory";
 CREATE TABLE "inventory" (
     "warehouse_id" BIGINT,
     "variant_id"   BIGINT,
-    "sku"          VARCHAR(20),
+    "sku"          VARCHAR (20),
     "count"        INTEGER,
     PRIMARY KEY ("warehouse_id", "variant_id"),
     FOREIGN KEY ("warehouse_id") REFERENCES "warehouse" ("warehouse_id") ON DELETE CASCADE,
@@ -359,6 +360,26 @@ END
 $$ LANGUAGE plpgsql;
 
 -- CALL "add_to_cart"(1, 1, 7);
+
+------------------------------------------------------------------------------------------------------------------------
+
+CREATE OR REPLACE PROCEDURE "stock"(
+    w_id BIGINT,
+    v_id BIGINT,
+    sq VARCHAR (20),
+    cnt INTEGER
+) AS $$
+BEGIN
+    INSERT INTO "inventory"
+    VALUES (w_id, v_id, sq, cnt);
+EXCEPTION WHEN unique_violation THEN
+    UPDATE "inventory"
+    SET "count" = "count" + cnt
+    WHERE "warehouse_id" = w_id AND "variant_id" = v_id;
+END
+$$ LANGUAGE plpgsql;
+
+-- CALL "stock"(1, 3, 'SKU008', 100);
 
 
 ------------------------------------------------------------------------------------------------------------------------

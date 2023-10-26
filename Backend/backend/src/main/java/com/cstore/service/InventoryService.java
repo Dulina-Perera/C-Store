@@ -2,7 +2,7 @@ package com.cstore.service;
 
 import com.cstore.dto.WarehouseVariantDTO;
 import com.cstore.exception.NoSuchWarehouseException;
-import com.cstore.model.warehouse.Inventory;
+import com.cstore.model.warehouse.Inventory_;
 import com.cstore.model.warehouse.Warehouse;
 import com.cstore.repository.InventoryRepository;
 import com.cstore.repository.WarehouseRepository;
@@ -13,9 +13,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Service
+// @Service
 public class InventoryService {
-    private final InventoryRepository inventoryRepository;
+    /*private final InventoryRepository inventoryRepository;
     private final WarehouseRepository warehouseRepository;
 
     @Autowired
@@ -24,7 +24,7 @@ public class InventoryService {
         this.warehouseRepository = warehouseRepository;
     }
 
-    private WarehouseVariantDTO convert(Inventory inventory) {
+    private WarehouseVariantDTO convert(Inventory_ inventory) {
         WarehouseVariantDTO warehouseVariantDTO = new WarehouseVariantDTO();
 
         warehouseVariantDTO.setVariantId(inventory.getInventoryId().getVariantId());
@@ -45,5 +45,5 @@ public class InventoryService {
                 .stream()
                 .map(this::convert)
                 .collect(Collectors.toList());
-    }
+    }*/
 }
