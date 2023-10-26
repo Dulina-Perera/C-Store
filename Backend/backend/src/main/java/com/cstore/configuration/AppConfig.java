@@ -15,7 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @RequiredArgsConstructor
-public class ApplicationConfiguration {
+public class AppConfig {
     private final static String USER_NOT_FOUND_MSG = "User with user id %s not found.";
     private final UserDao userDao;
 

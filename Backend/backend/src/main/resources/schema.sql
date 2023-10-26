@@ -97,11 +97,11 @@ CREATE TABLE "product_image" (
 -- Belongs to
 DROP TABLE IF EXISTS "belongs_to";
 CREATE TABLE "belongs_to" (
-                              "category_id" BIGINT,
-                              "product_id"  BIGINT,
-                              PRIMARY KEY ("category_id", "product_id"),
-                              FOREIGN KEY ("category_id") REFERENCES "category" ("category_id") ON DELETE CASCADE,
-                              FOREIGN KEY ("product_id") REFERENCES "product" ("product_id") ON DELETE CASCADE
+    "category_id" BIGINT,
+    "product_id"  BIGINT,
+    PRIMARY KEY ("category_id", "product_id"),
+    FOREIGN KEY ("category_id") REFERENCES "category" ("category_id") ON DELETE CASCADE,
+    FOREIGN KEY ("product_id") REFERENCES "product" ("product_id") ON DELETE CASCADE
 );
 
 -- ProductSelectionProperty

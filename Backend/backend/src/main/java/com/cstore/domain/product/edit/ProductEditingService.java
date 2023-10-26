@@ -1,5 +1,7 @@
 package com.cstore.domain.product.edit;
 
+import com.cstore.dao.category.BelongsToDao;
+import com.cstore.dao.category.CategoryDao;
 import com.cstore.dao.product.ProductDao;
 import com.cstore.dao.image.ImageDao;
 import com.cstore.dao.product.image.ProductImageDao;
@@ -12,8 +14,10 @@ import com.cstore.dto._Property;
 import com.cstore.exception.NoSuchProductException;
 import com.cstore.model.product.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +25,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ProductEditingService {
+    private final BelongsToDao belongsToDao;
     private final ImageDao imageDao;
     private final ProductDao productDao;
     private final ProductImageDao productImageDao;
@@ -28,7 +33,9 @@ public class ProductEditingService {
     private final VariantDao variantDao;
     private final VariesOnDao variesOnDao;
 
-    public Long addBareProduct(ProductAddRequest toAdd) {
+    public Long addBareProduct(
+        ProductAddRequest toAdd
+    ) throws DataAccessException {
         Product product = Product
             .builder()
             .productName(toAdd.getProductName())
@@ -54,7 +61,18 @@ public class ProductEditingService {
         return product.getProductId();
     }
 
-    public PropertyMap populateWithProperties(List<Property> properties) {
+    public void defineCategories(
+        Long productId,
+        List<Long> categoryIds
+    ) throws DataAccessException, SQLIntegrityConstraintViolationException {
+        for (Long categoryId : categoryIds) {
+            belongsToDao.save(productId, categoryId);
+        }
+    }
+
+    public PropertyMap populateWithProperties(
+        List<Property> properties
+    ) throws DataAccessException {
         PropertyMap propertyMap = new PropertyMap();
 
         for (Property property : properties) {
