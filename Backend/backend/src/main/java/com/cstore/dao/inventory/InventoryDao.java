@@ -12,4 +12,6 @@ public interface InventoryDao {
     Integer findCountByVariantId(Long variantId);
 
     int stock(Inventory newStock) throws DataAccessException, SQLIntegrityConstraintViolationException;
+
+    void updateInventory(Long userId, Long orderId) throws DataAccessException, SQLIntegrityConstraintViolationException;
 }

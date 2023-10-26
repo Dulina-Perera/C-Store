@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController
-@RequestMapping(path = "/cstore/api/warehouses")
+//@RestController
+//@RequestMapping(path = "/cstore/api/warehouses")
 public class WarehouseController {
     /*private final InventoryService inventoryService;
     private final WarehouseService warehouseService;

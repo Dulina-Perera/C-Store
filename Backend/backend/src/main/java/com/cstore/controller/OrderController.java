@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.SQLException;
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/orders")
+//@RestController
+//@RequestMapping("/api/orders")
 public class OrderController {
-    private final OrderService orderService;
+    /*private final OrderService orderService;
 
     @Autowired
     public OrderController(OrderService orderService) {
@@ -38,9 +38,9 @@ public class OrderController {
         orderService.deleteOrderByID(orderId);
     }
 
-    /*@RequestMapping(method = RequestMethod.POST, path = "/orders")
+    *//*@RequestMapping(method = RequestMethod.POST, path = "/orders")
     public Order addOrderDetails(@PathVariable(name = "customer_id", required = true) Long customerId) {
-        *//* TODO
+        *//**//* TODO
          *  Check whether the cart is empty.
          *  If so, throw an error saying that an order of no items cannot be placed.
          *
@@ -51,18 +51,18 @@ public class OrderController {
          * TODO
          *  Create a new empty order.
          *  Ask the frontend to process the payment & call 'placeOrder'.
-         *//*
+         *//**//*
         return orderService.addOrderDetails(customerId);
     }
 
-    *//* This method is called immediately after the success of an order. *//*
+    *//**//* This method is called immediately after the success of an order. *//**//*
     @RequestMapping(method = RequestMethod.PATCH, path = "/orders/{order_id}")
     public Order placeOrder(@PathVariable(name = "customer_id", required = true) Long customerId,
                             @PathVariable(name = "order_id", required = true) Long orderId,
                             @RequestBody(required = true)Map<String, Object> orderDetails) {
-        *//* TODO
+        *//**//* TODO
          *  Update the order details, copy all the cart items from the cart to the order & empty the cart.
-         *//*
+         *//**//*
         return orderService.placeOrder(customerId, orderId, orderDetails);
     }*/
 }

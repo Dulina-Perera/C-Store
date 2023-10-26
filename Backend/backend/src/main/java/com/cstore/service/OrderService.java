@@ -15,9 +15,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Service
+//@Service
 public class OrderService {
-    private final OrderContactDao orderContactDao;
+    /*private final OrderContactDao orderContactDao;
     private final OrderDao orderDao;
 
     @Autowired
@@ -75,5 +75,5 @@ public class OrderService {
 
     public void deleteOrderByID(Long orderId) throws SQLException {
         orderDao.deleteByID(orderId);
-    }
+    }*/
 }

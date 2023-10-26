@@ -22,8 +22,8 @@ public class InventoryDaoImpl implements InventoryDao {
         Long variantId
     ) throws DataAccessException {
         String sql = "SELECT * " +
-            "FROM \"inventory\" " +
-            "WHERE \"warehouse_id\" = ? AND \"variant_id\" = ?;";
+                     "FROM \"inventory\" " +
+                     "WHERE \"warehouse_id\" = ? AND \"variant_id\" = ?;";
 
         Inventory inventory = templ.queryForObject(
             sql,
@@ -60,6 +60,22 @@ public class InventoryDaoImpl implements InventoryDao {
                 ps.setLong(2, newStock.getVariantId());
                 ps.setString(3, newStock.getSku());
                 ps.setInt(4, newStock.getCount());
+            }
+        );
+    }
+
+    @Override
+    public void updateInventory(
+        Long userId,
+        Long orderId
+    ) throws DataAccessException, SQLIntegrityConstraintViolationException {
+        String sql = "CALL \"update_inventory\"(?, ?);";
+
+        templ.update(
+            sql,
+            ps -> {
+                ps.setLong(1, userId);
+                ps.setLong(2, orderId);
             }
         );
     }

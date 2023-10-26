@@ -1,7 +1,6 @@
 \c "cstore";
 
 DELETE FROM "order_item";
-DELETE FROM "order_contact";
 DELETE FROM "order";
 DELETE FROM "cart_item";
 DELETE FROM "cart";
@@ -926,7 +925,7 @@ INSERT INTO "user_contact" ("user_id", "telephone_number") VALUES
 	(2, '0714283876');
 
 -- SELECT *
--- FROM "customer_contact";
+-- FROM "user_contact";
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- "customer_address"
@@ -936,7 +935,7 @@ INSERT INTO "user_address" ("user_id", "street_number", "street_name", "city", "
 	(2, '123', 'Kesbewa Road', 'Kesbewaa', 12345);
 
 -- SELECT *
--- FROM "customer_address";
+-- FROM "user_address";
 
 -- ---------------------------------------------------------------------------------------------------------------------
 --  "cart"
@@ -957,34 +956,23 @@ INSERT INTO "cart_item" ("user_id", "variant_id", "count") VALUES
 	(2, 3, 1),
 	(3, 5, 3);
 
--- SELECT *
--- FROM "cart_item";
+SELECT *
+FROM "cart_item";
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- "order" table
 
-INSERT INTO "order" ("date", "total_payment", "payment_method", "delivery_method", "email", "street_number", "street_name", "city", "zipcode") VALUES
-	('2023-01-15 08:30:00', 149.97, 'Credit Card', 'Express Shipping', 'dulinaperera@gmail.com', '456', 'Godagama', 'Kaluthara', 98765),
-	('2023-03-20 10:00:00', 239.97, 'Credit Card', 'Express Shipping', 'nethumrathnayake@gmail.com', '456', 'Kawdana', 'Dehiwala', 98765);
+INSERT INTO "order" ("date", "total_payment", "payment_method", "delivery_method", "email", "street_number", "street_name", "city", "zipcode", "telephone_number") VALUES
+	('2023-01-15 08:30:00', 149.97, 'Credit Card', 'Express Shipping', 'dulinaperera@gmail.com', '456', 'Godagama', 'Kaluthara', 98765, '0702632639'),
+	('2023-03-20 10:00:00', 239.97, 'Credit Card', 'Express Shipping', 'nethumrathnayake@gmail.com', '456', 'Kawdana', 'Dehiwala', 98765, '0705654028');
 
 -- SELECT *
 -- FROM "order";
 
 -- ---------------------------------------------------------------------------------------------------------------------
--- "order_contact"
-
-INSERT INTO "order_contact" ("order_id", "telephone_number") VALUES
-	(1, '0702632639'),
-	(2, '0705654028');
-
--- SELECT *
--- FROM "order_contact";
-
--- ---------------------------------------------------------------------------------------------------------------------
 -- "order_item"
 
 INSERT INTO "order_item" ("order_id", "variant_id", "warehouse_id", "count") VALUES
-	(1, 1, 1, 2),
 	(2, 3, 1, 1),
 	(2, 5, 1, 2);
 

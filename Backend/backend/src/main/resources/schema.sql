@@ -15,6 +15,7 @@ DROP FUNCTION IF EXISTS "customer_order_report";
 DROP FUNCTION IF EXISTS "count_stocks";
 DROP FUNCTION IF EXISTS "categories_from_product";
 
+DROP PROCEDURE IF EXISTS "update_inventory";
 DROP PROCEDURE IF EXISTS "stock";
 DROP PROCEDURE IF EXISTS "add_to_cart";
 
@@ -217,10 +218,10 @@ CREATE TABLE "user_address" (
 -- Cart
 DROP TABLE IF EXISTS "cart";
 CREATE TABLE "cart" (
-                        "user_id"     BIGINT,
-                        "total_price" NUMERIC (12, 2),
-                        PRIMARY KEY ("user_id"),
-                        FOREIGN KEY ("user_id") REFERENCES "user" ("user_id") ON DELETE CASCADE
+     "user_id"     BIGINT,
+     "total_price" NUMERIC (12, 2),
+     PRIMARY KEY ("user_id"),
+     FOREIGN KEY ("user_id") REFERENCES "user" ("user_id") ON DELETE CASCADE
 );
 
 -- Contains
@@ -237,45 +238,38 @@ CREATE TABLE "cart_item" (
 -- Order
 DROP TABLE IF EXISTS "order";
 CREATE TABLE "order" (
-                         "order_id"        BIGSERIAL,
+    "order_id"        BIGSERIAL,
 
-                         "status"          VARCHAR (20) CHECK ("status" IN ('PLACED', 'PROCESSING', 'PROCESSED')),
+    "status"          VARCHAR (20) CHECK ("status" IN ('PLACED', 'PROCESSING', 'PROCESSED')),
 
-                         "date"            TIMESTAMP,
-                         "total_payment"   NUMERIC (12, 2),
-                         "payment_method"  VARCHAR (20),
-                         "delivery_method" VARCHAR (40),
+    "date"            TIMESTAMP,
+    "total_payment"   NUMERIC (12, 2),
+    "payment_method"  VARCHAR (20),
+    "delivery_method" VARCHAR (40),
 
-                         "customer_id"     BIGINT,
-                         "email"           VARCHAR (60),
-                         "street_number"   VARCHAR (10),
-                         "street_name"     VARCHAR (60),
-                         "city"            VARCHAR (40),
-                         "zipcode"         INTEGER,
-                         PRIMARY KEY ("order_id"),
-                         FOREIGN KEY ("customer_id") REFERENCES "user" ("user_id") ON DELETE NO ACTION
-);
+    "customer_id"     BIGINT,
+    "email"           VARCHAR (60),
+    "street_number"   VARCHAR (10),
+    "street_name"     VARCHAR (60),
+    "city"            VARCHAR (40),
+    "zipcode"         INTEGER,
 
--- Order Contact
-DROP TABLE IF EXISTS "order_contact";
-CREATE TABLE "order_contact" (
-                                 "order_id"         BIGINT,
-                                 "telephone_number" VARCHAR (12),
-                                 PRIMARY KEY ("order_id", "telephone_number"),
-                                 FOREIGN KEY ("order_id") REFERENCES "order" ("order_id") ON DELETE CASCADE
+    "telephone_number" VARCHAR (12),
+    PRIMARY KEY ("order_id"),
+    FOREIGN KEY ("customer_id") REFERENCES "user" ("user_id") ON DELETE NO ACTION
 );
 
 -- Order Item
 DROP TABLE IF EXISTS "order_item";
 CREATE TABLE "order_item" (
-                              "order_id"     BIGINT,
-                              "variant_id"   BIGINT,
-                              "warehouse_id" BIGINT,
-                              "count"        INTEGER,
-                              PRIMARY KEY ("order_id", "variant_id", "warehouse_id"),
-                              FOREIGN KEY ("order_id") REFERENCES "order" ("order_id") ON DELETE CASCADE,
-                              FOREIGN KEY ("variant_id") REFERENCES "variant" ("variant_id"),
-                              FOREIGN KEY ("warehouse_id") REFERENCES "warehouse" ("warehouse_id")
+    "order_id"     BIGINT,
+    "variant_id"   BIGINT,
+    "warehouse_id" BIGINT,
+    "count"        INTEGER,
+    PRIMARY KEY ("order_id", "variant_id", "warehouse_id"),
+    FOREIGN KEY ("order_id") REFERENCES "order" ("order_id") ON DELETE CASCADE,
+    FOREIGN KEY ("variant_id") REFERENCES "variant" ("variant_id"),
+    FOREIGN KEY ("warehouse_id") REFERENCES "warehouse" ("warehouse_id")
 );
 
 -- Sales Report
@@ -380,6 +374,39 @@ END
 $$ LANGUAGE plpgsql;
 
 -- CALL "stock"(1, 3, 'SKU008', 100);
+
+------------------------------------------------------------------------------------------------------------------------
+
+CREATE OR REPLACE PROCEDURE "update_inventory"(u_id BIGINT, o_id BIGINT) AS $$
+DECLARE
+    row_record cart_item%ROWTYPE;
+    query TEXT;
+    w_id BIGINT;
+BEGIN
+    query := 'SELECT * ' ||
+             'FROM "cart_item" ' ||
+             'WHERE "user_id" = ' || u_id;
+
+    FOR row_record IN EXECUTE query LOOP
+        SELECT "warehouse_id" INTO w_id
+        FROM "inventory"
+        WHERE "variant_id" = row_record."variant_id" AND "count" = (SELECT MAX("count")
+                                                                    FROM "inventory"
+                                                                    WHERE "variant_id" = row_record."variant_id")
+        LIMIT 1;
+
+        UPDATE "inventory"
+        SET "count" = "count" - row_record."count"
+        WHERE "variant_id" = row_record."variant_id" AND "warehouse_id" = w_id;
+
+        INSERT INTO "order_item"
+        VALUES (o_id, w_id, row_record."variant_id", row_record."count");
+    END LOOP;
+    COMMIT;
+END
+$$ LANGUAGE plpgsql;
+
+-- CALL "update_inventory"(1, 1);
 
 
 ------------------------------------------------------------------------------------------------------------------------
