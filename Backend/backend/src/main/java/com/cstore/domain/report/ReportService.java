@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class ReportService {
     private final ReportDao reportDao;
 
-    @Scheduled(cron = "00 00 00 1,4,7,10 *")
+    @Scheduled(cron = "00 00 00 01 1,4,7,10 *")
     public void sendReport() {
 
     }

@@ -69,9 +69,9 @@ CREATE TABLE "sub_category" (
 -- Image
 DROP TABLE IF EXISTS "image";
 CREATE TABLE "image" (
-                         "image_id" BIGSERIAL,
-                         "url"      VARCHAR (100),
-                         PRIMARY KEY ("image_id")
+     "image_id" BIGSERIAL,
+     "url"      VARCHAR (100),
+     PRIMARY KEY ("image_id")
 );
 
 -- WholeProduct
@@ -89,11 +89,11 @@ CREATE TABLE "product" (
 -- WholeProduct Image
 DROP TABLE IF EXISTS "product_image";
 CREATE TABLE "product_image" (
-                                 "image_id"   BIGINT,
-                                 "product_id" BIGINT,
-                                 PRIMARY KEY ("image_id"),
-                                 FOREIGN KEY ("product_id") REFERENCES "product" ("product_id") ON DELETE CASCADE,
-                                 FOREIGN KEY ("image_id") REFERENCES "image" ("image_id") ON DELETE CASCADE
+     "image_id"   BIGINT,
+     "product_id" BIGINT,
+     PRIMARY KEY ("image_id"),
+     FOREIGN KEY ("product_id") REFERENCES "product" ("product_id") ON DELETE CASCADE,
+     FOREIGN KEY ("image_id") REFERENCES "image" ("image_id") ON DELETE CASCADE
 );
 
 -- Belongs to
@@ -120,10 +120,10 @@ CREATE TABLE "property" (
 -- Variant
 DROP TABLE IF EXISTS "variant";
 CREATE TABLE "variant" (
-                           "variant_id" BIGSERIAL,
-                           "price"      NUMERIC (10, 2) DEFAULT 0,
-                           "weight"     NUMERIC (8, 2),
-                           PRIMARY KEY ("variant_id")
+    "variant_id" BIGSERIAL,
+    "price"      NUMERIC (10, 2) DEFAULT 0,
+    "weight"     NUMERIC (8, 2),
+    PRIMARY KEY ("variant_id")
 );
 
 -- Varies, based on

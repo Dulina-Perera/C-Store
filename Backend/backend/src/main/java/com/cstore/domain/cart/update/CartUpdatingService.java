@@ -21,23 +21,8 @@ public class CartUpdatingService {
     private final InventoryDao inventoryDao;
     private final VariantDao variantDao;
 
-    public List<CartItemDto> getItems(Long userId) {
-
-        List<CartItem> items = cartItemDao.findByUserId(userId);
-
-        List<CartItemDto> response = new ArrayList<>();
-        for (CartItem item : items) {
-            CartItemDto cartItem = CartItemDto
-                .builder()
-                .variantId(item.getVariantId())
-                .count(item.getCount())
-                .build();
-
-            response.add(cartItem);
-        }
-
-        return response;
-
+    public List<CartItemResponse> getItems(Long userId) {
+        return cartItemDao.findByUserId(userId);
     }
 
     public Long addVariant(Long userId, VariantProperiesDto properties) {

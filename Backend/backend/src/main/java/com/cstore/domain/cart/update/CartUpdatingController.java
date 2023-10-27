@@ -23,13 +23,11 @@ public class CartUpdatingController {
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "")
-    public List<CartItemDto> getItems(
+    public List<CartItemResponse> getItems(
         @PathVariable(name = "user_id", required = true)
         Long userId
     ) {
-
         return cartUpdatingService.getItems(userId);
-
     }
 
     @Operation(

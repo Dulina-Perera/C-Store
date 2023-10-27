@@ -2,13 +2,13 @@
 * Thus, JWT authentication occurs prior to accessing the cart. (For both ADMINs & REG_CUSTs.)
 
 For what do REG_CUSTs access their cart?
-    1. To get cart items.
+    1. To get cart items. (/api/v1/carts/{user_id})
         * Why?
             * When a customer arrives at the CART PAGE & the front end has no records on what variants
               (with what amount) are in the cart, the front end has to retrieve those records.
 
         * How?
-            * Send a request to GET_CART_ITEM.
+            * Send a request to GET_ITEMS.
                 * To retrieve cart items, the backend needs the customer identifier & it will be retrieved from the JWT
                   token.
 
@@ -16,14 +16,19 @@ For what do REG_CUSTs access their cart?
                 [
                     {
                         "variantId": 153,
-                        "count": 7
+                        "productName": "Bluetooth Receiver",
+                        "mainImage": "static/image/19.jfif"
+                        "variantPrice": 8100.00,
+                        "count": 1
                     },
                     {
                         "variantId": 167,
-                        "count": 1
+                        "productName": "Six claw dancing robot",
+                        "mainImage": "static/image/21.jfif"
+                        "variantPrice": 3500.00,
+                        "count": 3
                     }
                 ]
-
         * It is essential to call REFRESH_CART after a successful execution of this method as this method only returns
           what's in the cart without checking for consistency with the inventory.
 

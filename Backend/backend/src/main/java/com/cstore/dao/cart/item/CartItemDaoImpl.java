@@ -1,5 +1,6 @@
 package com.cstore.dao.cart.item;
 
+import com.cstore.domain.cart.update.CartItemResponse;
 import com.cstore.model.cart.CartItem;
 import com.cstore.model.product.Product;
 import lombok.RequiredArgsConstructor;
@@ -14,22 +15,22 @@ import java.util.Optional;
 @Repository
 @RequiredArgsConstructor
 public class CartItemDaoImpl implements CartItemDao {
-
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public List<CartItem> findByUserId(Long userId) throws DataAccessException {
-
-        String sql = "SELECT * " +
-                     "FROM \"cart_item\" " +
-                     "WHERE \"user_id\" = ?;";
+    public List<CartItemResponse> findByUserId(Long userId) throws DataAccessException {
+        String sql = "SELECT DISTINCT ci.\"variant_id\", p.\"product_name\", p.\"image_url\", v.\"price\", ci.\"count\" " +
+                     "FROM \"cart_item\" AS ci NATURAL LEFT OUTER JOIN " +
+                     "     \"variant\" AS v NATURAL LEFT OUTER JOIN " +
+                     "     \"varies_on\" AS vo NATURAL LEFT OUTER JOIN " +
+                     "     \"product\" AS p " +
+                     "WHERE ci.\"user_id\" = ?;";
 
         return jdbcTemplate.query(
             sql,
             preparedStatement -> preparedStatement.setLong(1, userId),
-            new BeanPropertyRowMapper<>(CartItem.class)
+            new BeanPropertyRowMapper<>(CartItemResponse.class)
         );
-
     }
 
     @Override
@@ -85,5 +86,4 @@ public class CartItemDaoImpl implements CartItemDao {
             }
         );
     }
-
 }
