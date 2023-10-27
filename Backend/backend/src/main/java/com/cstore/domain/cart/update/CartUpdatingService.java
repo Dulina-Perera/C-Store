@@ -21,12 +21,16 @@ public class CartUpdatingService {
     private final InventoryDao inventoryDao;
     private final VariantDao variantDao;
 
-    public List<CartItemResponse> getItems(Long userId) {
+    public List<CartItemResponse> getItems(
+        Long userId
+    ) {
         return cartItemDao.findByUserId(userId);
     }
 
-    public Long addVariant(Long userId, VariantProperiesDto properties) {
-
+    public Long addVariant(
+        Long userId,
+        VariantProperiesDto properties
+    ) {
         List<Long> propertyIds = properties.getPropertyIds();
         Set<Variant> variants = new HashSet<Variant>();
 
@@ -52,7 +56,6 @@ public class CartUpdatingService {
     }
 
     public CartItemDto updateVariant(Long userId, CartItemUpdateRequest request) {
-
         Optional<CartItem> item = cartItemDao.findByUIdAndVId(userId, request.getVariantId());
 
         if (item.isEmpty()) {
@@ -73,7 +76,6 @@ public class CartUpdatingService {
             .variantId(request.getVariantId())
             .count(request.getNewCount())
             .build();
-
     }
 
     public List<CartItemDto> refresh(Long userId, List<CartItemDto> cartItems) {

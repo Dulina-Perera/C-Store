@@ -29,6 +29,7 @@ For what do REG_CUSTs access their cart?
                         "count": 3
                     }
                 ]
+
         * It is essential to call REFRESH_CART after a successful execution of this method as this method only returns
           what's in the cart without checking for consistency with the inventory.
 
@@ -51,11 +52,8 @@ For what do REG_CUSTs access their cart?
                     "count": 5
                 ]
 
-            * The backend will send a JSON object like following.
-                {
-                    "variantId": 153,
-                    "count": 5
-                }
+            * The backend will send the id of the variant.
+            * It is not necessary to send the product details & count as the frontend already knows them.
 
         * Note that this method won't check for consistency between the variant count requested by the customer &
           the variant count in the inventory.
@@ -124,7 +122,7 @@ For what do REG_CUSTs access their cart?
                     }
                 ]
 
-            * If the two counts are consistent with each other, the backend will send nothing.
+            * If the two counts are consistent with each other, the backend will send an empty JSON array.
             * Otherwise, it will send a JSON array like following.
                 [
                     {
