@@ -1,6 +1,6 @@
 package com.cstore.domain.order.checkout;
 
-import com.cstore.exception.SparseStocksException;
+import com.cstore.exception.sparsestocks.SparseStocksException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.web.bind.annotation.PathVariable;

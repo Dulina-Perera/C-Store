@@ -1,7 +1,8 @@
 \c cstore;
 
-DROP TRIGGER IF EXISTS "update_variant" ON "varies_on";
-DROP FUNCTION IF EXISTS "update_variant";
+DROP TRIGGER IF EXISTS "update_variant" ON "varies_on"; DROP FUNCTION IF EXISTS "update_variant";
+DROP TRIGGER IF EXISTS "update_cart" ON "cart_item"; DROP FUNCTION IF EXISTS "update_cart";
+DROP TRIGGER IF EXISTS "delete_order_items" ON "order"; DROP FUNCTION IF EXISTS "delete_order_items";
 
 DROP FUNCTION IF EXISTS "unmarketable_properties";
 DROP FUNCTION IF EXISTS "search_products_by_name";
@@ -142,12 +143,12 @@ CREATE TABLE "varies_on" (
 -- Warehouse
 DROP TABLE IF EXISTS "warehouse";
 CREATE TABLE "warehouse" (
-                             "warehouse_id"  BIGSERIAL,
-                             "street_number" VARCHAR (10),
-                             "street_name"   VARCHAR (60),
-                             "city"          VARCHAR (40),
-                             "zipcode"       INTEGER,
-                             PRIMARY KEY ("warehouse_id")
+     "warehouse_id"  BIGSERIAL,
+     "street_number" VARCHAR (10),
+     "street_name"   VARCHAR (60),
+     "city"          VARCHAR (40),
+     "zipcode"       INTEGER,
+     PRIMARY KEY ("warehouse_id")
 );
 
 -- Warehouse Contact
@@ -648,6 +649,65 @@ $$ LANGUAGE plpgsql;
 ------------------------------------------------------------------------------------------------------------------------
 -- Triggers-------------------------------------------------------------------------------------------------------------
 
+
+CREATE OR REPLACE FUNCTION "delete_order_items"() RETURNS TRIGGER AS $$
+    DECLARE row_record order_item%ROWTYPE;
+    DECLARE query TEXT;
+BEGIN
+    query := 'SELECT * ' ||
+             'FROM "order_item" ' ||
+             'WHERE "order_id" = ' || OLD."order_id";
+
+    IF OLD."status" = 'PLACED' THEN
+        FOR row_record IN EXECUTE query LOOP
+            UPDATE "inventory" AS i
+            SET "count" = "count" + row_record."count"
+            WHERE (i."warehouse_id", i."variant_id") = (row_record."warehouse_id", row_record."variant_id");
+        END LOOP;
+    END IF;
+
+    RETURN OLD;
+END
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS "delete_order_items" ON "order";
+CREATE TRIGGER "delete_order_items"
+    BEFORE DELETE ON "order"
+    FOR EACH ROW
+EXECUTE FUNCTION "delete_order_items"();
+
+------------------------------------------------------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION "update_cart"() RETURNS TRIGGER AS $$
+    DECLARE variantPrice NUMERIC (10, 2);
+BEGIN
+    variantPrice := 0;
+
+    SELECT v."price" INTO variantPrice
+    FROM "cart_item" AS ci NATURAL LEFT OUTER JOIN "variant" AS v
+    WHERE (ci."user_id", ci."variant_id") = (NEW."user_id", NEW."variant_id");
+
+    IF (TG_OP = 'INSERT') THEN
+        UPDATE "cart"
+        SET "total_price" = "total_price" + variantPrice * NEW."count"
+        WHERE "user_id" = NEW."user_id";
+    ELSIF (TG_OP = 'UPDATE') THEN
+        UPDATE "cart"
+        SET "total_price" = "total_price" + variantPrice * NEW."count" - OLD."count"
+        WHERE "user_id" = NEW."user_id";
+    END IF;
+
+    RETURN NEW;
+END
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS "update_cart" ON "cart_item";
+CREATE TRIGGER "update_cart"
+    AFTER INSERT OR UPDATE ON "cart_item"
+    FOR EACH ROW
+EXECUTE FUNCTION "update_cart"();
+
+------------------------------------------------------------------------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION "update_variant"() RETURNS TRIGGER AS $$
 DECLARE productPrice NUMERIC (10, 2);

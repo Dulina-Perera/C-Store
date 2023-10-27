@@ -966,8 +966,8 @@ INSERT INTO "order" ("date", "total_payment", "payment_method", "delivery_method
 	('2023-01-15 08:30:00', 149.97, 'Credit Card', 'Express Shipping', 'dulinaperera@gmail.com', '456', 'Godagama', 'Kaluthara', 98765, '0702632639'),
 	('2023-03-20 10:00:00', 239.97, 'Credit Card', 'Express Shipping', 'nethumrathnayake@gmail.com', '456', 'Kawdana', 'Dehiwala', 98765, '0705654028');
 
--- SELECT *
--- FROM "order";
+SELECT *
+FROM "order";
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- "order_item"

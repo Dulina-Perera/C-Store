@@ -2,10 +2,7 @@ package com.cstore.dao.order;
 
 import com.cstore.dto.order.OrderDetailsDto;
 import com.cstore.model.order.Order;
-import com.cstore.model.product.Product;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,7 +10,9 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,12 +20,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class OrderDaoImpl implements OrderDao {
     private final JdbcTemplate templ;
-
-    String url = "jdbc:mysql://localhost:3306/cstore";
-    String username = "cadmin";
-    String password = "cstore_GRP28_CSE21";
-
-    Logger logger = LoggerFactory.getLogger(OrderDaoImpl.class);
 
     @Override
     public List<Order> findAll(
@@ -62,15 +55,6 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public void deleteAll() throws SQLException {
-        String sql = "DELETE FROM `order`;";
-
-        Connection connection = DriverManager.getConnection(url, username, password);
-        Statement statement = connection.createStatement();
-        statement.executeUpdate(sql);
-    }
-
-    @Override
     public void deleteByID(
         Long orderId
     ) throws DataAccessException {
@@ -87,8 +71,8 @@ public class OrderDaoImpl implements OrderDao {
     public Long placeOrder(
         Long userId
     ) {
-        String sql = "INSERT INTO \"order\" (\"status\", \"customer_id\") " +
-                     "VALUES ('PLACED', ?) " +
+        String sql = "INSERT INTO \"order\" (\"status\", \"date\", \"customer_id\") " +
+                     "VALUES ('PLACED', CURRENT_TIMESTAMP, ?) " +
                      "RETURNING \"order_id\";";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -167,5 +151,15 @@ public class OrderDaoImpl implements OrderDao {
             sql,
             ps -> ps.setLong(1, orderId)
         );
+    }
+
+    @Override
+    public int deleteTimedOutOrders(
+    ) throws DataAccessException {
+        String sql = "DELETE " +
+                     "FROM \"order\" " +
+                     "WHERE \"status\" = 'PLACED' AND EXTRACT(EPOCH FROM (CURRENT_TIMESTAMP - \"date\")) / 60 > 1;";
+
+        return templ.update(sql);
     }
 }
