@@ -2,7 +2,7 @@
 * Thus, JWT authentication occurs prior to accessing the cart. (For both ADMINs & REG_CUSTs.)
 
 For what do REG_CUSTs access their cart?
-    1. To get cart items. (/api/v1/carts/{user_id})
+    1. To get cart items. (GET /api/v1/carts/{user_id})
         * Why?
             * When a customer arrives at the CART PAGE & the front end has no records on what variants
               (with what amount) are in the cart, the front end has to retrieve those records.
@@ -37,7 +37,7 @@ For what do REG_CUSTs access their cart?
 
 
 
-    2. To add a variant to the cart.
+    2. To add a variant to the cart. (POST /api/v1/carts/{user_id}/add)
         * Why?
             * To facilitate the purpose of a cart: which is to accumulate variants till purchase.
 
@@ -63,7 +63,7 @@ For what do REG_CUSTs access their cart?
 
 
 
-    3. To update a cart item.
+    3. To update a cart item. (PUT /api/v1/carts/{user_id}/update)
         * Why?
             * To update (increase or decrease variant count) the variants already in the cart.
 
@@ -88,14 +88,14 @@ For what do REG_CUSTs access their cart?
 
 
 
-    4. To remove a cart item.
+    4. To remove a cart item. (PUT /api/v1/carts/{user_id}/update)
         This is just a special case of updating a cart item where variant count is decreased to 0.
 
 
 
 
 
-    5. Refresh the cart.
+    5. Refresh the cart. (GET /api/v1/carts/{user_id}/refresh)
         * Why?
             * According to our design, adding variants to the cart does not deduct the stock count of the variant.
             * So, the front end needs to check for the consistency of the variant count in the cart & the variant count
