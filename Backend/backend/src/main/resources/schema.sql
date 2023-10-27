@@ -453,12 +453,12 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION "customer_order_report"(c_id BIGINT)
     RETURNS TABLE (
-                      "order_id"      BIGINT,
-                      "date"          TIMESTAMP,
-                      "total_payment" NUMERIC (12, 2),
-                      "variant_id"    BIGINT,
-                      "count"         INTEGER
-                  ) AS $$
+        "order_id"      BIGINT,
+        "date"          TIMESTAMP,
+        "total_payment" NUMERIC (12, 2),
+        "variant_id"    BIGINT,
+        "count"         INTEGER
+    ) AS $$
 BEGIN
     RETURN QUERY
         SELECT o."order_id", o."date", o."total_payment", oi."variant_id", oi."count"
