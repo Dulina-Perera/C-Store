@@ -12,7 +12,7 @@ import org.springframework.util.ResourceUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -28,11 +28,13 @@ public class ReportService {
         Long customerId,
         String reportFormat
     ) throws FileNotFoundException, JRException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
         String path = "/media/dulina/SP PHD U3/Education/Campus Documents/5. Semester 3/Database Systems/C Store" +
                 "/Backend/backend/src/main/resources/static/reports/Customer-Order";
 
-        List<OrderReport> processedOrders = orderDao.findProcessedOrders(customerId);
+        List<Order> processedOrders = orderDao.findProcessedOrders(customerId);
 
+        File generated;
         File file = ResourceUtils.getFile("classpath:static/reports/Customer-Order Report.jrxml");
         JasperReport report = JasperCompileManager.compileReport(file.getAbsolutePath());
 
@@ -43,13 +45,15 @@ public class ReportService {
         JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataSource);
 
         if (reportFormat.equalsIgnoreCase("html")) {
+            generated = new File("%s/html/%d-%s.html".formatted(path, customerId, dateFormat.format(new Date())));
             JasperExportManager.exportReportToHtmlFile(
                 jasperPrint,
-                "%s/html/%d-%s.html".formatted(path, customerId, new Date().toString()));
+                generated.getAbsolutePath());
         } else if (reportFormat.equalsIgnoreCase("pdf")) {
-            JasperExportManager.exportReportToHtmlFile(
+            generated = new File("%s/pdf/%d-%s.pdf".formatted(path, customerId, dateFormat.format(new Date())));
+            JasperExportManager.exportReportToPdfFile(
                 jasperPrint,
-                "%s/pdf/%d-%s.pdf".formatted(path, customerId, new Date().toString()));
+                generated.getAbsolutePath());
         }
         return "Report generated successfully.";
     }

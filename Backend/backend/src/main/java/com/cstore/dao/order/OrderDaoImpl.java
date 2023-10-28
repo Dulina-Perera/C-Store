@@ -1,8 +1,7 @@
 package com.cstore.dao.order;
 
-import com.cstore.domain.report.OrderReport;
-import com.cstore.dto.order.OrderDetailsDto;
 import com.cstore.model.order.Order;
+import com.cstore.dto.order.OrderDetailsDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -23,30 +22,29 @@ public class OrderDaoImpl implements OrderDao {
     private final JdbcTemplate templ;
 
     @Override
-    public List<Order> findAll(
+    public List<com.cstore.model.order.Order> findAll(
     ) throws DataAccessException {
         String sql = "SELECT * " +
                      "FROM \"order\";";
 
         return templ.query(
             sql,
-            new BeanPropertyRowMapper<>(Order.class)
+            new BeanPropertyRowMapper<>(com.cstore.model.order.Order.class)
         );
     }
 
     @Override
-    public List<OrderReport> findProcessedOrders(
+    public List<Order> findProcessedOrders(
         Long customerId
     ) throws DataAccessException {
-        String sql = "SELECT CONCAT(\"first_name\", \"last_name\") AS \"name\"," +
-                     "       \"order_id\", \"date\", \"total_payment\", \"payment_method\", \"delivery_method\" " +
-                     "FROM \"order\" AS o LEFT OUTER JOIN \"registered_user\" AS ru ON o.\"customer_id\" = ru.\"user_id\"" +
+        String sql = "SELECT \"order_id\", \"date\", \"total_payment\", \"payment_method\", \"delivery_method\" " +
+                     "FROM \"order\" " +
                      "WHERE \"customer_id\" = ? AND \"status\" = 'PROCESSED';";
 
         return templ.query(
             sql,
             ps -> ps.setLong(1, customerId),
-            new BeanPropertyRowMapper<>(OrderReport.class)
+            new BeanPropertyRowMapper<>(Order.class)
         );
     }
 
@@ -59,9 +57,9 @@ public class OrderDaoImpl implements OrderDao {
                      "WHERE \"order_id\" = ?;";
 
         try {
-            Order order = templ.queryForObject(
+            com.cstore.model.order.Order order = templ.queryForObject(
                 sql,
-                new BeanPropertyRowMapper<>(Order.class),
+                new BeanPropertyRowMapper<>(com.cstore.model.order.Order.class),
                 orderId
             );
 

@@ -1,8 +1,7 @@
 package com.cstore.dao.order;
 
-import com.cstore.domain.report.OrderReport;
-import com.cstore.dto.order.OrderDetailsDto;
 import com.cstore.model.order.Order;
+import com.cstore.dto.order.OrderDetailsDto;
 import org.springframework.dao.DataAccessException;
 
 import java.sql.SQLIntegrityConstraintViolationException;
@@ -10,9 +9,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface OrderDao {
-    List<Order> findAll();
+    List<com.cstore.model.order.Order> findAll();
 
-    List<OrderReport> findProcessedOrders(Long customerId) throws DataAccessException;
+    List<Order> findProcessedOrders(Long customerId) throws DataAccessException;
 
     Optional<Order> findById(Long orderId);
 

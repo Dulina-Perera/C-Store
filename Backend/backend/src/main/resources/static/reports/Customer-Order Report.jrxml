@@ -1,178 +1,148 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.20.6.final using JasperReports Library version 6.20.6-5c96b6aa8a39ac1dc6b6bea4b81168e16dd39231  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Customer-Order Report" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="df013db5-f76e-44d3-b0df-bcbc46d93160">
-    <style name="Title" fontName="Ubuntu Mono" fontSize="50" isBold="true"/>
-    <style name="SubTitle" forecolor="#736343" fontName="Ubuntu Mono" fontSize="18"/>
-    <style name="Column header" forecolor="#666666" fontName="Ubuntu Mono" fontSize="12" isBold="true"/>
-    <style name="Detail" fontName="Ubuntu Mono" fontSize="12"/>
-    <style name="Row" mode="Transparent">
-        <conditionalStyle>
-            <conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
-            <style backcolor="#E6DAC3"/>
-        </conditionalStyle>
-    </style>
-
-    <field name="name" class="java.lang.String">
-    </field>
-    <field name="order_id" class="java.lang.Long">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Customer-Order Report" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="87ad5aa7-f12d-4484-9b9d-be7f34b027d8">
+    <field name="orderId" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.name" value="order_id"/>
+        <property name="com.jaspersoft.studio.field.label" value="order_id"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="order"/>
     </field>
     <field name="date" class="java.sql.Timestamp">
+        <property name="com.jaspersoft.studio.field.name" value="date"/>
+        <property name="com.jaspersoft.studio.field.label" value="date"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="order"/>
     </field>
-    <field name="total_payment" class="java.math.BigDecimal">
+    <field name="totalPayment" class="java.math.BigDecimal">
+        <property name="com.jaspersoft.studio.field.name" value="total_payment"/>
+        <property name="com.jaspersoft.studio.field.label" value="total_payment"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="order"/>
     </field>
-    <field name="payment_method" class="java.lang.String">
+    <field name="paymentMethod" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.name" value="payment_method"/>
+        <property name="com.jaspersoft.studio.field.label" value="payment_method"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="order"/>
     </field>
-    <field name="delivery_method" class="java.lang.String">
+    <field name="deliveryMethod" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.name" value="delivery_method"/>
+        <property name="com.jaspersoft.studio.field.label" value="delivery_method"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="order"/>
     </field>
-    <group name="Group1">
-        <groupExpression><![CDATA[$F{name}]]></groupExpression>
-        <groupFooter>
-            <band height="6"/>
-        </groupFooter>
-    </group>
-    <group name="Group2">
-        <groupExpression><![CDATA[$F{order_id}]]></groupExpression>
-    </group>
-    <group name="date">
-        <groupExpression><![CDATA[$F{date}]]></groupExpression>
-    </group>
-    <group name="total_payment">
-        <groupExpression><![CDATA[$F{total_payment}]]></groupExpression>
-    </group>
-    <group name="payment_method">
-        <groupExpression><![CDATA[$F{payment_method}]]></groupExpression>
-    </group>
-    <group name="delivery_method">
-        <groupExpression><![CDATA[$F{delivery_method}]]></groupExpression>
+    <sortField name="orderId" order="Descending"/>
+    <group name="orderId">
+        <groupExpression><![CDATA[$F{orderId}]]></groupExpression>
     </group>
     <background>
         <band splitType="Stretch"/>
     </background>
     <title>
-        <band height="136" splitType="Stretch">
+        <band height="71" splitType="Stretch">
             <staticText>
-                <reportElement style="Title" x="0" y="0" width="262" height="62" uuid="bc1ce1da-8232-46ea-be55-cec4abb986dd"/>
-                <textElement verticalAlignment="Middle">
-                    <font fontName="Ubuntu Mono"/>
+                <reportElement x="0" y="0" width="80" height="30" uuid="893257b7-4cf8-406e-ab15-3d6acc822d18"/>
+                <textElement textAlignment="Left" markup="none">
+                    <font fontName="Ubuntu Mono" size="22" isBold="true"/>
                 </textElement>
-                <text>C-Store</text>
+                <text><![CDATA[C-Store]]></text>
             </staticText>
             <staticText>
-                <reportElement style="SubTitle" x="0" y="70" width="240" height="30" forecolor="#000000" uuid="f6a78448-8260-4445-a9e0-e3fb53b080d9"/>
+                <reportElement x="0" y="30" width="150" height="20" uuid="dcc655fa-a72a-496b-8212-023200efe484"/>
                 <textElement>
-                    <font fontName="Times New Roman" isBold="true"/>
+                    <font fontName="Ubuntu Mono" size="14" isBold="true"/>
                 </textElement>
-                <text>Customer-Order Report</text>
+                <text><![CDATA[Customer-Order Report]]></text>
             </staticText>
-            <frame>
-                <reportElement mode="Opaque" x="-20" y="112" width="842" height="24" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="ff649bda-bbd1-4c2d-bd67-21f69ad64bbf"/>
-                <textField>
-                    <reportElement style="SubTitle" x="20" y="0" width="755" height="24" forecolor="#000000" backcolor="#000000" uuid="b5a25815-f4ed-4382-9712-d113dc519d4e"/>
-                    <textElement>
-                        <font isBold="true"/>
-                    </textElement>
-                    <textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
-                </textField>
-            </frame>
+            <staticText>
+                <reportElement x="0" y="50" width="270" height="20" uuid="c113da3a-d94e-4a15-b1e2-5a4049599f3e"/>
+                <textElement>
+                    <font size="9"/>
+                </textElement>
+                <text><![CDATA[A summary of completed orders of a registered customer.]]></text>
+            </staticText>
         </band>
     </title>
-    <pageHeader>
-        <band splitType="Stretch"/>
-    </pageHeader>
     <columnHeader>
-        <band height="56" splitType="Stretch">
-            <textField>
-                <reportElement style="Column header" x="88" y="10" width="90" height="20" forecolor="#000000" uuid="2f07d5b5-9c89-4346-9b9e-e5243a791357"/>
-                <textElement textAlignment="Left" verticalAlignment="Middle">
-                    <font size="10" isBold="false"/>
+        <band height="21" splitType="Stretch">
+            <staticText>
+                <reportElement x="0" y="0" width="80" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="7f9364fa-0f45-4cf0-888f-760959a2a00b"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="Ubuntu Mono" size="11" isBold="true"/>
                 </textElement>
-                <textFieldExpression>Order Id</textFieldExpression>
-            </textField>
-            <frame>
-                <reportElement mode="Opaque" x="0" y="10" width="550" height="20" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="0de7a267-15e5-4ca3-aa06-8809e9ff11ec"/>
-                <textField evaluationTime="Report">
-                    <reportElement style="Column header" x="430" y="0" width="120" height="20" forecolor="#000000" uuid="c1a7292a-85d5-467e-8987-876bee224fa0"/>
-                    <textElement textAlignment="Center" verticalAlignment="Middle">
-                        <font size="10" isBold="false"/>
-                    </textElement>
-                    <textFieldExpression>Delivery Method</textFieldExpression>
-                </textField>
-                <textField pattern="EEEEE dd MMMMM yyyy">
-                    <reportElement style="Column header" x="0" y="0" width="100" height="20" forecolor="#000000" uuid="5cd4d104-c0d8-48e2-b710-0075a04d044e"/>
-                    <textElement verticalAlignment="Middle">
-                        <font size="10" isBold="false"/>
-                    </textElement>
-                    <textFieldExpression>Order Id</textFieldExpression>
-                </textField>
-                <textField evaluationTime="Report">
-                    <reportElement style="Column header" x="200" y="0" width="110" height="20" forecolor="#000000" uuid="28a30dcf-ec35-40aa-9524-8d55fdd5c571"/>
-                    <textElement textAlignment="Center" verticalAlignment="Middle">
-                        <font size="10" isBold="false"/>
-                    </textElement>
-                    <textFieldExpression>Total Payment</textFieldExpression>
-                </textField>
-                <textField evaluationTime="Report">
-                    <reportElement style="Column header" x="310" y="0" width="120" height="20" forecolor="#000000" uuid="3c7fe08c-33c5-44d3-87da-7a4e87842b10"/>
-                    <textElement textAlignment="Center" verticalAlignment="Middle">
-                        <font size="10" isBold="false"/>
-                    </textElement>
-                    <textFieldExpression>Payment Method</textFieldExpression>
-                </textField>
-            </frame>
-            <frame>
-                <reportElement mode="Opaque" x="0" y="30" width="550" height="20" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="5d8169bd-4a75-48c8-8a68-6d3ad5ba9402"/>
-                <textField>
-                    <reportElement style="Column header" x="100" y="-20" width="100" height="20" forecolor="#000000" uuid="18cfe1ca-f7d6-48b0-9827-28578b42a5e0"/>
-                    <textElement textAlignment="Left" verticalAlignment="Middle">
-                        <font size="10" isBold="false"/>
-                    </textElement>
-                    <textFieldExpression><![CDATA[$F{order_id}]]></textFieldExpression>
-                </textField>
-                <textField pattern="EEEEE dd MMMMM yyyy">
-                    <reportElement style="Column header" x="0" y="0" width="100" height="20" forecolor="#000000" uuid="fbce24bb-3cb1-44a3-8eec-8c067ddbe5b5"/>
-                    <textElement verticalAlignment="Middle">
-                        <font size="10" isBold="false"/>
-                    </textElement>
-                    <textFieldExpression><![CDATA[$F{order_id}]]></textFieldExpression>
-                </textField>
-                <textField evaluationTime="Report">
-                    <reportElement style="Column header" x="200" y="0" width="110" height="20" forecolor="#000000" uuid="8dc759ed-3c75-425b-bee5-46af843cb8d7"/>
-                    <textElement textAlignment="Center" verticalAlignment="Middle">
-                        <font size="10" isBold="false"/>
-                    </textElement>
-                    <textFieldExpression><![CDATA[$F{total_payment}]]></textFieldExpression>
-                </textField>
-                <textField evaluationTime="Report">
-                    <reportElement style="Column header" x="310" y="0" width="120" height="20" forecolor="#000000" uuid="e183bf6d-b0b5-466a-97b8-8c4fe1e57c13"/>
-                    <textElement textAlignment="Center" verticalAlignment="Middle">
-                        <font size="10" isBold="false"/>
-                    </textElement>
-                    <textFieldExpression><![CDATA[$F{payment_method}]]></textFieldExpression>
-                </textField>
-                <textField evaluationTime="Report">
-                    <reportElement style="Column header" x="430" y="0" width="120" height="20" forecolor="#000000" uuid="4a0f1e50-bad7-4196-8b9c-dc65a4eb5db1"/>
-                    <textElement textAlignment="Center" verticalAlignment="Middle">
-                        <font size="10" isBold="false"/>
-                    </textElement>
-                    <textFieldExpression><![CDATA[$F{delivery_method}]]></textFieldExpression>
-                </textField>
-                <textField>
-                    <reportElement style="Column header" x="100" y="0" width="100" height="20" forecolor="#000000" uuid="64b332f5-6c68-4f0b-aca6-de9060d04dbf"/>
-                    <textElement textAlignment="Left" verticalAlignment="Middle">
-                        <font size="10" isBold="false"/>
-                    </textElement>
-                    <textFieldExpression><![CDATA[$F{date}]]></textFieldExpression>
-                </textField>
-            </frame>
+                <text><![CDATA[Order Id]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="80" y="0" width="100" height="20" uuid="033a33a8-5289-4cc7-b019-2a5ed11f565b"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="Ubuntu Mono" size="11" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Date]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="180" y="0" width="100" height="20" uuid="4b618678-f613-4ae6-8f1f-3c43e0d28a3d"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="Ubuntu Mono" size="11" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Total Payment]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="280" y="0" width="100" height="20" uuid="9a768975-2635-44f8-9b5c-797faac6ccf4"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="Ubuntu Mono" size="11" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Payment Method]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="380" y="0" width="100" height="20" uuid="9f7461cd-1a61-48cc-9792-e342e730a0cb"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="Ubuntu Mono" size="11" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Delivery Method]]></text>
+            </staticText>
         </band>
     </columnHeader>
     <detail>
-        <band splitType="Stretch"/>
+        <band height="125" splitType="Stretch">
+            <textField>
+                <reportElement x="0" y="0" width="80" height="20" uuid="9ffaec28-406e-4572-82d6-ec7b5d680f27"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="Ubuntu Mono" size="10"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{orderId}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="80" y="0" width="100" height="20" uuid="0be695c9-5221-42e9-9bfe-8e59be15620f"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="Ubuntu Mono" size="10"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{date}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="180" y="0" width="100" height="20" uuid="15e9b00c-a8db-46f3-a055-0597c5b156ba"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="Ubuntu Mono" size="10"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{totalPayment}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="280" y="0" width="100" height="20" uuid="0dbe86ee-a2af-43bb-aa56-674a23a85eed"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="Ubuntu Mono" size="10"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{paymentMethod}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="380" y="0" width="100" height="20" uuid="762a61c1-6406-49e1-ae56-d6cbf1ac679e"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+                    <font fontName="Ubuntu Mono" size="10"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{deliveryMethod}]]></textFieldExpression>
+            </textField>
+        </band>
     </detail>
     <columnFooter>
-        <band splitType="Stretch"/>
+        <band height="45" splitType="Stretch"/>
     </columnFooter>
+    <pageFooter>
+        <band height="54" splitType="Stretch"/>
+    </pageFooter>
     <summary>
-        <band splitType="Stretch"/>
+        <band height="42" splitType="Stretch"/>
     </summary>
 </jasperReport>
