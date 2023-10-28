@@ -18,8 +18,10 @@ public class CartItemDaoImpl implements CartItemDao {
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public List<CartItemResponse> findByUserId(Long userId) throws DataAccessException {
-        String sql = "SELECT DISTINCT ci.\"variant_id\", p.\"product_name\", p.\"image_url\", v.\"price\", ci.\"count\" " +
+    public List<CartItemResponse> findByUserId(
+        Long userId
+    ) throws DataAccessException {
+        String sql = "SELECT DISTINCT ci.\"variant_id\", p.\"product_name\", p.\"image_url\" AS \"main_image\", v.\"price\" AS \"variant_price\", ci.\"count\" " +
                      "FROM \"cart_item\" AS ci NATURAL LEFT OUTER JOIN " +
                      "     \"variant\" AS v NATURAL LEFT OUTER JOIN " +
                      "     \"varies_on\" AS vo NATURAL LEFT OUTER JOIN " +

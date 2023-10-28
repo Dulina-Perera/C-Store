@@ -130,14 +130,14 @@ CREATE TABLE "variant" (
 -- Varies, based on
 DROP TABLE IF EXISTS "varies_on";
 CREATE TABLE "varies_on" (
-                             "varies_on_id" BIGSERIAL,
-                             "product_id"   BIGINT,
-                             "property_id"  BIGINT,
-                             "variant_id"   BIGINT,
-                             PRIMARY KEY ("varies_on_id"),
-                             FOREIGN KEY ("product_id") REFERENCES "product" ("product_id") ON DELETE CASCADE,
-                             FOREIGN KEY ("variant_id") REFERENCES "variant" ("variant_id") ON DELETE CASCADE,
-                             FOREIGN KEY ("property_id") REFERENCES "property" ("property_id") ON DELETE CASCADE
+    "varies_on_id" BIGSERIAL,
+    "product_id"   BIGINT,
+    "property_id"  BIGINT,
+    "variant_id"   BIGINT,
+    PRIMARY KEY ("varies_on_id"),
+    FOREIGN KEY ("product_id") REFERENCES "product" ("product_id") ON DELETE CASCADE,
+    FOREIGN KEY ("variant_id") REFERENCES "variant" ("variant_id") ON DELETE CASCADE,
+    FOREIGN KEY ("property_id") REFERENCES "property" ("property_id") ON DELETE CASCADE
 );
 
 -- Warehouse
@@ -197,23 +197,23 @@ CREATE TABLE "registered_user" (
 -- User Contact
 DROP TABLE IF EXISTS "user_contact";
 CREATE TABLE "user_contact" (
-                                "user_id"          BIGINT,
-                                "telephone_number" VARCHAR (12),
-                                PRIMARY KEY ("user_id", "telephone_number"),
-                                FOREIGN KEY ("user_id") REFERENCES "user" ("user_id") ON DELETE CASCADE
+    "user_id"          BIGINT,
+    "telephone_number" VARCHAR (12),
+    PRIMARY KEY ("user_id", "telephone_number"),
+    FOREIGN KEY ("user_id") REFERENCES "user" ("user_id") ON DELETE CASCADE
 );
 
 -- User Address
 DROP TABLE IF EXISTS "user_address";
 CREATE TABLE "user_address" (
-                                "address_id"    BIGSERIAL,
-                                "user_id"       BIGINT,
-                                "street_number" VARCHAR (10),
-                                "street_name"   VARCHAR (60),
-                                "city"          VARCHAR (40),
-                                "zipcode"       INTEGER,
-                                PRIMARY KEY ("address_id"),
-                                FOREIGN KEY ("user_id") REFERENCES "user" ("user_id") ON DELETE CASCADE
+    "address_id"    BIGSERIAL,
+    "user_id"       BIGINT,
+    "street_number" VARCHAR (10),
+    "street_name"   VARCHAR (60),
+    "city"          VARCHAR (40),
+    "zipcode"       INTEGER,
+    PRIMARY KEY ("address_id"),
+    FOREIGN KEY ("user_id") REFERENCES "user" ("user_id") ON DELETE CASCADE
 );
 
 -- Cart
