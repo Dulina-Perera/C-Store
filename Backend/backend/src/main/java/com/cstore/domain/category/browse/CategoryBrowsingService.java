@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-
 @RequiredArgsConstructor
 public class CategoryBrowsingService {
     private final CategoryDao categoryDao;
@@ -38,7 +37,6 @@ public class CategoryBrowsingService {
     }
 
     public List<ProductCard> getProductsByCategory(Long categoryId) {
-
         List<ProductCard> productCards = new ArrayList<ProductCard>();
 
         List<Product> products = productDao.findByCategoryId(categoryId);
@@ -72,6 +70,5 @@ public class CategoryBrowsingService {
         }
 
         return productCards;
-
     }
 }

@@ -25,7 +25,7 @@ public class CategoryBrowsingController {
     private final CategoryBrowsingService categoryBrowsingService;
 
     @Operation(
-        method = "getRootCategories",
+        method = "Get Root Categories",
         responses = {
             @ApiResponse(
                 content = @Content(
@@ -47,7 +47,7 @@ public class CategoryBrowsingController {
     }
 
     @Operation(
-        method = "getChildCategories",
+        method = "Get Child Categories",
         responses = {
             @ApiResponse(
                  content = @Content(
@@ -71,7 +71,7 @@ public class CategoryBrowsingController {
     }
 
     @Operation(
-	    method = "getProductsByCategory",
+	    method = "Get Products by Category",
 	    responses = {
             @ApiResponse(
                 content = @Content(
@@ -89,8 +89,6 @@ public class CategoryBrowsingController {
         @PathVariable(name = "category_id")
         Long categoryId
     ) {
-
         return categoryBrowsingService.getProductsByCategory(categoryId);
-
     }
 }

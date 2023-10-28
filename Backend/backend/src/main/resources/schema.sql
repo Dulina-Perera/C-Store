@@ -50,10 +50,10 @@ DROP TABLE IF EXISTS "category";
 -- Category
 DROP TABLE IF EXISTS "category";
 CREATE TABLE "category" (
-                            "category_id"          BIGSERIAL,
-                            "category_name"        VARCHAR (40),
-                            "category_description" VARCHAR,
-                            PRIMARY KEY ("category_id")
+     "category_id"          BIGSERIAL,
+     "category_name"        VARCHAR (40),
+     "category_description" VARCHAR,
+     PRIMARY KEY ("category_id")
 );
 
 -- Sub Category
@@ -501,15 +501,31 @@ CREATE OR REPLACE FUNCTION "products_from_category"(c_id BIGINT)
         "image_url"    VARCHAR(100)
     ) AS $$
 BEGIN
+    CREATE TEMP TABLE "mappings" (
+        "category_id" BIGINT,
+        "product_id" BIGINT
+    );
+
+    INSERT INTO "mappings"
+        SELECT *
+        FROM "belongs_to"
+        WHERE "category_id" = c_id;
+
+    INSERT INTO "mappings"
+        SELECT sc."sub_category_id", bt."product_id"
+        FROM "sub_category" AS sc RIGHT OUTER JOIN "belongs_to" AS bt ON sc."sub_category_id" = bt."category_id"
+        WHERE sc."category_id" = c_id;
+
     RETURN QUERY
         SELECT DISTINCT p.*
-        FROM "belongs_to" AS bt NATURAL LEFT OUTER JOIN "product" AS p
-        WHERE bt."category_id" = c_id;
+        FROM "mappings" NATURAL LEFT OUTER JOIN "product" AS p;
+
+    DROP TABLE IF EXISTS "mappings";
 END
 $$ LANGUAGE plpgsql;
 
 -- SELECT *
--- FROM "products_from_category"(4);
+-- FROM "products_from_category"(1);
 
 ------------------------------------------------------------------------------------------------------------------------
 

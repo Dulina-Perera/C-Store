@@ -22,7 +22,6 @@ import java.util.Optional;
 @Repository
 @RequiredArgsConstructor
 public class ProductDaoImpl implements ProductDao {
-
     private final JdbcTemplate jdbcTemplate;
 
     String url = "jdbc:mysql://localhost:3306/cstore";
@@ -140,7 +139,6 @@ public class ProductDaoImpl implements ProductDao {
     public List<Product> findByCategoryId(
         Long categoryId
     ) throws DataAccessException {
-
         String sql = "SELECT * " +
                      "FROM \"products_from_category\"(?);";
 
@@ -149,7 +147,6 @@ public class ProductDaoImpl implements ProductDao {
             preparedStatement -> preparedStatement.setLong(1, categoryId),
             new BeanPropertyRowMapper<>(Product.class)
         );
-
     }
 
     @Override
