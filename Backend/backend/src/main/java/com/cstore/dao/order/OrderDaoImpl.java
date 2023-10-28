@@ -1,5 +1,6 @@
 package com.cstore.dao.order;
 
+import com.cstore.domain.report.OrderReport;
 import com.cstore.dto.order.OrderDetailsDto;
 import com.cstore.model.order.Order;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,22 @@ public class OrderDaoImpl implements OrderDao {
         return templ.query(
             sql,
             new BeanPropertyRowMapper<>(Order.class)
+        );
+    }
+
+    @Override
+    public List<OrderReport> findProcessedOrders(
+        Long customerId
+    ) throws DataAccessException {
+        String sql = "SELECT CONCAT(\"first_name\", \"last_name\") AS \"name\"," +
+                     "       \"order_id\", \"date\", \"total_payment\", \"payment_method\", \"delivery_method\" " +
+                     "FROM \"order\" AS o LEFT OUTER JOIN \"registered_user\" AS ru ON o.\"customer_id\" = ru.\"user_id\"" +
+                     "WHERE \"customer_id\" = ? AND \"status\" = 'PROCESSED';";
+
+        return templ.query(
+            sql,
+            ps -> ps.setLong(1, customerId),
+            new BeanPropertyRowMapper<>(OrderReport.class)
         );
     }
 

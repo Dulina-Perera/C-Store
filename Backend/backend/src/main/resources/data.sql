@@ -956,15 +956,15 @@ INSERT INTO "cart_item" ("user_id", "variant_id", "count") VALUES
 	(2, 3, 1),
 	(3, 5, 3);
 
-SELECT *
-FROM "cart_item";
+-- SELECT *
+-- FROM "cart_item";
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- "order" table
 
-INSERT INTO "order" ("date", "total_payment", "payment_method", "delivery_method", "email", "street_number", "street_name", "city", "zipcode", "telephone_number") VALUES
-	('2023-01-15 08:30:00', 149.97, 'Credit Card', 'Express Shipping', 'dulinaperera@gmail.com', '456', 'Godagama', 'Kaluthara', 98765, '0702632639'),
-	('2023-03-20 10:00:00', 239.97, 'Credit Card', 'Express Shipping', 'nethumrathnayake@gmail.com', '456', 'Kawdana', 'Dehiwala', 98765, '0705654028');
+INSERT INTO "order" ("status", "date", "total_payment", "payment_method", "delivery_method", "customer_id", "email", "street_number", "street_name", "city", "zipcode", "telephone_number") VALUES
+	('PROCESSED', '2023-01-15 08:30:00', 149.97, 'Credit Card', 'Express Shipping', 1, 'dulinaperera@gmail.com', '456', 'Godagama', 'Kaluthara', 98765, '0702632639'),
+	('PROCESSED', '2023-03-20 10:00:00', 239.97, 'Credit Card', 'Express Shipping', 2, 'nethumrathnayake@gmail.com', '456', 'Kawdana', 'Dehiwala', 98765, '0705654028');
 
 SELECT *
 FROM "order";

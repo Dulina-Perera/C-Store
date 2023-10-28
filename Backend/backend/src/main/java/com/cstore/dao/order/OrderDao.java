@@ -1,5 +1,6 @@
 package com.cstore.dao.order;
 
+import com.cstore.domain.report.OrderReport;
 import com.cstore.dto.order.OrderDetailsDto;
 import com.cstore.model.order.Order;
 import org.springframework.dao.DataAccessException;
@@ -10,6 +11,8 @@ import java.util.Optional;
 
 public interface OrderDao {
     List<Order> findAll();
+
+    List<OrderReport> findProcessedOrders(Long customerId) throws DataAccessException;
 
     Optional<Order> findById(Long orderId);
 

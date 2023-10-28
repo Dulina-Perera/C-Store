@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.6.final using JasperReports Library version 6.20.6-5c96b6aa8a39ac1dc6b6bea4b81168e16dd39231  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Customer-Order Report" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="df013db5-f76e-44d3-b0df-bcbc46d93160">
+    <style name="Title" fontName="Ubuntu Mono" fontSize="50" isBold="true"/>
+    <style name="SubTitle" forecolor="#736343" fontName="Ubuntu Mono" fontSize="18"/>
+    <style name="Column header" forecolor="#666666" fontName="Ubuntu Mono" fontSize="12" isBold="true"/>
+    <style name="Detail" fontName="Ubuntu Mono" fontSize="12"/>
+    <style name="Row" mode="Transparent">
+        <conditionalStyle>
+            <conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+            <style backcolor="#E6DAC3"/>
+        </conditionalStyle>
+    </style>
+
+    <field name="name" class="java.lang.String">
+    </field>
+    <field name="order_id" class="java.lang.Long">
+    </field>
+    <field name="date" class="java.sql.Timestamp">
+    </field>
+    <field name="total_payment" class="java.math.BigDecimal">
+    </field>
+    <field name="payment_method" class="java.lang.String">
+    </field>
+    <field name="delivery_method" class="java.lang.String">
+    </field>
+    <group name="Group1">
+        <groupExpression><![CDATA[$F{name}]]></groupExpression>
+        <groupFooter>
+            <band height="6"/>
+        </groupFooter>
+    </group>
+    <group name="Group2">
+        <groupExpression><![CDATA[$F{order_id}]]></groupExpression>
+    </group>
+    <group name="date">
+        <groupExpression><![CDATA[$F{date}]]></groupExpression>
+    </group>
+    <group name="total_payment">
+        <groupExpression><![CDATA[$F{total_payment}]]></groupExpression>
+    </group>
+    <group name="payment_method">
+        <groupExpression><![CDATA[$F{payment_method}]]></groupExpression>
+    </group>
+    <group name="delivery_method">
+        <groupExpression><![CDATA[$F{delivery_method}]]></groupExpression>
+    </group>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <title>
+        <band height="136" splitType="Stretch">
+            <staticText>
+                <reportElement style="Title" x="0" y="0" width="262" height="62" uuid="bc1ce1da-8232-46ea-be55-cec4abb986dd"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Ubuntu Mono"/>
+                </textElement>
+                <text>C-Store</text>
+            </staticText>
+            <staticText>
+                <reportElement style="SubTitle" x="0" y="70" width="240" height="30" forecolor="#000000" uuid="f6a78448-8260-4445-a9e0-e3fb53b080d9"/>
+                <textElement>
+                    <font fontName="Times New Roman" isBold="true"/>
+                </textElement>
+                <text>Customer-Order Report</text>
+            </staticText>
+            <frame>
+                <reportElement mode="Opaque" x="-20" y="112" width="842" height="24" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="ff649bda-bbd1-4c2d-bd67-21f69ad64bbf"/>
+                <textField>
+                    <reportElement style="SubTitle" x="20" y="0" width="755" height="24" forecolor="#000000" backcolor="#000000" uuid="b5a25815-f4ed-4382-9712-d113dc519d4e"/>
+                    <textElement>
+                        <font isBold="true"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+                </textField>
+            </frame>
+        </band>
+    </title>
+    <pageHeader>
+        <band splitType="Stretch"/>
+    </pageHeader>
+    <columnHeader>
+        <band height="56" splitType="Stretch">
+            <textField>
+                <reportElement style="Column header" x="88" y="10" width="90" height="20" forecolor="#000000" uuid="2f07d5b5-9c89-4346-9b9e-e5243a791357"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="10" isBold="false"/>
+                </textElement>
+                <textFieldExpression>Order Id</textFieldExpression>
+            </textField>
+            <frame>
+                <reportElement mode="Opaque" x="0" y="10" width="550" height="20" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="0de7a267-15e5-4ca3-aa06-8809e9ff11ec"/>
+                <textField evaluationTime="Report">
+                    <reportElement style="Column header" x="430" y="0" width="120" height="20" forecolor="#000000" uuid="c1a7292a-85d5-467e-8987-876bee224fa0"/>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="10" isBold="false"/>
+                    </textElement>
+                    <textFieldExpression>Delivery Method</textFieldExpression>
+                </textField>
+                <textField pattern="EEEEE dd MMMMM yyyy">
+                    <reportElement style="Column header" x="0" y="0" width="100" height="20" forecolor="#000000" uuid="5cd4d104-c0d8-48e2-b710-0075a04d044e"/>
+                    <textElement verticalAlignment="Middle">
+                        <font size="10" isBold="false"/>
+                    </textElement>
+                    <textFieldExpression>Order Id</textFieldExpression>
+                </textField>
+                <textField evaluationTime="Report">
+                    <reportElement style="Column header" x="200" y="0" width="110" height="20" forecolor="#000000" uuid="28a30dcf-ec35-40aa-9524-8d55fdd5c571"/>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="10" isBold="false"/>
+                    </textElement>
+                    <textFieldExpression>Total Payment</textFieldExpression>
+                </textField>
+                <textField evaluationTime="Report">
+                    <reportElement style="Column header" x="310" y="0" width="120" height="20" forecolor="#000000" uuid="3c7fe08c-33c5-44d3-87da-7a4e87842b10"/>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="10" isBold="false"/>
+                    </textElement>
+                    <textFieldExpression>Payment Method</textFieldExpression>
+                </textField>
+            </frame>
+            <frame>
+                <reportElement mode="Opaque" x="0" y="30" width="550" height="20" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="5d8169bd-4a75-48c8-8a68-6d3ad5ba9402"/>
+                <textField>
+                    <reportElement style="Column header" x="100" y="-20" width="100" height="20" forecolor="#000000" uuid="18cfe1ca-f7d6-48b0-9827-28578b42a5e0"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="10" isBold="false"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$F{order_id}]]></textFieldExpression>
+                </textField>
+                <textField pattern="EEEEE dd MMMMM yyyy">
+                    <reportElement style="Column header" x="0" y="0" width="100" height="20" forecolor="#000000" uuid="fbce24bb-3cb1-44a3-8eec-8c067ddbe5b5"/>
+                    <textElement verticalAlignment="Middle">
+                        <font size="10" isBold="false"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$F{order_id}]]></textFieldExpression>
+                </textField>
+                <textField evaluationTime="Report">
+                    <reportElement style="Column header" x="200" y="0" width="110" height="20" forecolor="#000000" uuid="8dc759ed-3c75-425b-bee5-46af843cb8d7"/>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="10" isBold="false"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$F{total_payment}]]></textFieldExpression>
+                </textField>
+                <textField evaluationTime="Report">
+                    <reportElement style="Column header" x="310" y="0" width="120" height="20" forecolor="#000000" uuid="e183bf6d-b0b5-466a-97b8-8c4fe1e57c13"/>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="10" isBold="false"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$F{payment_method}]]></textFieldExpression>
+                </textField>
+                <textField evaluationTime="Report">
+                    <reportElement style="Column header" x="430" y="0" width="120" height="20" forecolor="#000000" uuid="4a0f1e50-bad7-4196-8b9c-dc65a4eb5db1"/>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="10" isBold="false"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$F{delivery_method}]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement style="Column header" x="100" y="0" width="100" height="20" forecolor="#000000" uuid="64b332f5-6c68-4f0b-aca6-de9060d04dbf"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="10" isBold="false"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$F{date}]]></textFieldExpression>
+                </textField>
+            </frame>
+        </band>
+    </columnHeader>
+    <detail>
+        <band splitType="Stretch"/>
+    </detail>
+    <columnFooter>
+        <band splitType="Stretch"/>
+    </columnFooter>
+    <summary>
+        <band splitType="Stretch"/>
+    </summary>
+</jasperReport>
