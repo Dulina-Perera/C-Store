@@ -35,7 +35,7 @@ public class ReportService {
         List<Order> processedOrders = orderDao.findProcessedOrders(customerId);
 
         File generated;
-        File file = ResourceUtils.getFile("classpath:static/reports/Customer-Order Report.jrxml");
+        File file = ResourceUtils.getFile("classpath:templates/Customer-Order Report.jrxml");
         JasperReport report = JasperCompileManager.compileReport(file.getAbsolutePath());
 
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(processedOrders);

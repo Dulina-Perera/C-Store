@@ -276,24 +276,24 @@ CREATE TABLE "order_item" (
 -- Sales Report
 DROP TABLE IF EXISTS "sales_report";
 CREATE TABLE "sales_report" (
-                                "year"           SMALLINT,
-                                "quarter"        CHAR (2) CHECK ("quarter" IN ('Q1', 'Q2', 'Q3', 'Q4')),
-                                "total_sales"    INTEGER DEFAULT 0,
-                                "total_earnings" NUMERIC (10, 2) DEFAULT 0,
-                                PRIMARY KEY ("year", "quarter")
+    "year"           SMALLINT,
+    "quarter"        CHAR (2) CHECK ("quarter" IN ('Q1', 'Q2', 'Q3', 'Q4')),
+    "total_sales"    INTEGER DEFAULT 0,
+    "total_earnings" NUMERIC (10, 2) DEFAULT 0,
+    PRIMARY KEY ("year", "quarter")
 );
 
 -- Sale
 DROP TABLE IF EXISTS "sales_item";
 CREATE TABLE "sales_item" (
-                              "year"       SMALLINT,
-                              "quarter"    CHAR (2),
-                              "variant_id" BIGINT,
-                              "sales"      INTEGER DEFAULT 0,
-                              "earnings"   NUMERIC (10, 2) DEFAULT 0,
-                              PRIMARY KEY ("year", "quarter", "variant_id"),
-                              FOREIGN KEY ("year", "quarter") REFERENCES "sales_report" ("year", "quarter") ON DELETE CASCADE ON UPDATE CASCADE,
-                              FOREIGN KEY ("variant_id") REFERENCES "variant" ("variant_id") ON DELETE NO ACTION ON UPDATE NO ACTION
+    "year"       SMALLINT,
+    "quarter"    CHAR (2),
+    "variant_id" BIGINT,
+    "sales"      INTEGER DEFAULT 0,
+    "earnings"   NUMERIC (10, 2) DEFAULT 0,
+    PRIMARY KEY ("year", "quarter", "variant_id"),
+    FOREIGN KEY ("year", "quarter") REFERENCES "sales_report" ("year", "quarter") ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY ("variant_id") REFERENCES "variant" ("variant_id") ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
 
