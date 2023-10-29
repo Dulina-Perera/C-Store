@@ -428,8 +428,8 @@ BEGIN
 END
 $$ LANGUAGE plpgsql;
 
--- SELECT *
--- FROM "categories_from_product"(1);
+SELECT *
+FROM "categories_from_product"(1);
 
 ------------------------------------------------------------------------------------------------------------------------
 

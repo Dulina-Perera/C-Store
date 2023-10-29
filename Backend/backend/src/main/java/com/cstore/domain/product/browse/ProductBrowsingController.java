@@ -13,20 +13,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.sql.SQLException;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "api/v1/products/browse")
-@Tag(name = "Browse Products")
-
+@RequestMapping(path = "/api/v1/products/browse")
 @RequiredArgsConstructor
+@Tag(name = "Browse Products")
 public class ProductBrowsingController {
-
-    private final ProductBrowsingService service;
+    private final ProductBrowsingService serv;
 
     @Operation(
-        method = "getProducts",
+        method = "Get Products",
         responses = {
            @ApiResponse(
                content = @Content(
@@ -40,15 +37,12 @@ public class ProductBrowsingController {
         summary = "Returns all products (with properties of non-monetary value)."
     )
     @RequestMapping(method = RequestMethod.GET, path = "")
-    public List<ProductCard> getProducts(
-    ) {
-
-        return service.getProducts();
-
+    public List<ProductCard> getProducts() {
+        return serv.getProducts();
     }
 
     @Operation(
-            method = "getProductsByName",
+            method = "Get Products by Name",
             responses = {
                     @ApiResponse(
                             content = @Content(
@@ -63,12 +57,13 @@ public class ProductBrowsingController {
     )
     @RequestMapping(method = RequestMethod.GET, path = "/{product_name}")
     public List<ProductCard> getProductsByName(
-        @PathVariable(name = "product_name", required = true)
+        @PathVariable(
+            name = "product_name",
+            required = true
+        )
         String productName
     ) {
-
-        return service.getProductsByName(productName);
-
+        return serv.getProductsByName(productName);
     }
 
 }

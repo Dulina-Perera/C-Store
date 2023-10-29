@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.annotations.Comment;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -39,12 +38,13 @@ public class ProductSelectionController {
     )
     @RequestMapping(method = RequestMethod.GET, path = "/{product_id}")
     public SelectedProduct getProductById(
-        @PathVariable(name = "product_id", required = true)
+        @PathVariable(
+            name = "product_id",
+            required = true
+        )
         Long productId
     ) {
-
         return productSelectionService.getProductById(productId);
-
     }
 
 }

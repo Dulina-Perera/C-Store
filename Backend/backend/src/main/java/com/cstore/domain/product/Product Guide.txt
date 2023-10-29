@@ -1,0 +1,42 @@
+What can an actor do with products?
+    1. Browse through the list of products.
+        * This should be accessible to all actors.
+        * Browsing doesn't require exposing all the characteristics of a product.
+            * What characteristics are revealed?
+                - Product Id
+                - Product Name
+                - Base Price
+                - Brand
+                - Main Image
+                - Map of properties with no monetary value
+
+                * The JSON object would look like:
+                    {
+                        "productId": <Long>
+                        "productName": <String>
+                        "basePrice": <BigDecimal>
+                        "brand": <String>
+                        "mainImage": <String>
+                        "properties": <Map<String, List<String>>>
+                    }
+                * Suppose that for a product COLOUR & SIZE are non-monetary properties.
+                  And they can take values (BLACK, WHITE & SKY BLUE) & (5.78In, 5.81In, 6.33In) respectively.
+                  Then the properties map would look like:
+                    {
+                        "colour": [
+                            "black",
+                            "white",
+                            "sky blue"
+                        ],
+                        "size": [
+                            "5.78In",
+                            "5.81In",
+                            "6.33In"
+                        ]
+                    }
+        * In addition to this general browsing (/api/v1/products/browse), browsing by name (/api/v1/products/browse/{product_name}) is also allowed.
+            * Note that browsing by name utilizes LIKE expressions.
+              So, the client doesn't have to provide the full name of the product.
+
+
+    2. Select a product.

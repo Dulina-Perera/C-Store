@@ -16,6 +16,6 @@ public class ProductCard {
     private String productName;
     private BigDecimal basePrice;
     private String brand;
-    private String imageUrl;
+    private String mainImage;
     private Map<String, List<String>> properties;
 }

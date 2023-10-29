@@ -10,8 +10,6 @@ import com.cstore.model.product.Property;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,7 +45,7 @@ public class CategoryBrowsingService {
                 .productName(product.getProductName())
                 .basePrice(product.getBasePrice())
                 .brand(product.getBrand())
-                .imageUrl(product.getImageUrl())
+                .mainImage(product.getImageUrl())
                 .build();
 
             Map<String, List<String>> propertyMap = new HashMap<>();

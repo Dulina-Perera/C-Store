@@ -189,8 +189,8 @@ INSERT INTO "belongs_to" ("category_id", "product_id") VALUES
 	(17,39),
 	(2,40);
 
-SELECT *
-FROM "belongs_to";
+-- SELECT *
+-- FROM "belongs_to";
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- "property"
