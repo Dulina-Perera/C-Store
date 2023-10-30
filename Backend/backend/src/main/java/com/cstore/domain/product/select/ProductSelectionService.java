@@ -51,8 +51,9 @@ public class ProductSelectionService {
             productSelectionCategories.add(productSelectionCategory);
         }
 
-        PropertySelectionMap map = new PropertySelectionMap();
         List<Property> properties = propertyDao.findByProductId(product.getProductId());
+        /*PropertySelectionMap map = new PropertySelectionMap();
+
         for (Property property : properties) {
             if (map.containsKey(property.getPropertyName())) {
                 map.get(property.getPropertyName()).add(property);
@@ -62,7 +63,7 @@ public class ProductSelectionService {
                 propertyList.add(property);
                 map.put(property.getPropertyName(), propertyList);
             }
-        }
+        }*/
 
         Integer stockCount = productDao.countStocks(product.getProductId());
 
@@ -76,7 +77,7 @@ public class ProductSelectionService {
             .imageUrl(product.getMainImage())
             .otherImages(otherImages)
             .categories(productSelectionCategories)
-            .properties(map)
+            .properties(properties)
             .stockCount(stockCount)
             .build();
     }

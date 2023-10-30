@@ -29,7 +29,8 @@ public class SelectedProduct {
 
     private List<ProductSelectionCategory> categories;
 
-    private PropertySelectionMap properties;
+    private List<Property> properties;
+    // private PropertySelectionMap properties;
 
     private Integer stockCount;
 }
