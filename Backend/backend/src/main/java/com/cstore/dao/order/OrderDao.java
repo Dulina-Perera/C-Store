@@ -4,6 +4,7 @@ import com.cstore.domain.report.customerorder.OrderItemProperty;
 import com.cstore.dto.order.OrderDetailsDto;
 import com.cstore.model.order.Order;
 import com.cstore.model.order.OrderItem;
+import com.cstore.model.product.Variant;
 import org.springframework.dao.DataAccessException;
 
 import java.sql.SQLIntegrityConstraintViolationException;
@@ -32,4 +33,6 @@ public interface OrderDao {
     void emptyCart(Long orderId) throws DataAccessException, SQLIntegrityConstraintViolationException;
 
     int deleteTimedOutOrders() throws DataAccessException;
+
+    Long buyNow(Long userId, Variant variant) throws DataAccessException;
 }

@@ -54,9 +54,7 @@ public class CartUpdatingController {
         @RequestBody(required = true)
         VariantProperiesDto properties
     ) {
-
         return cartUpdatingService.addVariant(userId, properties);
-
     }
 
     @Operation(

@@ -4,6 +4,7 @@ import com.cstore.domain.report.customerorder.OrderItemProperty;
 import com.cstore.dto.order.OrderDetailsDto;
 import com.cstore.model.order.Order;
 import com.cstore.model.order.OrderItem;
+import com.cstore.model.product.Variant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -229,5 +230,13 @@ public class OrderDaoImpl implements OrderDao {
                      "WHERE \"status\" = 'PLACED' AND EXTRACT(EPOCH FROM (CURRENT_TIMESTAMP - \"date\")) / 60 > 1;";
 
         return templ.update(sql);
+    }
+
+    @Override
+    public Long buyNow(
+        Long userId,
+        Variant variant
+    ) throws DataAccessException {
+        return null;
     }
 }

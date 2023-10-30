@@ -13,5 +13,5 @@ public interface VariantDao {
 
     Variant save(Variant variant);
 
-    Integer countStocks(Long varaintId);
+    Integer countStocks(Long variantId) throws DataAccessException;
 }

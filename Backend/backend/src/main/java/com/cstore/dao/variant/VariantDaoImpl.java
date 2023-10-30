@@ -84,11 +84,17 @@ public class VariantDaoImpl implements VariantDao {
     }
 
     @Override
-    public Integer countStocks(Long variantId) {
-        String sql = "SELECT SUM(`count`) " +
-                     "FROM `inventory` " +
-                     "WHERE `variant_id` = ?;";
+    public Integer countStocks(
+        Long variantId
+    ) throws DataAccessException {
+        String sql = "SELECT SUM(\"count\") " +
+                     "FROM \"inventory\" " +
+                     "WHERE \"variant_id\" = ?;";
 
-        return jdbcTemplate.queryForObject(sql, Integer.class, variantId);
+        return jdbcTemplate.queryForObject(
+            sql,
+            Integer.class,
+            variantId
+        );
     }
 }
