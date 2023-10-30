@@ -83,7 +83,7 @@ CREATE TABLE "product" (
     "base_price"   NUMERIC (10, 2) DEFAULT 0,
     "brand"        VARCHAR (40),
     "description"  VARCHAR,
-    "image_url"   VARCHAR (100),
+    "image_url"    VARCHAR (100),
     PRIMARY KEY ("product_id")
 );
 
@@ -278,7 +278,7 @@ CREATE TABLE "order_item" (
 DROP TABLE IF EXISTS "sales_report";
 CREATE TABLE "sales_report" (
     "year"           SMALLINT,
-    "quarter"        CHAR (2) CHECK ("quarter" IN ('Q1', 'Q2', 'Q3', 'Q4')),
+    "quarter"        SMALLINT CHECK ("quarter" IN (1, 2, 3, 4)),
     "total_sales"    INTEGER DEFAULT 0,
     "total_earnings" NUMERIC (10, 2) DEFAULT 0,
     PRIMARY KEY ("year", "quarter")
@@ -288,7 +288,7 @@ CREATE TABLE "sales_report" (
 DROP TABLE IF EXISTS "sales_item";
 CREATE TABLE "sales_item" (
     "year"       SMALLINT,
-    "quarter"    CHAR (2),
+    "quarter"    SMALLINT,
     "variant_id" BIGINT,
     "sales"      INTEGER DEFAULT 0,
     "earnings"   NUMERIC (10, 2) DEFAULT 0,
@@ -537,7 +537,7 @@ $$ LANGUAGE plpgsql;
 
 ------------------------------------------------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION "products_with_most_sales"(y SMALLINT, q CHAR (2))
+CREATE OR REPLACE FUNCTION "products_with_most_sales"(y SMALLINT, q SMALLINT)
     RETURNS TABLE(
         "product_id"     BIGINT,
         "total_sales"    INTEGER,
@@ -585,7 +585,7 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION "quarters_with_most_interest"(p_id BIGINT)
     RETURNS TABLE (
         "year"     SMALLINT,
-        "quarter"  CHAR (2),
+        "quarter"  SMALLINT,
         "total_sales"    INTEGER,
         "total_earnings" NUMERIC(10, 2)
     ) AS $$
