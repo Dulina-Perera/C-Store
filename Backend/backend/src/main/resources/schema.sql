@@ -203,7 +203,7 @@ CREATE TABLE "user_contact" (
     FOREIGN KEY ("user_id") REFERENCES "user" ("user_id") ON DELETE CASCADE
 );
 
--- User Address
+-- User ShippingAddress
 DROP TABLE IF EXISTS "user_address";
 CREATE TABLE "user_address" (
     "address_id"    BIGSERIAL,
@@ -230,7 +230,7 @@ DROP TABLE IF EXISTS "cart_item";
 CREATE TABLE "cart_item" (
      "user_id"    BIGINT,
      "variant_id" BIGINT,
-     "count"   INTEGER,
+     "count"      INTEGER,
      PRIMARY KEY ("user_id", "variant_id"),
      FOREIGN KEY ("user_id") REFERENCES "cart" ("user_id") ON DELETE CASCADE,
      FOREIGN KEY ("variant_id") REFERENCES "variant" ("variant_id") ON DELETE CASCADE
@@ -267,6 +267,7 @@ CREATE TABLE "order_item" (
     "variant_id"   BIGINT,
     "warehouse_id" BIGINT,
     "count"        INTEGER,
+    "price"        NUMERIC (10, 2),
     PRIMARY KEY ("order_id", "variant_id", "warehouse_id"),
     FOREIGN KEY ("order_id") REFERENCES "order" ("order_id") ON DELETE CASCADE,
     FOREIGN KEY ("variant_id") REFERENCES "variant" ("variant_id"),
@@ -378,17 +379,24 @@ $$ LANGUAGE plpgsql;
 
 ------------------------------------------------------------------------------------------------------------------------
 
+-- Assuming that there is just one warehouse.
+
 CREATE OR REPLACE PROCEDURE "update_inventory"(u_id BIGINT, o_id BIGINT) AS $$
 DECLARE
     row_record cart_item%ROWTYPE;
-    query TEXT;
-    w_id BIGINT;
+    query      TEXT;
+    v_price    NUMERIC (10, 2);
+    w_id       BIGINT;
 BEGIN
     query := 'SELECT * ' ||
              'FROM "cart_item" ' ||
              'WHERE "user_id" = ' || u_id;
 
     FOR row_record IN EXECUTE query LOOP
+        SELECT "price" INTO v_price
+        FROM "variant"
+        WHERE "variant_id" = row_record."variant_id";
+
         SELECT "warehouse_id" INTO w_id
         FROM "inventory"
         WHERE "variant_id" = row_record."variant_id" AND "count" = (SELECT MAX("count")
@@ -401,7 +409,7 @@ BEGIN
         WHERE "variant_id" = row_record."variant_id" AND "warehouse_id" = w_id;
 
         INSERT INTO "order_item"
-        VALUES (o_id, w_id, row_record."variant_id", row_record."count");
+        VALUES (o_id, w_id, row_record."variant_id", row_record."count", row_record."count" * v_price);
     END LOOP;
     COMMIT;
 END

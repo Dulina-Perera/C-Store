@@ -1,7 +1,9 @@
 package com.cstore.dao.order;
 
-import com.cstore.model.order.Order;
+import com.cstore.domain.report.OrderItemProperty;
 import com.cstore.dto.order.OrderDetailsDto;
+import com.cstore.model.order.Order;
+import com.cstore.model.order.OrderItem;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -34,12 +36,63 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
+    public List<OrderItem> findOrderItems(Long orderId) throws DataAccessException {
+        String sql = "SELECT * " +
+                     "FROM \"order_item\" " +
+                     "WHERE \"order_id\" = ?;";
+
+        return templ.query(
+            sql,
+            ps -> ps.setLong(1, orderId),
+            new BeanPropertyRowMapper<>(OrderItem.class)
+        );
+    }
+
+    @Override
+    public List<OrderItemProperty> findAllOrderItems(
+        Long orderId
+    ) throws DataAccessException {
+        String sql = "SELECT oi.\"variant_id\", " +
+                     "       pd.\"product_name\", " +
+                     "       pr.\"property_name\", " +
+                     "       pr.\"value\", " +
+                     "       oi.\"count\" AS \"quantity\", " +
+                     "       oi.\"price\" " +
+                     "FROM \"order_item\" AS oi NATURAL LEFT OUTER JOIN " +
+                     "     \"varies_on\" AS vo NATURAL LEFT OUTER JOIN " +
+                     "     \"property\" AS pr NATURAL LEFT OUTER JOIN " +
+                     "     \"product\" AS pd " +
+                     "WHERE \"order_id\" = ?;";
+
+        return templ.query(
+            sql,
+            ps -> ps.setLong(1, orderId),
+            new BeanPropertyRowMapper<>(OrderItemProperty.class)
+        );
+    }
+
+    @Override
     public List<Order> findProcessedOrders(
         Long customerId
     ) throws DataAccessException {
         String sql = "SELECT \"order_id\", \"date\", \"total_payment\", \"payment_method\", \"delivery_method\" " +
                      "FROM \"order\" " +
                      "WHERE \"customer_id\" = ? AND \"status\" = 'PROCESSED';";
+
+        return templ.query(
+            sql,
+            ps -> ps.setLong(1, customerId),
+            new BeanPropertyRowMapper<>(Order.class)
+        );
+    }
+
+    @Override
+    public List<Order> findProcessingAndProcessedOrders(
+        Long customerId
+    ) throws DataAccessException {
+        String sql = "SELECT * " +
+                     "FROM \"order\" " +
+                     "WHERE \"customer_id\" = ? AND \"status\" IN ('PROCESSING', 'PROCESSED');";
 
         return templ.query(
             sql,

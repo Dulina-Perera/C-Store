@@ -20,5 +20,7 @@ public interface ProductDao {
 
     List<Product> findByCategoryId(Long categoryId) throws DataAccessException;
 
+    Optional<Product> findByVariantId(Long variantId) throws DataAccessException;
+
     Integer countStocks(Long productId) throws DataAccessException;
 }

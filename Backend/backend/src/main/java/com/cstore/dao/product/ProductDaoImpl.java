@@ -140,6 +140,23 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
+    public Optional<Product> findByVariantId(
+        Long variantId
+    ) throws DataAccessException {
+        String sql = "SELECT p.* " +
+                     "FROM \"product\" AS p NATURAL LEFT OUTER JOIN " +
+                     "     \"varies_on\" AS vo " +
+                     "WHERE \"variant_id\" = ? " +
+                     "LIMIT 1;";
+
+        return Optional.ofNullable(jdbcTemplate.queryForObject(
+            sql,
+            new BeanPropertyRowMapper<>(Product.class),
+            variantId
+        ));
+    }
+
+    @Override
     public Integer countStocks(
         Long productId
     ) throws DataAccessException {
@@ -152,6 +169,4 @@ public class ProductDaoImpl implements ProductDao {
             productId
         );
     }
-
-
 }

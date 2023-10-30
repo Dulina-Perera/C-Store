@@ -60,6 +60,20 @@ public class PropertyDaoImpl implements PropertyDao {
     }
 
     @Override
+    public List<Property> findByVariantId(Long variantId) throws DataAccessException {
+        String sql = "SELECT p.* " +
+                     "FROM \"property\" AS p NATURAL LEFT OUTER JOIN " +
+                     "     \"varies_on\" AS vo " +
+                     "WHERE vo.\"variant_id\" = ?;";
+
+        return jdbcTemplate.query(
+            sql,
+            preparedStatement -> preparedStatement.setLong(1, variantId),
+            new BeanPropertyRowMapper<>(Property.class)
+        );
+    }
+
+    @Override
     public Property save(Property property) {
         String sql = "INSERT INTO \"property\"(\"property_name\", \"value\", \"image_url\", \"price_increment\") " +
                      "VALUES(?, ?, ?, ?) " +

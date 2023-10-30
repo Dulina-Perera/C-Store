@@ -12,6 +12,8 @@ public interface PropertyDao {
 
     List<Property> findByProductId(Long productId) throws DataAccessException;
 
+    List<Property> findByVariantId(Long variantId) throws DataAccessException;
+
     Property save(Property property);
 
     List<Property> findUnmarketableProperties(Long productId) throws DataAccessException;

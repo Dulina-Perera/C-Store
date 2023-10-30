@@ -26,6 +26,9 @@ public class Order {
     )
     private Long orderId;
 
+    @Column(name = "status", length = 20)
+    private String status;
+
     @Column(name = "date")
     private Timestamp date;
 
