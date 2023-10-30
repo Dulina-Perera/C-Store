@@ -974,7 +974,7 @@ INSERT INTO "order" ("status", "date", "total_payment", "payment_method", "deliv
 INSERT INTO "order_item" ("order_id", "variant_id", "warehouse_id", "count") VALUES
     (1, 13, 1, 5),
 	(2, 3, 1, 1),
-	(2, 5, 1, 2);
+	(2, 78, 1, 2);
 
 -- SELECT *
 -- FROM "order_item";

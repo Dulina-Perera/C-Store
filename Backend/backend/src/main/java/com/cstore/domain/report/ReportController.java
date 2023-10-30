@@ -40,4 +40,23 @@ public class ReportController {
             );
         }
     }
+
+    @RequestMapping(
+        method = RequestMethod.GET,
+        path = "/orders/categories/max"
+    )
+    public ResponseEntity<List<Category>> getCategoryWithMostOrders(
+    ) {
+        try {
+            return new ResponseEntity<>(
+                reportService.getCategoriesWithMostOrders(),
+                HttpStatus.OK
+            );
+        } catch (DataAccessException dae) {
+            return new ResponseEntity<>(
+                null,
+                HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        }
+    }
 }
