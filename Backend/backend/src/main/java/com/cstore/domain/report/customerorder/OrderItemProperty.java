@@ -1,4 +1,4 @@
-package com.cstore.domain.report;
+package com.cstore.domain.report.customerorder;
 
 import lombok.*;
 

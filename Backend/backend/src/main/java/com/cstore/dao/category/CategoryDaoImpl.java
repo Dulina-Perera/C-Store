@@ -2,10 +2,6 @@ package com.cstore.dao.category;
 
 import com.cstore.model.category.Category;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.annotations.Comment;
-import org.hibernate.annotations.Parameter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;

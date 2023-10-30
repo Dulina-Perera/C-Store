@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/reports/sales")
+@RequestMapping("/api/v1/reports/quarterly-sales")
 @RequiredArgsConstructor
 public class SalesReportController {
     private final SalesReportService salesReportService;

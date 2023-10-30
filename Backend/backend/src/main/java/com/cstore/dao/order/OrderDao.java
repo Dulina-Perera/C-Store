@@ -1,6 +1,6 @@
 package com.cstore.dao.order;
 
-import com.cstore.domain.report.OrderItemProperty;
+import com.cstore.domain.report.customerorder.OrderItemProperty;
 import com.cstore.dto.order.OrderDetailsDto;
 import com.cstore.model.order.Order;
 import com.cstore.model.order.OrderItem;

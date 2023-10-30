@@ -58,7 +58,9 @@ public class SecurityConfig {
                     "api/v1/products/browse",
                     "api/v1/products/browse/**",
                     "api/v1/products/select/**",
-                    "api/v1/reports/customer-order/{customer_id}",
+
+                    // Just for testing purposes.
+                    "api/v1/reports/**",
 
                     "/v2/api-docs",
                     "/v3/api-docs",

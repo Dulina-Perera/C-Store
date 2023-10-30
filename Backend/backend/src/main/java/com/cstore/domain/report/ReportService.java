@@ -1,129 +1,54 @@
 package com.cstore.domain.report;
 
-import com.cstore.dao.order.OrderDao;
-import com.cstore.dao.product.ProductDao;
-import com.cstore.dao.property.PropertyDao;
 import com.cstore.dao.report.ReportDao;
-import com.cstore.dao.variant.VariantDao;
-import com.cstore.model.order.Order;
-import com.cstore.model.order.OrderItem;
-import com.cstore.model.product.Property;
 import lombok.RequiredArgsConstructor;
-import net.sf.jasperreports.engine.*;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static com.cstore.domain.report.Period.*;
 
 @Service
 @RequiredArgsConstructor
 public class ReportService {
-    private final ProductDao productDao;
-    private final PropertyDao propertyDao;
-    private final OrderDao orderDao;
     private final ReportDao reportDao;
 
-    public String customerOrderReport(
-        Long customerId,
-        String reportFormat
-    ) throws FileNotFoundException, JRException {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
-        String path = "/media/dulina/SP PHD U3/Education/Campus Documents/5. Semester 3/Database Systems/C Store" +
-                "/Backend/backend/src/main/resources/static/reports/Customer-Order";
+    public List<Product> getProductsWithMostSales(
+        Period period
+    ) throws DataAccessException {
+        Timestamp from, till;
 
-        List<Order> processedOrders = orderDao.findProcessedOrders(customerId);
-
-        File generated;
-        File file = ResourceUtils.getFile("classpath:templates/Customer-Order Report.jrxml");
-        JasperReport report = JasperCompileManager.compileReport(file.getAbsolutePath());
-
-        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(processedOrders);
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("created by", "C-Store");
-
-        JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataSource);
-
-        if (reportFormat.equalsIgnoreCase("html")) {
-            generated = new File("%s/html/%d-%s.html".formatted(path, customerId, dateFormat.format(new Date())));
-            JasperExportManager.exportReportToHtmlFile(
-                jasperPrint,
-                generated.getAbsolutePath());
-        } else if (reportFormat.equalsIgnoreCase("pdf")) {
-            generated = new File("%s/pdf/%d-%s.pdf".formatted(path, customerId, dateFormat.format(new Date())));
-            JasperExportManager.exportReportToPdfFile(
-                jasperPrint,
-                generated.getAbsolutePath());
-        }
-        return "Report generated successfully.";
-    }
-
-    @Scheduled(cron = "00 00 00 01 1,4,7,10 *")
-    public void quarterlySalesReport() {
-
-    }
-
-    public CustomerOrderReport getCustomerOrderReport(
-        Long customerId
-    ) {
-        List<Order> orders = orderDao.findProcessingAndProcessedOrders(customerId);
-        List<ReportItem> reportItems = new ArrayList<>();
-
-        for (Order order : orders) {
-            ReportItem reportItem = ReportItem
-                .builder()
-                .orderId(order.getOrderId())
-                .status(order.getStatus())
-                .date(order.getDate())
-                .totalPayment(order.getTotalPayment())
-                .paymentMethod(order.getPaymentMethod())
-                .deliveryMethod(order.getDeliveryMethod())
-                .build();
-
-            ShippingAddress shippingAddress = ShippingAddress
-                .builder()
-                .streetNumber(order.getStreetNumber())
-                .streetName(order.getStreetName())
-                .city(order.getCity())
-                .zipcode(order.getZipcode())
-                .build();
-
-            reportItem.setShippingAddress(shippingAddress);
-
-            List<OrderItem> orderItems = orderDao.findOrderItems(order.getOrderId());
-            List<ReportVariant> variants = new ArrayList<>();
-
-            for (OrderItem orderItem : orderItems) {
-                ReportVariant reportVariant = ReportVariant
-                    .builder()
-                    .productName(productDao.findByVariantId(orderItem.getVariantId()).get().getProductName())
-                    .quantity(orderItem.getCount())
-                    .price(orderItem.getPrice())
-                    .build();
-
-                List<Property> properties = propertyDao.findByVariantId(orderItem.getVariantId());
-
-                Map<String, String> propertyMap = new HashMap<String, String>();
-                for (Property property : properties) {
-                    propertyMap.put(property.getPropertyName(), property.getValue());
-                }
-
-                reportVariant.setProperties(propertyMap);
-                variants.add(reportVariant);
+        LocalDate now = LocalDate.now();
+        switch (period) {
+            case TODAY, YESTERDAY -> {
+                LocalDate current = (period == TODAY) ? now : now.minusDays(1);
+                from = Timestamp.valueOf(current.atStartOfDay());
+                till = Timestamp.valueOf(current.plusDays(1).atStartOfDay());
             }
-
-            reportItem.setVariants(variants);
-
-            reportItems.add(reportItem);
+            case THIS_WEEK, LAST_WEEK -> {
+                LocalDate current = (period == THIS_WEEK) ? now : now.minusWeeks(1);
+                from = Timestamp.valueOf(current.with(java.time.DayOfWeek.MONDAY).atStartOfDay());
+                till = Timestamp.valueOf(current.with(java.time.DayOfWeek.SUNDAY).plusDays(1).atStartOfDay());
+            }
+            case THIS_MONTH, LAST_MONTH -> {
+                LocalDate current = (period == THIS_MONTH) ? now : now.minusMonths(1);
+                from = Timestamp.valueOf(current.withDayOfMonth(1).atStartOfDay());
+                till = Timestamp.valueOf(current.plusMonths(1).withDayOfMonth(1).atStartOfDay());
+            }
+            case THIS_YEAR, LAST_YEAR -> {
+                LocalDate current = (period == THIS_YEAR) ? now : now.minusYears(1);
+                from = Timestamp.valueOf(current.withDayOfYear(1).atStartOfDay());
+                till = Timestamp.valueOf(current.plusYears(1).withDayOfYear(1).atStartOfDay());
+            }
+            default -> throw new PeriodUndefinedException("Invalid period.");
         }
 
-        return CustomerOrderReport
-            .builder()
-            .orderItems(reportItems)
-            .build();
+
+        return reportDao.findProductsWithMostSales(from, till);
     }
 }
