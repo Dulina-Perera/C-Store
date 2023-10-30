@@ -324,14 +324,14 @@ WHERE "category_id" NOT IN (SELECT DISTINCT "sub_category_id"
  */
 DROP VIEW IF EXISTS "leaf_category";
 CREATE VIEW "leaf_category" AS
-SELECT *
-FROM "category"
-WHERE "category_id" IN (SELECT DISTINCT "sub_category_id"
+    SELECT *
+    FROM "category"
+    WHERE "category_id" IN (SELECT DISTINCT "sub_category_id"
                         FROM sub_category) AND "category_id" NOT IN (SELECT DISTINCT "category_id"
 	                                                                 FROM sub_category);
 
--- SELECT *
--- FROM "leaf_category";
+SELECT *
+FROM "leaf_category";
 
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -438,6 +438,53 @@ $$ LANGUAGE plpgsql;
 
 -- SELECT *
 -- FROM "categories_from_product"(1);
+
+------------------------------------------------------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION "categories_with_most_orders"()
+    RETURNS TABLE (
+        "category_id"          BIGINT,
+        "category_name"        VARCHAR (40),
+        "category_description" VARCHAR,
+        "order_count"          INTEGER
+    ) AS $$
+BEGIN
+    RETURN QUERY
+        WITH ranked_categories AS (
+            SELECT
+                lc."category_id",
+                lc."category_name",
+                lc."category_description",
+                CAST(COUNT(DISTINCT o."order_id") AS INTEGER) AS "order_count",
+                RANK() OVER (ORDER BY COUNT(DISTINCT o."order_id") DESC) AS rank
+            FROM
+                "leaf_category" AS lc
+                    NATURAL LEFT OUTER JOIN
+                "belongs_to" AS bt
+                    NATURAL LEFT OUTER JOIN
+                "varies_on" AS vo
+                    NATURAL LEFT OUTER JOIN
+                "order_item" AS oi
+                    NATURAL LEFT OUTER JOIN
+                "order" AS o
+            GROUP BY
+                lc."category_id",
+                lc."category_name",
+                lc."category_description"
+        )
+        SELECT
+            rc."category_id",
+            rc."category_name",
+            rc."category_description",
+            rc."order_count"
+        FROM
+            ranked_categories AS rc
+        WHERE rank = 1;
+END
+$$ LANGUAGE plpgsql;
+
+-- SELECT *
+-- FROM "categories_with_most_orders"();
 
 ------------------------------------------------------------------------------------------------------------------------
 
@@ -773,3 +820,10 @@ CREATE TRIGGER "update_variant"
     AFTER INSERT ON "varies_on"
     FOR EACH ROW
 EXECUTE FUNCTION "update_variant"();
+
+SELECT lc.*, vo."variant_id", COUNT(DISTINCT o."order_id")
+FROM "leaf_category" AS lc NATURAL LEFT OUTER JOIN "belongs_to" AS bt NATURAL LEFT OUTER JOIN "varies_on" AS vo NATURAL LEFT OUTER JOIN "order_item" AS oi NATURAL LEFT OUTER JOIN "order" AS o
+GROUP BY lc."category_id", lc."category_name", lc."category_description", vo."variant_id";
+
+
+

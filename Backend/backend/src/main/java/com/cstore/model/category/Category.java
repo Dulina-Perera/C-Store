@@ -3,15 +3,10 @@ package com.cstore.model.category;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity
-@Table(name = "category", schema = "cstore/public")
-
-@Getter
-@Setter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Builder @AllArgsConstructor @NoArgsConstructor
+@Getter @Setter
 @ToString
+@Entity @Table(name = "category", schema = "cstore/public")
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

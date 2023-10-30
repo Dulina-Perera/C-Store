@@ -1,5 +1,6 @@
 package com.cstore.dao.report;
 
+import com.cstore.domain.report.Category;
 import com.cstore.domain.report.Product;
 import com.cstore.model.report.SalesItem;
 import com.cstore.model.report.SalesReport;
@@ -75,6 +76,18 @@ public class ReportDaoImpl implements ReportDao {
                 ps.setTimestamp(2, till);
             },
             new BeanPropertyRowMapper<>(Product.class)
+        );
+    }
+
+    @Override
+    public List<Category> findCategoriesWithMostOrders(
+    ) throws DataAccessException {
+        String sql = "SELECT * " +
+                     "FROM \"categories_with_most_orders\"();";
+
+        return jdbcTemplate.query(
+            sql,
+            new BeanPropertyRowMapper<>(Category.class)
         );
     }
 }

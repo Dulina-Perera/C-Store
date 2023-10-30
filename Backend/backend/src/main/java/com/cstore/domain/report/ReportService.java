@@ -6,9 +6,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.cstore.domain.report.Period.*;
@@ -50,5 +48,10 @@ public class ReportService {
 
 
         return reportDao.findProductsWithMostSales(from, till);
+    }
+
+    public List<Category> getCategoriesWithMostOrders(
+    ) throws DataAccessException {
+        return reportDao.findCategoriesWithMostOrders();
     }
 }
