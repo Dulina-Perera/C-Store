@@ -7,7 +7,6 @@ import com.cstore.model.product.Product;
 import com.cstore.model.product.Property;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jfree.util.Log;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -34,7 +33,7 @@ public class ProductBrowsingService {
                 .productName(product.getProductName())
                 .basePrice(product.getBasePrice())
                 .brand(product.getBrand())
-                .mainImage(product.getImageUrl())
+                .mainImage(product.getMainImage())
                 .build();
 
             Map<String, List<String>> propertyMap = new HashMap<>();
@@ -74,7 +73,7 @@ public class ProductBrowsingService {
                 .productName(product.getProductName())
                 .basePrice(product.getBasePrice())
                 .brand(product.getBrand())
-                .mainImage(product.getImageUrl())
+                .mainImage(product.getMainImage())
                 .build();
 
             Map<String, List<String>> propertyMap = new HashMap<>();

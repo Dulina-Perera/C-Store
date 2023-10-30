@@ -49,7 +49,6 @@ public class PropertyDaoImpl implements PropertyDao {
     public List<Property> findByProductId(
         Long productId
     ) throws DataAccessException {
-
         String sql = "SELECT * " +
                      "FROM \"properties_from_product\"(?);";
 
@@ -58,7 +57,6 @@ public class PropertyDaoImpl implements PropertyDao {
                 preparedStatement -> preparedStatement.setLong(1, productId),
                 new BeanPropertyRowMapper<>(Property.class)
         );
-
     }
 
     @Override

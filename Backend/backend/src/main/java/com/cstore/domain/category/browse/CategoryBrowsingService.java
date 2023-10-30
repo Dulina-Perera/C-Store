@@ -45,7 +45,7 @@ public class CategoryBrowsingService {
                 .productName(product.getProductName())
                 .basePrice(product.getBasePrice())
                 .brand(product.getBrand())
-                .mainImage(product.getImageUrl())
+                .mainImage(product.getMainImage())
                 .build();
 
             Map<String, List<String>> propertyMap = new HashMap<>();

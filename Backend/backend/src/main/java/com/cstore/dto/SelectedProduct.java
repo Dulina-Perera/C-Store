@@ -1,5 +1,6 @@
 package com.cstore.dto;
 
+import com.cstore.domain.product.select.PropertySelectionMap;
 import com.cstore.dto.ProductSelectionCategory;
 import com.cstore.model.product.Image;
 import com.cstore.model.product.Property;
@@ -28,7 +29,7 @@ public class SelectedProduct {
 
     private List<ProductSelectionCategory> categories;
 
-    private List<Property> properties;
+    private PropertySelectionMap properties;
 
     private Integer stockCount;
 }

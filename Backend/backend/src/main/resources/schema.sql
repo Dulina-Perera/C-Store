@@ -83,7 +83,7 @@ CREATE TABLE "product" (
     "base_price"   NUMERIC (10, 2) DEFAULT 0,
     "brand"        VARCHAR (40),
     "description"  VARCHAR,
-    "image_url"    VARCHAR (100),
+    "image_url"   VARCHAR (100),
     PRIMARY KEY ("product_id")
 );
 
@@ -113,7 +113,7 @@ CREATE TABLE "property" (
     "property_id"     BIGSERIAL,
     "property_name"   VARCHAR (40),
     "value"           VARCHAR (40),
-    "image_url"       VARCHAR (100),
+    "image_url"       VARCHAR (400),
     "price_increment" NUMERIC (10, 2) DEFAULT 0,
     PRIMARY KEY ("property_id")
 );
@@ -327,7 +327,7 @@ SELECT *
 FROM "category"
 WHERE "category_id" IN (SELECT DISTINCT "sub_category_id"
                         FROM sub_category) AND "category_id" NOT IN (SELECT DISTINCT "category_id"
-	                                FROM sub_category);
+	                                                                 FROM sub_category);
 
 -- SELECT *
 -- FROM "leaf_category";
@@ -557,20 +557,20 @@ CREATE OR REPLACE FUNCTION "properties_from_product"(p_id BIGINT)
         "property_id"     BIGINT,
         "property_name"   VARCHAR (40),
         "value"           VARCHAR (40),
-        "image_url"       VARCHAR (100),
+        "image_url"       VARCHAR (400),
         "price_increment" NUMERIC (10, 2)
     ) AS $$
 BEGIN
     RETURN QUERY
-        SELECT pp.*
-        FROM "property" AS pp NATURAL LEFT OUTER JOIN "varies_on" AS vo NATURAL LEFT OUTER JOIN "product" AS pd
-        WHERE pd.product_id = p_id
-        ORDER BY pp.property_name;
+        SELECT DISTINCT pp.*
+        FROM "property" AS pp NATURAL LEFT OUTER JOIN "varies_on" AS vo LEFT OUTER JOIN "product" AS pd ON vo."product_id" = pd."product_id"
+        WHERE pd."product_id" = 1
+        ORDER BY pp."property_name" DESC;
 END
 $$ LANGUAGE plpgsql;
 
 -- SELECT *
--- FROM properties_from_product(1);
+-- FROM "properties_from_product"(2);
 
 ------------------------------------------------------------------------------------------------------------------------
 

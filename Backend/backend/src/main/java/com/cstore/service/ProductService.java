@@ -44,7 +44,7 @@ public class ProductService {
         productDto.setBasePrice(product.getBasePrice());
         productDto.setBrand(product.getBrand());
         productDto.setDescription(product.getDescription());
-        productDto.setImageUrl(product.getImageUrl());
+        productDto.setMainImage(product.getMainImage());
 
         for (VariesOn variesOn : variances) {
             PropertyDto propertyDTO = new PropertyDto();
@@ -93,7 +93,7 @@ public class ProductService {
         product.setBasePrice(newProduct.getBasePrice());
         product.setBrand(newProduct.getBrand());
         product.setDescription(newProduct.getDescription());
-        product.setImageUrl(newProduct.getImageUrl());
+        product.setMainImage(newProduct.getImageUrl());
 
         productDao.save(product);
         product.setProductId(getProduct(product).getProductId());

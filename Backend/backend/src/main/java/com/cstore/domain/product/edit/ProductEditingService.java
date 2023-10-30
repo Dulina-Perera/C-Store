@@ -1,7 +1,6 @@
 package com.cstore.domain.product.edit;
 
 import com.cstore.dao.category.BelongsToDao;
-import com.cstore.dao.category.CategoryDao;
 import com.cstore.dao.product.ProductDao;
 import com.cstore.dao.image.ImageDao;
 import com.cstore.dao.product.image.ProductImageDao;
@@ -11,7 +10,6 @@ import com.cstore.dao.varieson.VariesOnDao;
 import com.cstore.dto.NewProductDto;
 import com.cstore.dto.ProductDto;
 import com.cstore.dto._Property;
-import com.cstore.exception.NoSuchProductException;
 import com.cstore.model.product.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
@@ -20,7 +18,6 @@ import org.springframework.stereotype.Service;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +39,7 @@ public class ProductEditingService {
             .basePrice(toAdd.getBasePrice())
             .brand(toAdd.getBrand())
             .description(toAdd.getDescription())
-            .imageUrl(toAdd.getMainImageUrl())
+            .mainImage(toAdd.getMainImageUrl())
             .build();
 
         product = productDao.save(product);

@@ -1,13 +1,8 @@
 package com.cstore.dao.product;
 
-import com.cstore.model.category.Category;
 import com.cstore.model.product.Product;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.annotations.Comment;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
-import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -15,7 +10,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,7 +49,7 @@ public class ProductDaoImpl implements ProductDao {
         preparedStatement.setBigDecimal(2, unknown.getBasePrice());
         preparedStatement.setString(3, unknown.getBrand());
         preparedStatement.setString(4, unknown.getDescription());
-        preparedStatement.setString(5, unknown.getImageUrl());
+        preparedStatement.setString(5, unknown.getMainImage());
 
         ResultSet resultSet = preparedStatement.executeQuery();
         if (resultSet.next()) {
@@ -75,17 +69,13 @@ public class ProductDaoImpl implements ProductDao {
                      "FROM \"product\" " +
                      "WHERE \"product_id\" = ?;";
 
-        try {
-            Product product = jdbcTemplate.queryForObject(
-                sql,
-                new BeanPropertyRowMapper<>(Product.class),
-                productId
-            );
+        Product product = jdbcTemplate.queryForObject(
+            sql,
+            new BeanPropertyRowMapper<>(Product.class),
+            productId
+        );
 
-            return Optional.of(product);
-        } catch (NullPointerException e) {
-            return Optional.empty();
-        }
+        return Optional.ofNullable(product);
     }
 
     @Override
@@ -119,7 +109,7 @@ public class ProductDaoImpl implements ProductDao {
                 ps.setBigDecimal(2, product.getBasePrice());
                 ps.setString(3, product.getBrand());
                 ps.setString(4, product.getDescription());
-                ps.setString(5, product.getImageUrl());
+                ps.setString(5, product.getMainImage());
 
             return ps;
             },
