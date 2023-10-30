@@ -12,8 +12,6 @@ public class RegisterRequest {
     private String lastName;
     private String email;
     private String password;
-
     private List<UserAddressDto> addresses;
-
-    private List<Integer> telephoneNumbers;
+    private List<String> telephoneNumbers;
 }

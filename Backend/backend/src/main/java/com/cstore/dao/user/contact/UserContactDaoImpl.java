@@ -19,7 +19,8 @@ public class UserContactDaoImpl implements UserContactDao {
 
     @Override
     public UserContact save(UserContact userContact) {
-        String sql = "INSERT INTO \"user_contact\" (\"user_id\", \"telephone_number\") VALUES(?, ?);";
+        String sql = "INSERT INTO \"user_contact\" (\"user_id\", \"telephone_number\") " +
+                     "VALUES(?, ?);";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(
@@ -27,7 +28,7 @@ public class UserContactDaoImpl implements UserContactDao {
                 PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
                 ps.setLong(1, userContact.getUserContactId().getUserId());
-                ps.setInt(2, userContact.getUserContactId().getTelephoneNumber());
+                ps.setString(2, userContact.getUserContactId().getTelephoneNumber());
 
                 return ps;
             }

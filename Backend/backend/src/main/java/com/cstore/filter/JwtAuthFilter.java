@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,9 +22,9 @@ import java.io.IOException;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+public class JwtAuthFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
-    private final UserDetailsService userDetailsService;
+    private final UserDetailsService serv;
 
     @Override
     protected void doFilterInternal(
@@ -35,22 +34,27 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
-        final String userId;
+        final String subject;
 
         if (
-            !StringUtils.isEmpty(authHeader) &&
-            StringUtils.startsWith(authHeader, "Bearer ")
+            StringUtils.isEmpty(authHeader) ||
+            !StringUtils.startsWith(authHeader, "Bearer ")
         ) {
+            filterChain.doFilter(request, response);
+        }
+        else {
             jwt = authHeader.substring(7);
             log.debug("JWT: {}", jwt);
 
-            userId = jwtService.extractUsername(jwt);
+            subject = jwtService.extractSubject(jwt);
+
             if (
-                StringUtils.isNotEmpty(userId) &&
+                StringUtils.isNotEmpty(subject) &&
                 SecurityContextHolder.getContext().getAuthentication() == null
             ) {
-                UserDetails userDetails = userDetailsService.loadUserByUsername(userId);
-                if (jwtService.isTokenValid(jwt, userDetails)) {
+                UserDetails userDetails = serv.loadUserByUsername(subject);
+
+                if (jwtService.isJwtValid(jwt, userDetails)) {
                     log.debug("User: {}", userDetails);
 
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
@@ -64,10 +68,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     );
 
                     SecurityContextHolder.getContext().setAuthentication(authToken);
-                    return;
                 }
             }
+
+            filterChain.doFilter(request, response);
         }
-        filterChain.doFilter(request, response);
     }
 }

@@ -3,11 +3,9 @@ package com.cstore.model.user;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.*;
-import org.hibernate.Hibernate;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Objects;
 
 @Embeddable
 @Builder @AllArgsConstructor @NoArgsConstructor
@@ -21,5 +19,5 @@ public class UserContactId implements Serializable {
     private Long userId;
 
     @Column(name = "telephone_number", nullable = false)
-    private Integer telephoneNumber;
+    private String telephoneNumber;
 }

@@ -1,6 +1,6 @@
 package com.cstore.configuration;
 
-import com.cstore.filter.JwtAuthenticationFilter;
+import com.cstore.filter.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,12 +24,12 @@ import java.util.List;
 @EnableMethodSecurity @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-
     private final AuthenticationProvider authProvider;
-    private final JwtAuthenticationFilter jwtAuthFilter;
+    private final JwtAuthFilter authFilter;
 
     @Bean
-    CorsConfigurationSource corsConfigurationSource() {
+    CorsConfigurationSource corsConfigurationSource(
+    ) {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(Arrays.asList(
             "http://localhost:3000",
@@ -45,26 +45,15 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(
+        HttpSecurity http
+    ) throws Exception {
         http
             .cors(Customizer.withDefaults())
             .csrf(AbstractHttpConfigurer::disable)
-            .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(
-                    "/api/v1/**",
-
-                    /*"/api/v1/auth/**",
-
-                    "/api/v1/categories/base",
-                    "/api/v1/categories/{category_id}/sub",
-                    "/api/v1/categories/{category_id}/products",
-
-                    "/api/v1/products/browse",
-                    "/api/v1/products/browse/{product_name}",
-                    "/api/v1/products/select/{product_id}",*/
+                    "/api/v1/auth/**",
 
                     "/v2/api-docs",
                     "/v3/api-docs",
@@ -79,11 +68,20 @@ public class SecurityConfig {
                     "/swagger-ui.html"
                 ).permitAll()
                 .anyRequest().authenticated()
-            )
+            );
+
+        http
+            .sessionManagement(session -> session
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            );
+
+        http
             .authenticationProvider(authProvider)
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+            .addFilterBefore(
+                authFilter,
+                UsernamePasswordAuthenticationFilter.class
+            );
 
         return http.build();
     }
-
 }

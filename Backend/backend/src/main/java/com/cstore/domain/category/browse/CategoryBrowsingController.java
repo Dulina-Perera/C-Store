@@ -19,7 +19,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "/api/v1/categories")
+@RequestMapping(path = "/api/v1/categories/browse")
 @Tag(name = "Browse Categories", description = "Provides controller methods for browsing categories.")
 public class CategoryBrowsingController {
     private final CategoryBrowsingService categoryBrowsingService;

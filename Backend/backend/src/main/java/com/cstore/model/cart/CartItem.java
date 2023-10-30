@@ -7,9 +7,7 @@ import lombok.*;
 @Getter @Setter
 @ToString
 public class CartItem {
-
     private Long userId;
     private Long variantId;
     private Integer count;
-
 }

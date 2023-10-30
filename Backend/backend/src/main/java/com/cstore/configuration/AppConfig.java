@@ -16,11 +16,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 @RequiredArgsConstructor
 public class AppConfig {
-    private final static String USER_NOT_FOUND_MSG = "User with user id %s not found.";
-    private final UserDao userDao;
+    private final static String USER_NOT_FOUND_MSG = "User with username %s not found!";
+    private final UserDao dao;
 
     @Bean
-    public AuthenticationProvider authenticationProvider() {
+    public AuthenticationProvider authProvider(
+    ) {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
 
         authProvider.setUserDetailsService(userDetailsService());
@@ -30,18 +31,22 @@ public class AppConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+    public AuthenticationManager authManager(
+        AuthenticationConfiguration authConfig
+    ) throws Exception {
         return authConfig.getAuthenticationManager();
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(12);
+    public PasswordEncoder passwordEncoder(
+    ) {
+        return new BCryptPasswordEncoder(15);
     }
 
     @Bean
-    public UserDetailsService userDetailsService() {
-        return username -> userDao
+    public UserDetailsService userDetailsService(
+    ) {
+        return username -> dao
             .findRegUserById(Long.parseLong(username))
             .orElseThrow(() -> new UsernameNotFoundException(
                 String.format(USER_NOT_FOUND_MSG, username)

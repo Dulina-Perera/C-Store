@@ -12,16 +12,16 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/v1/auth")
+@RequiredArgsConstructor
 @Tag(
     name = "Sign in & Sign up",
     description = "Provides controller methods for signing in & signing up."
 )
-@RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
 
     @Operation(
-        method = "register",
+        method = "Register",
         responses = {
             @ApiResponse(
                 content = @Content(
@@ -38,12 +38,15 @@ public class AuthController {
         method = RequestMethod.POST,
         path = "/register"
     )
-    public ResponseEntity<Jwt> register(@RequestBody(required = true) RegisterRequest request) {
+    public ResponseEntity<Jwt> register(
+        @RequestBody(required = true)
+        RegisterRequest request
+    ) {
         return ResponseEntity.ok(authService.register(request));
     }
 
     @Operation(
-        method = "authenticate",
+        method = "Authenticate",
         responses = {
             @ApiResponse(
                 content = @Content(

@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder @AllArgsConstructor @NoArgsConstructor
 public class Jwt {
-    private String token;
+    private String jwt;
 }

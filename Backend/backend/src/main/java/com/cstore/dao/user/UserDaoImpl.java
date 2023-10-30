@@ -1,9 +1,10 @@
 package com.cstore.dao.user;
 
+import com.cstore.model.user.RegUser;
 import com.cstore.model.user.RegisteredUser;
 import com.cstore.model.user.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -17,38 +18,76 @@ import java.util.Optional;
 @Repository
 @RequiredArgsConstructor
 public class UserDaoImpl implements UserDao {
-    private final JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate templ;
 
     @Override
-    public Optional<RegisteredUser> findRegUserById(Long id) {
-        try {
-            String sql = "SELECT * " +
-                         "FROM \"registered_user\" " +
-                         "WHERE \"user_id\" = ?";
+    public Optional<User> findUserById(Long id)
+        throws DataAccessException {
+        String sql = "SELECT * " +
+                     "FROM \"user\" " +
+                     "WHERE \"user_id\" = ?";
 
-            RegisteredUser registeredUser = jdbcTemplate.queryForObject(
-                sql,
-                new BeanPropertyRowMapper<>(RegisteredUser.class),
-                id
-            );
-            return Optional.ofNullable(registeredUser);
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
+        User user = templ.queryForObject(
+            sql,
+            new BeanPropertyRowMapper<>(User.class),
+            id
+        );
+
+        return Optional.ofNullable(user);
     }
 
     @Override
-    public Optional<RegisteredUser> findRegUserByEmail(String email) {
-        try {
-            String sql = "SELECT * " +
-                         "FROM \"registered_user\" " +
-                         "WHERE \"email\" = ?";
+    public Optional<RegUser> findRegUserById(Long id)
+        throws DataAccessException {
+        String sql = "SELECT * " +
+                     "FROM \"registered_user\" " +
+                     "WHERE \"user_id\" = ?";
 
-            RegisteredUser registeredUser = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(RegisteredUser.class), email);
-            return Optional.ofNullable(registeredUser);
-        } catch (EmptyResultDataAccessException erde) {
-            return Optional.empty();
+        RegUser regUser = templ.queryForObject(
+            sql,
+            new BeanPropertyRowMapper<>(RegUser.class),
+            id
+        );
+
+        if (regUser != null) {
+            regUser.setUser(findUserById(id).get());
         }
+
+        return Optional.ofNullable(regUser);
+    }
+
+    @Override
+    public Optional<User> findUserByEmail(String email)
+        throws DataAccessException {
+        String sql = "SELECT u.* " +
+                     "FROM \"user\" AS u NATURAL RIGHT OUTER JOIN \"registered_user\" AS ru " +
+                     "WHERE \"email\" = ?;";
+
+        return Optional.ofNullable(templ.queryForObject(
+            sql,
+            new BeanPropertyRowMapper<>(User.class),
+            email
+        ));
+    }
+
+    @Override
+    public Optional<RegUser> findRegUserByEmail(String email)
+        throws DataAccessException {
+        String sql = "SELECT * " +
+                     "FROM \"registered_user\" " +
+                     "WHERE \"email\" = ?";
+
+        RegUser regUser = templ.queryForObject(
+            sql,
+            new BeanPropertyRowMapper<>(RegUser.class),
+            email
+        );
+
+        if (regUser != null) {
+            regUser.setUser(findUserByEmail(regUser.getEmail()).get());
+        }
+
+        return Optional.ofNullable(regUser);
     }
 
     @Override
@@ -58,7 +97,7 @@ public class UserDaoImpl implements UserDao {
                      "RETURNING \"user_id\";";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        jdbcTemplate.update(
+        templ.update(
             connection -> {
                 PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
                 ps.setString(1, user.getRole().toString());
@@ -77,25 +116,28 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public RegisteredUser saveRegUser(RegisteredUser registeredUser) {
-        String sql = "INSERT INTO \"registered_user\" VALUES(?, ?, ?, ?, ?, ?, ?);";
+    public RegUser saveRegUser(
+        RegUser regUser
+    ) {
+        String sql = "INSERT INTO \"registered_user\" " +
+                     "VALUES(?, ?, ?, ?, ?, ?, ?);";
 
-        jdbcTemplate.update(
+        templ.update(
             connection -> {
                 PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
-                ps.setLong(1, registeredUser.getUserId());
-                ps.setString(2, registeredUser.getEmail());
-                ps.setString(3, registeredUser.getPassword());
-                ps.setString(4, registeredUser.getFirstName());
-                ps.setString(5, registeredUser.getLastName());
-                ps.setBoolean(6, registeredUser.getLocked());
-                ps.setBoolean(7, registeredUser.getEnabled());
+                ps.setLong(1, regUser.getUser().getUserId());
+                ps.setString(2, regUser.getEmail());
+                ps.setString(3, regUser.getPassword());
+                ps.setString(4, regUser.getFirstName());
+                ps.setString(5, regUser.getLastName());
+                ps.setBoolean(6, regUser.getLocked());
+                ps.setBoolean(7, regUser.getEnabled());
 
                 return ps;
             }
         );
 
-        return registeredUser;
+        return regUser;
     }
 }

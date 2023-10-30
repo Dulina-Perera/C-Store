@@ -1,51 +1,51 @@
 \c cstore;
 
-DROP TRIGGER IF EXISTS "update_variant" ON "varies_on"; DROP FUNCTION IF EXISTS "update_variant";
-DROP TRIGGER IF EXISTS "update_cart" ON "cart_item"; DROP FUNCTION IF EXISTS "update_cart";
-DROP TRIGGER IF EXISTS "delete_order_items" ON "order"; DROP FUNCTION IF EXISTS "delete_order_items";
+DROP TRIGGER IF EXISTS "update_variant" ON "varies_on"; DROP FUNCTION IF EXISTS "update_variant" CASCADE;
+DROP TRIGGER IF EXISTS "update_cart" ON "cart_item"; DROP FUNCTION IF EXISTS "update_cart" CASCADE;
+DROP TRIGGER IF EXISTS "delete_order_items" ON "order"; DROP FUNCTION IF EXISTS "delete_order_items" CASCADE;
 
-DROP FUNCTION IF EXISTS "unmarketable_properties";
-DROP FUNCTION IF EXISTS "search_products_by_name";
-DROP FUNCTION IF EXISTS "rank_categories_by_orders";
-DROP FUNCTION IF EXISTS "quarters_with_most_interest";
-DROP FUNCTION IF EXISTS "properties_from_product";
-DROP FUNCTION IF EXISTS "products_with_most_sales";
-DROP FUNCTION IF EXISTS "products_from_category";
-DROP FUNCTION IF EXISTS "images_from_product";
-DROP FUNCTION IF EXISTS "customer_order_report";
-DROP FUNCTION IF EXISTS "count_stocks";
-DROP FUNCTION IF EXISTS "categories_from_product";
+DROP FUNCTION IF EXISTS "unmarketable_properties" CASCADE;
+DROP FUNCTION IF EXISTS "search_products_by_name" CASCADE;
+DROP FUNCTION IF EXISTS "rank_categories_by_orders" CASCADE;
+DROP FUNCTION IF EXISTS "quarters_with_most_interest" CASCADE;
+DROP FUNCTION IF EXISTS "properties_from_product" CASCADE;
+DROP FUNCTION IF EXISTS "products_with_most_sales" CASCADE;
+DROP FUNCTION IF EXISTS "products_from_category" CASCADE;
+DROP FUNCTION IF EXISTS "images_from_product" CASCADE;
+DROP FUNCTION IF EXISTS "customer_order_report" CASCADE;
+DROP FUNCTION IF EXISTS "count_stocks" CASCADE;
+DROP FUNCTION IF EXISTS "categories_from_product" CASCADE;
 
-DROP PROCEDURE IF EXISTS "update_inventory";
-DROP PROCEDURE IF EXISTS "stock";
-DROP PROCEDURE IF EXISTS "add_to_cart";
+DROP PROCEDURE IF EXISTS "update_inventory" CASCADE;
+DROP PROCEDURE IF EXISTS "stock" CASCADE;
+DROP PROCEDURE IF EXISTS "add_to_cart" CASCADE;
 
-DROP VIEW IF EXISTS "leaf_category";
-DROP VIEW IF EXISTS "root_category";
+DROP VIEW IF EXISTS "leaf_category" CASCADE;
+DROP VIEW IF EXISTS "root_category" CASCADE;
 
-DROP TABLE IF EXISTS "sales_item";
-DROP TABLE IF EXISTS "sales_report";
-DROP TABLE IF EXISTS "order_item";
-DROP TABLE IF EXISTS "order_contact";
-DROP TABLE IF EXISTS "order";
-DROP TABLE IF EXISTS "cart_item";
-DROP TABLE IF EXISTS "cart";
-DROP TABLE IF EXISTS "user_address";
-DROP TABLE IF EXISTS "user_contact";
-DROP TABLE IF EXISTS "registered_user";
-DROP TABLE IF EXISTS "user";
-DROP TABLE IF EXISTS "inventory";
-DROP TABLE IF EXISTS "warehouse_contact";
-DROP TABLE IF EXISTS "warehouse";
-DROP TABLE IF EXISTS "varies_on";
-DROP TABLE IF EXISTS "variant";
-DROP TABLE IF EXISTS "property";
-DROP TABLE IF EXISTS "belongs_to";
-DROP TABLE IF EXISTS "product_image";
-DROP TABLE IF EXISTS "product";
-DROP TABLE IF EXISTS "image";
-DROP TABLE IF EXISTS "sub_category";
-DROP TABLE IF EXISTS "category";
+DROP TABLE IF EXISTS "sales_item" CASCADE;
+DROP TABLE IF EXISTS "sales_report" CASCADE;
+DROP TABLE IF EXISTS "order_item" CASCADE;
+DROP TABLE IF EXISTS "order_contact" CASCADE;
+DROP TABLE IF EXISTS "order" CASCADE;
+DROP TABLE IF EXISTS "cart_item" CASCADE;
+DROP TABLE IF EXISTS "cart" CASCADE;
+DROP TABLE IF EXISTS "user_address" CASCADE;
+DROP TABLE IF EXISTS "user_contact" CASCADE;
+DROP TABLE IF EXISTS "registered_user" CASCADE;
+DROP TABLE IF EXISTS "user" CASCADE;
+DROP TABLE IF EXISTS "inventory" CASCADE;
+DROP TABLE IF EXISTS "warehouse_contact" CASCADE;
+DROP TABLE IF EXISTS "warehouse" CASCADE;
+DROP TABLE IF EXISTS "varies_on" CASCADE;
+DROP TABLE IF EXISTS "variant" CASCADE;
+DROP TABLE IF EXISTS "property" CASCADE;
+DROP TABLE IF EXISTS "belongs_to" CASCADE;
+DROP TABLE IF EXISTS "product_image" CASCADE;
+DROP TABLE IF EXISTS "product" CASCADE;
+DROP TABLE IF EXISTS "image" CASCADE;
+DROP TABLE IF EXISTS "sub_category" CASCADE;
+DROP TABLE IF EXISTS "category" CASCADE;
 
 -- Category
 DROP TABLE IF EXISTS "category";
@@ -59,12 +59,12 @@ CREATE TABLE "category" (
 -- Sub Category
 DROP TABLE IF EXISTS "sub_category";
 CREATE TABLE "sub_category" (
-                                "category_id"     BIGINT,
-                                "sub_category_id" BIGINT,
-                                CHECK ("category_id" != "sub_category_id"),
-                                PRIMARY KEY ("category_id", "sub_category_id"),
-                                FOREIGN KEY ("category_id") REFERENCES "category" ("category_id") ON DELETE CASCADE,
-                                FOREIGN KEY ("sub_category_id") REFERENCES "category" ("category_id") ON DELETE CASCADE
+    "category_id"     BIGINT,
+    "sub_category_id" BIGINT,
+    CHECK ("category_id" != "sub_category_id"),
+    PRIMARY KEY ("category_id", "sub_category_id"),
+    FOREIGN KEY ("category_id") REFERENCES "category" ("category_id") ON DELETE CASCADE,
+    FOREIGN KEY ("sub_category_id") REFERENCES "category" ("category_id") ON DELETE CASCADE
 );
 
 -- Image
@@ -309,7 +309,7 @@ WHERE "category_id" NOT IN (SELECT DISTINCT "sub_category_id"
                             FROM sub_category);
 
 -- SELECT *
--- FROM "base_category";
+-- FROM "root_category";
 
 ------------------------------------------------------------------------------------------------------------------------
 
