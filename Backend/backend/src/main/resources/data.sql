@@ -521,9 +521,9 @@ INSERT INTO "variant" ("weight") VALUES
 	(200.00),
 	(240.00);
 
-SELECT *
-FROM "variant"
-ORDER BY "variant_id";
+-- SELECT *
+-- FROM "variant"
+-- ORDER BY "variant_id";
 
 -- ---------------------------------------------------------------------------------------------------------------------
 --  "varies_on"

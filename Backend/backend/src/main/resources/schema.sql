@@ -206,6 +206,17 @@ CREATE TABLE "user_address" (
     FOREIGN KEY ("user_id") REFERENCES "user" ("user_id") ON DELETE CASCADE
 );
 
+-- Registered User Token
+DROP TABLE IF EXISTS "token";
+CREATE TABLE "token" (
+    "user_id" BIGINT,
+    "content"   VARCHAR UNIQUE NOT NULL,
+    "expired" BOOLEAN,
+    "revoked" BOOLEAN,
+    PRIMARY KEY ("content"),
+    FOREIGN KEY ("user_id") REFERENCES "user" ("user_id") ON DELETE CASCADE
+);
+
 -- Cart
 DROP TABLE IF EXISTS "cart";
 CREATE TABLE "cart" (
