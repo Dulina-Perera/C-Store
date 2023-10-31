@@ -619,13 +619,13 @@ BEGIN
     RETURN QUERY
         SELECT DISTINCT pp.*
         FROM "property" AS pp NATURAL LEFT OUTER JOIN "varies_on" AS vo LEFT OUTER JOIN "product" AS pd ON vo."product_id" = pd."product_id"
-        WHERE pd."product_id" = 1
+        WHERE pd."product_id" = p_id
         ORDER BY pp."property_name" DESC;
 END
 $$ LANGUAGE plpgsql;
 
 -- SELECT *
--- FROM "properties_from_product"(2);
+-- FROM "properties_from_product"(14);
 
 ------------------------------------------------------------------------------------------------------------------------
 
@@ -821,9 +821,9 @@ CREATE TRIGGER "update_variant"
     FOR EACH ROW
 EXECUTE FUNCTION "update_variant"();
 
-SELECT lc.*, vo."variant_id", COUNT(DISTINCT o."order_id")
+/*SELECT lc.*, vo."variant_id", COUNT(DISTINCT o."order_id")
 FROM "leaf_category" AS lc NATURAL LEFT OUTER JOIN "belongs_to" AS bt NATURAL LEFT OUTER JOIN "varies_on" AS vo NATURAL LEFT OUTER JOIN "order_item" AS oi NATURAL LEFT OUTER JOIN "order" AS o
-GROUP BY lc."category_id", lc."category_name", lc."category_description", vo."variant_id";
+GROUP BY lc."category_id", lc."category_name", lc."category_description", vo."variant_id";*/
 
 
 
