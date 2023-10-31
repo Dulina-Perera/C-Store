@@ -60,14 +60,15 @@ public class ReportDaoImpl implements ReportDao {
         Timestamp from,
         Timestamp till
     ) throws DataAccessException {
-        String sql = "SELECT p.\"product_id\", p.\"product_name\", p.\"image_url\", SUM(oi.\"count\") AS \"sales\" " +
+        String sql = "SELECT p.\"product_id\", p.\"product_name\", p.\"main_image\", SUM(oi.\"count\") AS \"sales\" " +
                      "FROM \"order\" AS o NATURAL LEFT OUTER JOIN " +
                      "     \"order_item\" AS oi NATURAL LEFT OUTER JOIN " +
                      "     (SELECT DISTINCT \"product_id\", \"variant_id\" " +
                      "      FROM \"varies_on\") AS vo NATURAL LEFT OUTER JOIN " +
                      "     \"product\" AS p " +
                      "WHERE o.\"date\" BETWEEN ? AND ? " +
-                     "GROUP BY p.\"product_id\", p.\"product_name\", p.\"image_url\";";
+                     "GROUP BY p.\"product_id\", p.\"product_name\", p.\"main_image\" " +
+                     "LIMIT 1;";
 
         return jdbcTemplate.query(
             sql,
