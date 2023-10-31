@@ -91,8 +91,10 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public Product save(Product product) {
-        String sql = "INSERT INTO \"product\"(\"product_name\", \"base_price\", \"brand\", \"description\", \"image_url\") " +
+    public Product save(
+        Product product
+    ) {
+        String sql = "INSERT INTO \"product\"(\"product_name\", \"base_price\", \"brand\", \"description\", \"main_image\") " +
                      "VALUES(?, ?, ?, ?, ?) " +
                      "RETURNING \"product_id\";";
         KeyHolder keyHolder = new GeneratedKeyHolder();

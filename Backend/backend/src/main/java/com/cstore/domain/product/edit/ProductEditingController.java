@@ -15,10 +15,10 @@ import java.util.List;
 
 @Tag(name = "Edit Products")
 @RestController
-@RequestMapping(path = "/api/v1/products")
+@RequestMapping(path = "/api/v1/products/edit")
 @RequiredArgsConstructor
 public class ProductEditingController {
-    private final ProductEditingService serv;
+    private final ProductEditingService productEditingService;
 
     @Operation(
         description = """
@@ -43,9 +43,9 @@ public class ProductEditingController {
     )
     public Long addBareProduct(
         @RequestBody(required = true)
-        ProductAddRequest toAdd
+        BareProduct toAdd
     ) throws DataAccessException {
-        return serv.addBareProduct(toAdd);
+        return productEditingService.addBareProduct(toAdd);
     }
 
     @Operation(
@@ -72,7 +72,7 @@ public class ProductEditingController {
         @RequestBody(required = true)
         List<Long> categoryIds
     ) throws DataAccessException, SQLIntegrityConstraintViolationException {
-        serv.defineCategories(productId, categoryIds);
+        productEditingService.defineCategories(productId, categoryIds);
     }
 
 
@@ -101,7 +101,7 @@ public class ProductEditingController {
         @RequestBody(required = true)
         List<Property> properties
     ) {
-        return serv.populateWithProperties(properties);
+        return productEditingService.populateWithProperties(properties);
     }
 
     @Operation(
@@ -133,6 +133,6 @@ public class ProductEditingController {
         @RequestBody(required = true)
         List<Variant_> variantproperties
     ) {
-        serv.addVariants(productId, variantproperties);
+        productEditingService.addVariants(productId, variantproperties);
     }
 }

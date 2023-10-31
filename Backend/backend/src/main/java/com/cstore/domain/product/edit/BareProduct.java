@@ -9,12 +9,11 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor @NoArgsConstructor
-public class ProductAddRequest {
+public class BareProduct {
     private String productName;
     private BigDecimal basePrice;
     private String brand;
     private String description;
-    private String mainImageUrl;
-
-    private List<String> otherImageUrls;
+    private String mainImage;
+    private List<String> otherImages;
 }

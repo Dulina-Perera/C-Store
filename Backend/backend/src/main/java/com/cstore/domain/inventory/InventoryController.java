@@ -1,6 +1,5 @@
 package com.cstore.domain.inventory;
 
-import com.cstore.domain.product.edit.ProductAddRequest;
 import com.cstore.model.warehouse.Inventory;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

@@ -25,34 +25,34 @@ public class ProductEditingService {
     private final BelongsToDao belongsToDao;
     private final ImageDao imageDao;
     private final ProductDao productDao;
-    private final ProductImageDao productImageDao;
     private final PropertyDao propertyDao;
     private final VariantDao variantDao;
     private final VariesOnDao variesOnDao;
 
     public Long addBareProduct(
-        ProductAddRequest toAdd
+        BareProduct bareProduct
     ) throws DataAccessException {
         Product product = Product
             .builder()
-            .productName(toAdd.getProductName())
-            .basePrice(toAdd.getBasePrice())
-            .brand(toAdd.getBrand())
-            .description(toAdd.getDescription())
-            .mainImage(toAdd.getMainImageUrl())
+            .productName(bareProduct.getProductName())
+            .basePrice(bareProduct.getBasePrice())
+            .brand(bareProduct.getBrand())
+            .description(bareProduct.getDescription())
+            .mainImage(bareProduct.getMainImage())
             .build();
 
         product = productDao.save(product);
 
-        for (String imageUrl : toAdd.getOtherImageUrls()) {
-            Image image = Image
-                .builder()
-                .url(imageUrl)
-                .build();
+        if (bareProduct.getOtherImages() != null) {
+            for (String imageUrl : bareProduct.getOtherImages()) {
+                Image image = Image
+                    .builder()
+                    .productId(product.getProductId())
+                    .url(imageUrl)
+                    .build();
 
-            image = imageDao.save(image);
-
-            productImageDao.save(image.getImageId(), product.getProductId());
+                image = imageDao.save(image);
+            }
         }
 
         return product.getProductId();
@@ -96,7 +96,7 @@ public class ProductEditingService {
 
     public void addVariants(Long productId, List<Variant_> variants) {
         for (Variant_ variant_ : variants) {
-            Variant variant = variantDao.save(Variant
+            com.cstore.model.product.Variant variant = variantDao.save(com.cstore.model.product.Variant
                 .builder()
                 .weight(variant_.getWeight())
                 .build());

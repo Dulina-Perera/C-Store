@@ -38,7 +38,7 @@ public class CategoryBrowsingController {
         },
         summary = "Returns all the base categories."
     )
-    @RequestMapping(method = RequestMethod.GET, path = "/base")
+    @RequestMapping(method = RequestMethod.GET, path = "/root")
     public List<Category> getRootCategories(
     ) {
 
@@ -60,7 +60,7 @@ public class CategoryBrowsingController {
         },
         summary = "Returns all sub categories, given the category identifier."
     )
-    @RequestMapping(method = RequestMethod.GET, path = "/{category_id}/sub")
+    @RequestMapping(method = RequestMethod.GET, path = "/{category_id}/child")
     public List<Category> getChildCategories(
         @PathVariable(name = "category_id", required = true)
         Long categoryId

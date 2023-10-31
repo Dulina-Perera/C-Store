@@ -518,15 +518,16 @@ $$ LANGUAGE plpgsql;
 
 ------------------------------------------------------------------------------------------------------------------------
 
+DROP FUNCTION IF EXISTS "images_from_product";
 CREATE OR REPLACE FUNCTION "images_from_product"(p_id BIGINT)
     RETURNS TABLE (
-                      "image_id" BIGINT,
-                      "url"      VARCHAR (100)
-                  ) AS $$
+        "product_id" BIGINT,
+        "url"      VARCHAR (100)
+    ) AS $$
 BEGIN
     RETURN QUERY
         SELECT DISTINCT i.*
-        FROM "image" AS i NATURAL LEFT OUTER JOIN "product_image" AS pi NATURAL LEFT OUTER JOIN "product" AS p
+        FROM "image" AS i NATURAL LEFT OUTER JOIN "product" AS p
         WHERE p."product_id" = p_id;
 END
 $$ LANGUAGE plpgsql;

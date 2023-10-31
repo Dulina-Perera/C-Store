@@ -331,9 +331,9 @@ INSERT INTO "property" ("property_name", "value", "url", "price_increment") VALU
 	('Count','8',NULL,80.00),
 	('Count','10',NULL,160.00);
 
--- SELECT *
--- FROM "property"
--- ORDER BY "property_id";
+SELECT *
+FROM "property"
+ORDER BY "property_id";
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- "variant"
@@ -521,9 +521,9 @@ INSERT INTO "variant" ("weight") VALUES
 	(200.00),
 	(240.00);
 
--- SELECT *
--- FROM "variant"
--- ORDER BY "variant_id";
+SELECT *
+FROM "variant"
+ORDER BY "variant_id";
 
 -- ---------------------------------------------------------------------------------------------------------------------
 --  "varies_on"

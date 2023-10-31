@@ -75,7 +75,7 @@ public class PropertyDaoImpl implements PropertyDao {
 
     @Override
     public Property save(Property property) {
-        String sql = "INSERT INTO \"property\"(\"property_name\", \"value\", \"image_url\", \"price_increment\") " +
+        String sql = "INSERT INTO \"property\"(\"property_name\", \"value\", \"url\", \"price_increment\") " +
                      "VALUES(?, ?, ?, ?) " +
                      "RETURNING \"property_id\";";
         KeyHolder keyHolder = new GeneratedKeyHolder();

@@ -12,11 +12,11 @@ What can an actor do with products?
 
                 * The JSON object would look like:
                     {
-                        "productId": <Long>
-                        "productName": <String>
-                        "basePrice": <BigDecimal>
-                        "brand": <String>
-                        "mainImage": <String>
+                        "productId": <Long>,
+                        "productName": <String>,
+                        "basePrice": <BigDecimal>,
+                        "brand": <String>,
+                        "mainImage": <String>,
                         "properties": <Map<String, List<String>>>
                     }
                 * Suppose that for a product COLOUR & SIZE are non-monetary properties.
@@ -36,10 +36,25 @@ What can an actor do with products?
                     }
         * In addition to this general browsing (/api/v1/products/browse), browsing by name (/api/v1/products/browse/{product_name}) is also allowed.
             * Note that browsing by name utilizes LIKE expressions.
-              So, the client doesn't have to provide the full name of the product.
+                So, the client doesn't have to provide the full name of the product.
 
 
     2. Select a product.
 
-    3. Add a new product.
 
+    3. Add a new product.
+        * This should be restricted to authorized personnel. (In current implementation it is just the ADMIN.)
+        * Basic product information, categories it belongs to, & variant definitions have to be specified as follows.
+            {
+                "productName": <String>,
+                "basePrice": <BigDecimal>,
+                "brand": <String>,
+                "description": <String>,
+                "mainImage": <String>,
+                "otherImages": <List<String>>,
+
+                "categoryIds": <List<Long>>,
+
+                "variants": List<Pair<Map<String, String>, Integer>>
+            }
+            * Category Ids should be obtained using (/api/v1/categories/browse/root) & (/api/v1/categories/browse/{category_id}/child) endpoints.

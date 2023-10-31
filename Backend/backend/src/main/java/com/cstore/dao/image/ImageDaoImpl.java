@@ -2,6 +2,7 @@ package com.cstore.dao.image;
 
 import com.cstore.model.product.Image;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -31,28 +32,22 @@ public class ImageDaoImpl implements ImageDao {
     }
 
     @Override
-    public Image save(Image image) {
-        String sql = "INSERT INTO \"image\"(\"url\") " +
-                     "VALUES(?) " +
-                     "RETURNING \"image_id\";";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+    public Image save(
+        Image image
+    ) throws DataAccessException {
+        String sql = "INSERT INTO \"image\"(\"product_id\", \"url\") " +
+                     "VALUES(?, ?);";
 
         jdbcTemplate.update(
             connection -> {
-                PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                PreparedStatement ps = connection.prepareStatement(sql);
 
-                ps.setString(1, image.getUrl());
+                ps.setLong(1, image.getProductId());
+                ps.setString(2, image.getUrl());
 
                 return ps;
-            },
-            keyHolder
+            }
         );
-
-        Number generatedUserId = keyHolder.getKey();
-
-        if (generatedUserId != null) {
-            image.setImageId(generatedUserId.longValue());
-        }
 
         return image;
     }
