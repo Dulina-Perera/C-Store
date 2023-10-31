@@ -40,3 +40,6 @@ What can an actor do with products?
 
 
     2. Select a product.
+
+    3. Add a new product.
+

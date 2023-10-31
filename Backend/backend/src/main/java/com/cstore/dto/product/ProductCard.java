@@ -17,5 +17,5 @@ public class ProductCard {
     private BigDecimal basePrice;
     private String brand;
     private String mainImage;
-    private Map<String, List<String>> properties;
+    private Map<String, List<String>> unmarketableProperties;
 }

@@ -15,7 +15,6 @@ DELETE FROM "varies_on";
 DELETE FROM "variant";
 DELETE FROM "property";
 DELETE FROM "belongs_to";
-DELETE FROM "product_image";
 DELETE FROM "product";
 DELETE FROM "image";
 DELETE FROM "sub_category";
@@ -81,7 +80,7 @@ INSERT INTO "sub_category" ("category_id", "sub_category_id") VALUES
 -- ---------------------------------------------------------------------------------------------------------------------
 -- "product"
 
-INSERT INTO "product" ("product_name", "base_price", "brand", "description", "image_url") VALUES
+INSERT INTO "product" ("product_name", "base_price", "brand", "description", "main_image") VALUES
 	('iphone 14 pro',359900.00,'Apple','A high-end smartphone with advanced features.','1/1_product.jfif'),
 	('Macbook Pro',429900.00,'Apple','Powerful laptop for professionals','2/2_product.jfif'),
 	('TV',150000.00,'Samsung','4K Ultra HD OLED TV for stunning visuals','3/3_product.jfif'),
@@ -126,14 +125,6 @@ INSERT INTO "product" ("product_name", "base_price", "brand", "description", "im
 -- SELECT *
 -- FROM "product"
 -- ORDER BY "product_id";
-
--- ---------------------------------------------------------------------------------------------------------------------
--- "product Image"
-
-
-
--- SELECT *
--- FROM "product_image";
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- "belongs to"
@@ -194,7 +185,7 @@ INSERT INTO "belongs_to" ("category_id", "product_id") VALUES
 -- ---------------------------------------------------------------------------------------------------------------------
 -- "property"
 
-INSERT INTO "property" ("property_name", "value", "image_url", "price_increment") VALUES
+INSERT INTO "property" ("property_name", "value", "url", "price_increment") VALUES
 	('Color','Deep Purple','1/1_var_1.jfif',0.00),
 	('Color','Gold','1/1_var_2.jfif',0.00),
 	('Color','Silver','1/1_var_3.jfif',0.00),

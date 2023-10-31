@@ -70,9 +70,9 @@ CREATE TABLE "sub_category" (
 -- Image
 DROP TABLE IF EXISTS "image";
 CREATE TABLE "image" (
-     "image_id" BIGSERIAL,
-     "url"      VARCHAR (100),
-     PRIMARY KEY ("image_id")
+     "product_id" BIGINT,
+     "url"        VARCHAR (100),
+     PRIMARY KEY ("product_id", "url")
 );
 
 -- WholeProduct
@@ -83,18 +83,8 @@ CREATE TABLE "product" (
     "base_price"   NUMERIC (10, 2) DEFAULT 0,
     "brand"        VARCHAR (40),
     "description"  VARCHAR,
-    "image_url"    VARCHAR (100),
+    "main_image"    VARCHAR (100),
     PRIMARY KEY ("product_id")
-);
-
--- WholeProduct Image
-DROP TABLE IF EXISTS "product_image";
-CREATE TABLE "product_image" (
-     "image_id"   BIGINT,
-     "product_id" BIGINT,
-     PRIMARY KEY ("image_id"),
-     FOREIGN KEY ("product_id") REFERENCES "product" ("product_id") ON DELETE CASCADE,
-     FOREIGN KEY ("image_id") REFERENCES "image" ("image_id") ON DELETE CASCADE
 );
 
 -- Belongs to
@@ -113,7 +103,7 @@ CREATE TABLE "property" (
     "property_id"     BIGSERIAL,
     "property_name"   VARCHAR (40),
     "value"           VARCHAR (40),
-    "image_url"       VARCHAR (400),
+    "url"             VARCHAR (100),
     "price_increment" NUMERIC (10, 2) DEFAULT 0,
     PRIMARY KEY ("property_id")
 );
@@ -330,8 +320,8 @@ CREATE VIEW "leaf_category" AS
                         FROM sub_category) AND "category_id" NOT IN (SELECT DISTINCT "category_id"
 	                                                                 FROM sub_category);
 
-SELECT *
-FROM "leaf_category";
+-- SELECT *
+-- FROM "leaf_category";
 
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -654,6 +644,7 @@ $$ LANGUAGE plpgsql;
 
 ------------------------------------------------------------------------------------------------------------------------
 
+DROP FUNCTION IF EXISTS "search_products_by_name"();
 CREATE OR REPLACE FUNCTION "search_products_by_name"(p_name VARCHAR (100))
     RETURNS TABLE (
         "product_id"   BIGINT,
@@ -661,13 +652,13 @@ CREATE OR REPLACE FUNCTION "search_products_by_name"(p_name VARCHAR (100))
         "base_price"   NUMERIC (10, 2),
         "brand"        VARCHAR (40),
         "description"  VARCHAR,
-        "image_url"    VARCHAR (100)
+        "main_image"   VARCHAR (100)
     ) AS $$
 BEGIN
     RETURN QUERY
         SELECT *
         FROM "product" AS p
-        WHERE p."product_name" LIKE CONCAT('%', p_name, '%');
+        WHERE p."product_name" ILIKE CONCAT('%', p_name, '%');
 END
 $$ LANGUAGE plpgsql;
 

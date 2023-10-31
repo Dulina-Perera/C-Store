@@ -25,7 +25,6 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public List<Product> findAll(
     ) throws DataAccessException {
-
         String sql = "SELECT * " +
                      "FROM \"product\";";
 
@@ -33,7 +32,6 @@ public class ProductDaoImpl implements ProductDao {
             sql,
             new BeanPropertyRowMapper<>(Product.class)
         );
-
     }
 
     @Override
@@ -82,7 +80,6 @@ public class ProductDaoImpl implements ProductDao {
     public List<Product> findByName(
         String productName
     ) throws DataAccessException {
-
         String sql = "SELECT * " +
                      "FROM \"search_products_by_name\"(?);";
 
@@ -91,7 +88,6 @@ public class ProductDaoImpl implements ProductDao {
             preparedStatement -> preparedStatement.setString(1, productName),
             new BeanPropertyRowMapper<>(Product.class)
         );
-
     }
 
     @Override

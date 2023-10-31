@@ -62,7 +62,7 @@ public class CategoryBrowsingService {
                     propertyMap.put(property.getPropertyName(), propertyValues);
                 }
             }
-            productCard.setProperties(propertyMap);
+            productCard.setUnmarketableProperties(propertyMap);
 
             productCards.add(productCard);
         }

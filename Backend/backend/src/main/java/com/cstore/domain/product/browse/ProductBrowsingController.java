@@ -8,6 +8,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,8 +23,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @Tag(name = "Browse Products")
 public class ProductBrowsingController {
-    private final ProductBrowsingService serv;
+    private final ProductBrowsingService productBrowsingService;
 
+    // TODO: Implement pagination., Enhance documentation.
     @Operation(
         method = "Get Products",
         responses = {
@@ -37,10 +41,22 @@ public class ProductBrowsingController {
         summary = "Returns all products (with properties of non-monetary value)."
     )
     @RequestMapping(method = RequestMethod.GET, path = "")
-    public List<ProductCard> getProducts() {
-        return serv.getProducts();
+    public ResponseEntity<List<ProductCard>> getProducts(
+    ) {
+        try {
+            return new ResponseEntity<>(
+                productBrowsingService.getProducts(),
+                HttpStatus.OK
+            );
+        } catch (DataAccessException dae) {
+            return new ResponseEntity<>(
+                null,
+                HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        }
     }
 
+    // TODO: Implement pagination., Enhance documentation.
     @Operation(
             method = "Get Products by Name",
             responses = {
@@ -56,14 +72,24 @@ public class ProductBrowsingController {
             summary = "Returns all products (with properties of non-monetary value) matching a given name."
     )
     @RequestMapping(method = RequestMethod.GET, path = "/{product_name}")
-    public List<ProductCard> getProductsByName(
+    public ResponseEntity<List<ProductCard>> getProductsByName(
         @PathVariable(
             name = "product_name",
             required = true
         )
         String productName
     ) {
-        return serv.getProductsByName(productName);
+        try {
+            return new ResponseEntity<>(
+                productBrowsingService.getProductsByName(productName),
+                HttpStatus.OK
+            );
+        } catch (DataAccessException dae) {
+            return new ResponseEntity<>(
+                null,
+                HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        }
     }
 
 }

@@ -7,6 +7,7 @@ import com.cstore.model.product.Product;
 import com.cstore.model.product.Property;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,7 +23,8 @@ public class ProductBrowsingService {
     private final ProductDao productDao;
     private final PropertyDao propertyDao;
 
-    public List<ProductCard> getProducts() {
+    public List<ProductCard> getProducts(
+    ) throws DataAccessException {
         List<ProductCard> productCards = new ArrayList<ProductCard>();
 
         List<Product> products = productDao.findAll();
@@ -51,7 +53,7 @@ public class ProductBrowsingService {
                     propertyMap.put(property.getPropertyName(), propertyValues);
                 }
             }
-            productCard.setProperties(propertyMap);
+            productCard.setUnmarketableProperties(propertyMap);
 
             productCards.add(productCard);
         }
@@ -61,7 +63,7 @@ public class ProductBrowsingService {
 
     public List<ProductCard> getProductsByName(
         String productName
-    ) {
+    ) throws DataAccessException {
 
         List<ProductCard> productCards = new ArrayList<ProductCard>();
 
@@ -90,7 +92,7 @@ public class ProductBrowsingService {
                     propertyMap.put(property.getPropertyName(), propertyValues);
                 }
             }
-            productCard.setProperties(propertyMap);
+            productCard.setUnmarketableProperties(propertyMap);
 
             productCards.add(productCard);
         }
