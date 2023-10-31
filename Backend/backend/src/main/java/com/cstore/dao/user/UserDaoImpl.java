@@ -5,6 +5,7 @@ import com.cstore.model.user.RegisteredUser;
 import com.cstore.model.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -71,23 +72,28 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public Optional<RegUser> findRegUserByEmail(String email)
-        throws DataAccessException {
+    public Optional<RegUser> findRegUserByEmail(
+        String email
+    ) throws DataAccessException {
         String sql = "SELECT * " +
                      "FROM \"registered_user\" " +
                      "WHERE \"email\" = ?";
 
-        RegUser regUser = templ.queryForObject(
-            sql,
-            new BeanPropertyRowMapper<>(RegUser.class),
-            email
-        );
+        try {
+            RegUser regUser = templ.queryForObject(
+                    sql,
+                    new BeanPropertyRowMapper<>(RegUser.class),
+                    email
+            );
 
-        if (regUser != null) {
-            regUser.setUser(findUserByEmail(regUser.getEmail()).get());
+            if (regUser != null) {
+                regUser.setUser(findUserByEmail(regUser.getEmail()).get());
+            }
+
+            return Optional.ofNullable(regUser);
+        } catch (EmptyResultDataAccessException erdae) {
+            return Optional.empty();
         }
-
-        return Optional.ofNullable(regUser);
     }
 
     @Override

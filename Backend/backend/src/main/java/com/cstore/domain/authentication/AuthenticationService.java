@@ -1,32 +1,51 @@
-package com.cstore.domain.auth;
+package com.cstore.domain.authentication;
 
 import com.cstore.dao.user.UserDao;
 import com.cstore.dao.user.address.UserAddressDao;
 import com.cstore.dao.user.contact.UserContactDao;
+import com.cstore.dao.user.token.TokenDao;
 import com.cstore.dto.UserAddressDto;
 import com.cstore.exception.NoSuchUserException;
 import com.cstore.model.user.*;
 import com.cstore.service.JwtService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
-public class AuthService {
+public class AuthenticationService {
     private final UserDao userDao;
     private final UserAddressDao userAddressDao;
     private final UserContactDao userContactDao;
+    private final TokenDao tokenDao;
 
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authManager;
 
+    private void persistContent(
+        User user,
+        String content
+    ) throws DataAccessException {
+        Token token = Token
+            .builder()
+            .userId(user.getUserId())
+            .content(content)
+            .revoked(false)
+            .expired(false)
+            .build();
+        tokenDao.save(token);
+    }
+
     public Jwt register(
-        RegisterRequest request
-    ) {
+        RegistrationRequest request
+    ) throws DataAccessException {
         User user = new User();
 
         user.setRole(Role.REG_CUST);
@@ -68,19 +87,24 @@ public class AuthService {
             userContactDao.save(new UserContact(userContactId, user));
         }
 
-        String jwt = jwtService.generateTokenWithoutClaims(regUser);
+        String content = jwtService.generateTokenWithoutClaims(regUser);
+        persistContent(user, content);
+
         return Jwt
             .builder()
-            .jwt(jwt)
+            .jwt(content)
             .build();
     }
 
     public Jwt authenticate(
-        AuthRequest request
+        AuthenticationRequest request
     ) {
-        RegUser regUser = userDao
-            .findRegUserByEmail(request.getEmail())
-            .orElseThrow(() -> new NoSuchUserException("User with email " + request.getEmail() + "not found."));
+        Optional<RegUser> regUserOptional = userDao.findRegUserByEmail(request.getEmail());
+
+        if (regUserOptional.isEmpty()) {
+            throw new NoSuchUserException("User with email " + request.getEmail() + "not found.");
+        }
+        RegUser regUser = regUserOptional.get();
 
         authManager.authenticate(
             new UsernamePasswordAuthenticationToken(
@@ -89,10 +113,13 @@ public class AuthService {
             )
         );
 
-        String jwt = jwtService.generateTokenWithoutClaims(regUser);
+        String content = jwtService.generateTokenWithoutClaims(regUser);
+        tokenDao.revokeAllTokens(regUser.getUser());
+        persistContent(regUser.getUser(), content);
+
         return Jwt
             .builder()
-            .jwt(jwt)
+            .jwt(content)
             .build();
     }
 }

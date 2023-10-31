@@ -1,4 +1,4 @@
-package com.cstore.domain.auth;
+package com.cstore.domain.authentication;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder @AllArgsConstructor @NoArgsConstructor
-public class AuthRequest {
-    private String email;
-    private String password;
+public class Jwt {
+    private String jwt;
 }

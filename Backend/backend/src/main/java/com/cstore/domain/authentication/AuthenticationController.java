@@ -1,4 +1,4 @@
-package com.cstore.domain.auth;
+package com.cstore.domain.authentication;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -17,8 +17,8 @@ import lombok.RequiredArgsConstructor;
     name = "Sign in & Sign up",
     description = "Provides controller methods for signing in & signing up."
 )
-public class AuthController {
-    private final AuthService authService;
+public class AuthenticationController {
+    private final AuthenticationService authenticationService;
 
     @Operation(
         method = "Register",
@@ -40,9 +40,9 @@ public class AuthController {
     )
     public ResponseEntity<Jwt> register(
         @RequestBody(required = true)
-        RegisterRequest request
+        RegistrationRequest request
     ) {
-        return ResponseEntity.ok(authService.register(request));
+        return ResponseEntity.ok(authenticationService.register(request));
     }
 
     @Operation(
@@ -61,12 +61,12 @@ public class AuthController {
     )
     @RequestMapping(
         method = RequestMethod.POST,
-        path = "/authenticate"
+        path = "/login"
     )
     public ResponseEntity<Jwt> authenticate(
         @RequestBody(required = true)
-        AuthRequest request
+        AuthenticationRequest request
     ) {
-        return ResponseEntity.ok(authService.authenticate(request));
+        return ResponseEntity.ok(authenticationService.authenticate(request));
     }
 }

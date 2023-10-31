@@ -331,9 +331,9 @@ INSERT INTO "property" ("property_name", "value", "url", "price_increment") VALU
 	('Count','8',NULL,80.00),
 	('Count','10',NULL,160.00);
 
-SELECT *
-FROM "property"
-ORDER BY "property_id";
+-- SELECT *
+-- FROM "property"
+-- ORDER BY "property_id";
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- "variant"
@@ -926,6 +926,11 @@ INSERT INTO "user_address" ("user_id", "street_number", "street_name", "city", "
 
 -- SELECT *
 -- FROM "user_address";
+
+------------------------------------------------------------------------------------------------------------------------
+
+-- SELECT *
+-- FROM "token";
 
 -- ---------------------------------------------------------------------------------------------------------------------
 --  "cart"

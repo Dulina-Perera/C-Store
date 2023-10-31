@@ -210,7 +210,7 @@ CREATE TABLE "user_address" (
 DROP TABLE IF EXISTS "token";
 CREATE TABLE "token" (
     "user_id" BIGINT,
-    "content"   VARCHAR UNIQUE NOT NULL,
+    "content" VARCHAR UNIQUE NOT NULL,
     "expired" BOOLEAN,
     "revoked" BOOLEAN,
     PRIMARY KEY ("content"),

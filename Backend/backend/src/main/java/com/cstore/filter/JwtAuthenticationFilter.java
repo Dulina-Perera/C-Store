@@ -1,5 +1,7 @@
 package com.cstore.filter;
 
+import com.cstore.dao.user.token.TokenDao;
+import com.cstore.model.user.Token;
 import com.cstore.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -22,9 +24,11 @@ import java.io.IOException;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class JwtAuthFilter extends OncePerRequestFilter {
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
+    private final TokenDao tokenDao;
+
     private final JwtService jwtService;
-    private final UserDetailsService serv;
+    private final UserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(
@@ -33,7 +37,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
         final String authHeader = request.getHeader("Authorization");
-        final String jwt;
+        final String content;
         final String subject;
 
         if (
@@ -43,18 +47,22 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         }
         else {
-            jwt = authHeader.substring(7);
-            log.debug("JWT: {}", jwt);
+            content = authHeader.substring(7);
+            log.debug("JWT: {}", content);
 
-            subject = jwtService.extractSubject(jwt);
+            subject = jwtService.extractSubject(content);
 
             if (
                 StringUtils.isNotEmpty(subject) &&
                 SecurityContextHolder.getContext().getAuthentication() == null
             ) {
-                UserDetails userDetails = serv.loadUserByUsername(subject);
+                UserDetails userDetails = userDetailsService.loadUserByUsername(subject);
+                Boolean isTokenValid = tokenDao
+                    .findByContent(content)
+                    .map(token -> !token.getExpired() && !token.getRevoked())
+                    .orElse(false);
 
-                if (jwtService.isJwtValid(jwt, userDetails)) {
+                if (jwtService.isJwtValid(content, userDetails) && isTokenValid) {
                     log.debug("User: {}", userDetails);
 
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
