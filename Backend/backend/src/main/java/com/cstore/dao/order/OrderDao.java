@@ -34,5 +34,5 @@ public interface OrderDao {
 
     int deleteTimedOutOrders() throws DataAccessException;
 
-    Long buyNow(Long userId, Variant variant) throws DataAccessException;
+    Long buyNow(Long userId, Variant variant, Integer quantity) throws DataAccessException;
 }

@@ -1,6 +1,7 @@
 package com.cstore.dao.variant;
 
 import com.cstore.model.product.Variant;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -87,7 +88,7 @@ public class VariantDaoImpl implements VariantDao {
     public Integer countStocks(
         Long variantId
     ) throws DataAccessException {
-        String sql = "SELECT SUM(\"count\") " +
+        String sql = "SELECT SUM(\"quantity\") " +
                      "FROM \"inventory\" " +
                      "WHERE \"variant_id\" = ?;";
 

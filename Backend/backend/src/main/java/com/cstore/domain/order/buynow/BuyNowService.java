@@ -8,6 +8,7 @@ import com.cstore.exception.NoSuchVariantException;
 import com.cstore.exception.sparsestocks.SparseStocksException;
 import com.cstore.model.product.Variant;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ import static com.google.common.base.Throwables.getRootCause;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class BuyNowService {
     private final InventoryDao inventoryDao;
     private final OrderDao orderDao;
@@ -47,14 +49,15 @@ public class BuyNowService {
         }
         Variant variant = variants.iterator().next();
 
-        if (properties.getQuantity() < variantDao.countStocks(variant.getVariantId())) {
+        if (properties.getQuantity() > variantDao.countStocks(variant.getVariantId())) {
+            log.info("Available stocks = {}", variantDao.countStocks(variant.getVariantId()));
             throw new SparseStocksException("Not enough stocks!");
         }
 
-        Long orderId = orderDao.buyNow(userId, variants.iterator().next());
-
-        // TODO Finish implementation.
-
-        return null;
+        return orderDao.buyNow(
+            userId,
+            variant,
+            properties.getQuantity()
+        );
     }
 }

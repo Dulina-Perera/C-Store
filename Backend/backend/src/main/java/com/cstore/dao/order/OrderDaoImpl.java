@@ -22,17 +22,17 @@ import java.util.Optional;
 @Repository
 @RequiredArgsConstructor
 public class OrderDaoImpl implements OrderDao {
-    private final JdbcTemplate templ;
+    private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public List<com.cstore.model.order.Order> findAll(
+    public List<Order> findAll(
     ) throws DataAccessException {
         String sql = "SELECT * " +
                      "FROM \"order\";";
 
-        return templ.query(
+        return jdbcTemplate.query(
             sql,
-            new BeanPropertyRowMapper<>(com.cstore.model.order.Order.class)
+            new BeanPropertyRowMapper<>(Order.class)
         );
     }
 
@@ -42,7 +42,7 @@ public class OrderDaoImpl implements OrderDao {
                      "FROM \"order_item\" " +
                      "WHERE \"order_id\" = ?;";
 
-        return templ.query(
+        return jdbcTemplate.query(
             sql,
             ps -> ps.setLong(1, orderId),
             new BeanPropertyRowMapper<>(OrderItem.class)
@@ -65,7 +65,7 @@ public class OrderDaoImpl implements OrderDao {
                      "     \"product\" AS pd " +
                      "WHERE \"order_id\" = ?;";
 
-        return templ.query(
+        return jdbcTemplate.query(
             sql,
             ps -> ps.setLong(1, orderId),
             new BeanPropertyRowMapper<>(OrderItemProperty.class)
@@ -80,7 +80,7 @@ public class OrderDaoImpl implements OrderDao {
                      "FROM \"order\" " +
                      "WHERE \"customer_id\" = ? AND \"status\" = 'PROCESSED';";
 
-        return templ.query(
+        return jdbcTemplate.query(
             sql,
             ps -> ps.setLong(1, customerId),
             new BeanPropertyRowMapper<>(Order.class)
@@ -95,7 +95,7 @@ public class OrderDaoImpl implements OrderDao {
                      "FROM \"order\" " +
                      "WHERE \"customer_id\" = ? AND \"status\" IN ('PROCESSING', 'PROCESSED');";
 
-        return templ.query(
+        return jdbcTemplate.query(
             sql,
             ps -> ps.setLong(1, customerId),
             new BeanPropertyRowMapper<>(Order.class)
@@ -111,7 +111,7 @@ public class OrderDaoImpl implements OrderDao {
                      "WHERE \"order_id\" = ?;";
 
         try {
-            com.cstore.model.order.Order order = templ.queryForObject(
+            com.cstore.model.order.Order order = jdbcTemplate.queryForObject(
                 sql,
                 new BeanPropertyRowMapper<>(com.cstore.model.order.Order.class),
                 orderId
@@ -130,7 +130,7 @@ public class OrderDaoImpl implements OrderDao {
         String sql = "DELETE FROM \"order\" " +
                      "WHERE \"order_id\" = ?";
 
-        templ.update(
+        jdbcTemplate.update(
             sql,
             ps -> ps.setLong(1, orderId)
         );
@@ -145,7 +145,7 @@ public class OrderDaoImpl implements OrderDao {
                      "RETURNING \"order_id\";";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        templ.update(
+        jdbcTemplate.update(
             conn -> {
                 PreparedStatement ps = conn.prepareStatement(
                     sql,
@@ -176,7 +176,7 @@ public class OrderDaoImpl implements OrderDao {
                      "RETURNING \"order_id\";";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        templ.update(
+        jdbcTemplate.update(
             conn -> {
                 PreparedStatement ps = conn.prepareStatement(
                     sql,
@@ -216,7 +216,7 @@ public class OrderDaoImpl implements OrderDao {
                      "    WHERE \"order_id\" = ?" +
                      ");";
 
-        templ.update(
+        jdbcTemplate.update(
             sql,
             ps -> ps.setLong(1, orderId)
         );
@@ -229,14 +229,24 @@ public class OrderDaoImpl implements OrderDao {
                      "FROM \"order\" " +
                      "WHERE \"status\" = 'PLACED' AND EXTRACT(EPOCH FROM (CURRENT_TIMESTAMP - \"date\")) / 60 > 1;";
 
-        return templ.update(sql);
+        return jdbcTemplate.update(sql);
     }
 
     @Override
     public Long buyNow(
         Long userId,
-        Variant variant
+        Variant variant,
+        Integer quantity
     ) throws DataAccessException {
-        return null;
+        String sql = "SELECT * " +
+                     "FROM \"buy_now\"(?, ?, ?);";
+
+        return jdbcTemplate.queryForObject(
+            sql,
+            Long.class,
+            userId,
+            variant.getVariantId(),
+            quantity
+        );
     }
 }

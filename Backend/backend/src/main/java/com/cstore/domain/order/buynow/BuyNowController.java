@@ -10,20 +10,28 @@ import java.sql.SQLIntegrityConstraintViolationException;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "/api/v1/orders/buynow")
+@RequestMapping(path = "/api/v1/orders/buy-now")
 public class BuyNowController {
     private final BuyNowService buyNowService;
 
     @RequestMapping(
         method = RequestMethod.POST,
-        path = "/place/{user_id}"
+        path = "/{user_id}"
     )
     public Long placeOrder(
-        @PathVariable(name = "user_id", required = true)
+        @PathVariable(
+            name = "user_id",
+            required = true
+        )
         Long userId,
-        @RequestBody(required = true)
+        @RequestBody(
+            required = true
+        )
         VariantProperiesDto properies
     ) throws DataAccessException, SparseStocksException, SQLIntegrityConstraintViolationException {
-        return buyNowService.buyNow(userId, properies);
+        return buyNowService.buyNow(
+            userId,
+            properies
+        );
     }
 }
