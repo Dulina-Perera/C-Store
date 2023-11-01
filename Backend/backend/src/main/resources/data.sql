@@ -1,7 +1,6 @@
 \c "cstore";
 
 DELETE FROM "order_item";
-DELETE FROM "order_contact";
 DELETE FROM "order";
 DELETE FROM "cart_item";
 DELETE FROM "cart";
@@ -16,7 +15,6 @@ DELETE FROM "varies_on";
 DELETE FROM "variant";
 DELETE FROM "property";
 DELETE FROM "belongs_to";
-DELETE FROM "product_image";
 DELETE FROM "product";
 DELETE FROM "image";
 DELETE FROM "sub_category";
