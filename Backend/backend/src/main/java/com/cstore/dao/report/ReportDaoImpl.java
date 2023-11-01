@@ -58,7 +58,8 @@ public class ReportDaoImpl implements ReportDao {
     @Override
     public List<Product> findProductsWithMostSales(
         Timestamp from,
-        Timestamp till
+        Timestamp till,
+        Short limit
     ) throws DataAccessException {
         String sql = "SELECT p.\"product_id\", p.\"product_name\", p.\"main_image\", SUM(oi.\"count\") AS \"sales\" " +
                      "FROM \"order\" AS o NATURAL LEFT OUTER JOIN " +
@@ -68,13 +69,14 @@ public class ReportDaoImpl implements ReportDao {
                      "     \"product\" AS p " +
                      "WHERE o.\"date\" BETWEEN ? AND ? " +
                      "GROUP BY p.\"product_id\", p.\"product_name\", p.\"main_image\" " +
-                     "LIMIT 1;";
+                     "LIMIT ?;";
 
         return jdbcTemplate.query(
             sql,
             ps -> {
                 ps.setTimestamp(1, from);
                 ps.setTimestamp(2, till);
+                ps.setShort(3, limit);
             },
             new BeanPropertyRowMapper<>(Product.class)
         );

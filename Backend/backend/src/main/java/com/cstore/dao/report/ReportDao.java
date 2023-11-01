@@ -15,7 +15,7 @@ public interface ReportDao {
 
     List<SalesItem> findSalesItems(Short year, Short quarter) throws DataAccessException;
 
-    List<Product> findProductsWithMostSales(Timestamp from, Timestamp till) throws DataAccessException;
+    List<Product> findProductsWithMostSales(Timestamp from, Timestamp till, Short limit) throws DataAccessException;
 
     List<Category> findCategoriesWithMostOrders() throws DataAccessException;
 }

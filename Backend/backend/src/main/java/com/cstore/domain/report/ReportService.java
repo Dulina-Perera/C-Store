@@ -17,7 +17,8 @@ public class ReportService {
     private final ReportDao reportDao;
 
     public List<Product> getProductsWithMostSales(
-        Period period
+        Period period,
+        Short limit
     ) throws DataAccessException {
         Timestamp from, till;
 
@@ -47,7 +48,7 @@ public class ReportService {
         }
 
 
-        return reportDao.findProductsWithMostSales(from, till);
+        return reportDao.findProductsWithMostSales(from, till, limit);
     }
 
     public List<Category> getCategoriesWithMostOrders(

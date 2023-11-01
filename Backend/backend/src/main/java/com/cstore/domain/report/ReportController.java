@@ -12,25 +12,34 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/reports")
+@RequestMapping("/api/v1/all/reports")
 @RequiredArgsConstructor
 public class ReportController {
     private final ReportService reportService;
 
     @RequestMapping(
         method = RequestMethod.GET,
-        path = "/sales/products/max/{period}"
+        path = {
+            "/sales/products/max/{period}/{limit}",
+            "/sales/products/max/{period}"}
     )
     public ResponseEntity<List<Product>> getProductsWithMostSales(
         @PathVariable(
             name = "period",
             required = true
         )
-        Period period
+        Period period,
+        @PathVariable(
+            name = "limit",
+            required = false
+        )
+        Short limit
     ) {
+        limit = limit == null ? 5 : limit;
+
         try {
             return new ResponseEntity<>(
-                reportService.getProductsWithMostSales(period),
+                reportService.getProductsWithMostSales(period, limit),
                 HttpStatus.OK
             );
         } catch (DataAccessException dae) {
