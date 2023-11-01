@@ -5,10 +5,14 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import lombok.RequiredArgsConstructor;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -26,7 +30,7 @@ public class AuthenticationController {
             @ApiResponse(
                 content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = Jwt.class)
+                    schema = @Schema(implementation = AuthenticationResponse.class)
                 ),
                 description = "Success",
                 responseCode = "200"
@@ -38,7 +42,7 @@ public class AuthenticationController {
         method = RequestMethod.POST,
         path = "/register"
     )
-    public ResponseEntity<Jwt> register(
+    public ResponseEntity<AuthenticationResponse> register(
         @RequestBody(required = true)
         RegistrationRequest request
     ) {
@@ -51,7 +55,7 @@ public class AuthenticationController {
             @ApiResponse(
                 content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = Jwt.class)
+                    schema = @Schema(implementation = AuthenticationResponse.class)
                 ),
                 description = "Success",
                 responseCode = "200"
@@ -63,10 +67,21 @@ public class AuthenticationController {
         method = RequestMethod.POST,
         path = "/login"
     )
-    public ResponseEntity<Jwt> authenticate(
+    public ResponseEntity<AuthenticationResponse> login(
         @RequestBody(required = true)
         AuthenticationRequest request
     ) {
         return ResponseEntity.ok(authenticationService.authenticate(request));
+    }
+
+    @RequestMapping(
+        method = RequestMethod.POST,
+        path = "/refresh-token"
+    )
+    public void refreshToken(
+        HttpServletRequest request,
+        HttpServletResponse response
+    ) throws IOException {
+        authenticationService.refreshToken(request, response);
     }
 }

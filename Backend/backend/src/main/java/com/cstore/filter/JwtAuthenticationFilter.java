@@ -1,7 +1,6 @@
 package com.cstore.filter;
 
 import com.cstore.dao.user.token.TokenDao;
-import com.cstore.model.user.Token;
 import com.cstore.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -37,7 +36,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
         final String authHeader = request.getHeader("Authorization");
-        final String content;
+        final String accessToken;
         final String subject;
 
         if (
@@ -47,10 +46,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         }
         else {
-            content = authHeader.substring(7);
-            log.debug("JWT: {}", content);
+            accessToken = authHeader.substring(7);
+            log.debug("JWT: {}", accessToken);
 
-            subject = jwtService.extractSubject(content);
+            subject = jwtService.extractSubject(accessToken);
 
             if (
                 StringUtils.isNotEmpty(subject) &&
@@ -58,11 +57,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             ) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(subject);
                 Boolean isTokenValid = tokenDao
-                    .findByContent(content)
+                    .findByContent(accessToken)
                     .map(token -> !token.getExpired() && !token.getRevoked())
                     .orElse(false);
 
-                if (jwtService.isJwtValid(content, userDetails) && isTokenValid) {
+                if (jwtService.isTokenValid(accessToken, userDetails) && isTokenValid) {
                     log.debug("User: {}", userDetails);
 
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(

@@ -44,17 +44,21 @@ public class UserDaoImpl implements UserDao {
                      "FROM \"registered_user\" " +
                      "WHERE \"user_id\" = ?";
 
-        RegUser regUser = templ.queryForObject(
-            sql,
-            new BeanPropertyRowMapper<>(RegUser.class),
-            id
-        );
+        try {
+            RegUser regUser = templ.queryForObject(
+                sql,
+                new BeanPropertyRowMapper<>(RegUser.class),
+                id
+            );
 
-        if (regUser != null) {
-            regUser.setUser(findUserById(id).get());
+            if (regUser != null) {
+                regUser.setUser(findUserById(id).get());
+            }
+
+            return Optional.ofNullable(regUser);
+        } catch (EmptyResultDataAccessException erdae) {
+            return Optional.empty();
         }
-
-        return Optional.ofNullable(regUser);
     }
 
     @Override

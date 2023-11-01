@@ -4,6 +4,7 @@ import com.cstore.model.user.Token;
 import com.cstore.model.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -41,13 +42,17 @@ public class TokenDaoImpl implements TokenDao {
                      "FROM \"token\" " +
                      "WHERE \"content\" = ?;";
 
-        return Optional.ofNullable(
-            jdbcTemplate.queryForObject(
-                sql,
-                new BeanPropertyRowMapper<>(Token.class),
-                content
-            )
-        );
+        try {
+            return Optional.ofNullable(
+                jdbcTemplate.queryForObject(
+                    sql,
+                    new BeanPropertyRowMapper<>(Token.class),
+                    content
+                )
+            );
+        } catch (EmptyResultDataAccessException erdae) {
+            return Optional.empty();
+        }
     }
 
     @Override

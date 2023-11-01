@@ -1,3 +1,12 @@
+application:
+  security:
+    token:
+      access:
+        expiration-ms: 3600000 # an hour
+      refresh:
+        expiration-ms: 43200000 # 12 hours
+      secret-key: ${SECRET_KEY}
+
 logging:
   level:
     com.cstore: DEBUG
@@ -32,7 +41,4 @@ spring:
       data-locations:
         classpath:data.sql
 
-token:
-  expiration: 36000000
-  secret:
-    key: ${SECRET_KEY}
+

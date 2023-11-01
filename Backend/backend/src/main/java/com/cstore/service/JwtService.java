@@ -18,15 +18,37 @@ import javax.crypto.SecretKey;
 
 @Service
 public class JwtService {
-    @Value("${token.secret.key}")
-    private String jwtSecretKey;
+    @Value("${application.security.token.secret-key}")
+    private String SECRET_KEY;
 
-    @Value("${token.expiration}")
-    private Long jwtExpiration;
+    @Value("${application.security.token.access.expiration-ms}")
+    private Long ACCESS_EXPIRATION_MS;
+
+    @Value("${application.security.token.refresh.expiration-ms}")
+    private Long REFRESH_EXPIRATION_MS;
+
+
+
+
+
+    private String buildToken(
+        Map<String, Object> claims,
+        UserDetails userDetails,
+        Long accessExpirationMs
+    ) {
+        return Jwts
+            .builder()
+            .claims(claims)
+            .subject(userDetails.getUsername())
+            .issuedAt(new Date(System.currentTimeMillis()))
+            .expiration(new Date(System.currentTimeMillis() + accessExpirationMs))
+            .signWith(getSigningKey(), Jwts.SIG.HS256)
+            .compact();
+    }
 
     private SecretKey getSigningKey(
     ) {
-        byte[] keyBytes = Decoders.BASE64.decode(jwtSecretKey);
+        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
@@ -55,6 +77,16 @@ public class JwtService {
         return extractClaim(jwt, Claims::getExpiration);
     }
 
+    private boolean isJwtExpired(
+        String jwt
+    ) {
+        return extractExpiration(jwt).before(new Date());
+    }
+
+
+
+
+
     public String extractSubject(
         String jwt
     ) {
@@ -64,30 +96,38 @@ public class JwtService {
         );
     }
 
-    public String generateToken(
-        Map<String, Object> claims,
+    public String generateRefreshToken(
         UserDetails userDetails
     ) {
-        return Jwts
-            .builder()
-            .claims(claims)
-            .subject(userDetails.getUsername())
-            .issuedAt(new Date(System.currentTimeMillis()))
-            .expiration(new Date(System.currentTimeMillis() + jwtExpiration))
-            .signWith(getSigningKey(), Jwts.SIG.HS256)
-            .compact();
-    }
-
-    public String generateTokenWithoutClaims(
-        UserDetails userDetails
-    ) {
-        return generateToken(
+        return buildToken(
             new HashMap<>(),
-            userDetails
+            userDetails,
+            REFRESH_EXPIRATION_MS
         );
     }
 
-    public boolean isJwtValid(
+    public String generateAccessToken(
+        Map<String, Object> claims,
+        UserDetails userDetails
+    ) {
+        return buildToken(
+            claims,
+            userDetails,
+            ACCESS_EXPIRATION_MS
+        );
+    }
+
+    public String generateAccessTokenWithoutClaims(
+        UserDetails userDetails
+    ) {
+        return buildToken(
+            new HashMap<>(),
+            userDetails,
+            ACCESS_EXPIRATION_MS
+        );
+    }
+
+    public boolean isTokenValid(
         String jwt,
         UserDetails userDetails
     ) {
@@ -95,11 +135,5 @@ public class JwtService {
         return
             (subject.equals(userDetails.getUsername())) &&
             !isJwtExpired(jwt);
-    }
-
-    private boolean isJwtExpired(
-        String jwt
-    ) {
-        return extractExpiration(jwt).before(new Date());
     }
 }
