@@ -54,7 +54,7 @@ public class ReportController {
         method = RequestMethod.GET,
         path = "/orders/categories/max"
     )
-    public ResponseEntity<List<Category>> getCategoryWithMostOrders(
+    public ResponseEntity<List<Category>> getCategoriesWithMostOrders(
     ) {
         try {
             return new ResponseEntity<>(
