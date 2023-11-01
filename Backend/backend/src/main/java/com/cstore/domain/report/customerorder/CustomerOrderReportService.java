@@ -33,7 +33,7 @@ public class CustomerOrderReportService {
     ) throws FileNotFoundException, JRException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
         String path = "/media/dulina/SP PHD U3/Education/Campus Documents/5. Semester 3/Database Systems/C Store" +
-                "/Backend/backend/src/main/resources/static/reports/Customer-Order";
+            "/Backend/backend/src/main/resources/static/reports/Customer-Order";
 
         List<Order> processedOrders = orderDao.findProcessedOrders(customerId);
 
@@ -66,7 +66,7 @@ public class CustomerOrderReportService {
 
     }
 
-    public CustomerOrderReport getCustomerOrderReport(
+    public List<ReportItem> getCustomerOrderReport(
         Long customerId
     ) {
         List<Order> orders = orderDao.findProcessingAndProcessedOrders(customerId);
@@ -120,9 +120,6 @@ public class CustomerOrderReportService {
             reportItems.add(reportItem);
         }
 
-        return CustomerOrderReport
-            .builder()
-            .orderItems(reportItems)
-            .build();
+        return reportItems;
     }
 }
