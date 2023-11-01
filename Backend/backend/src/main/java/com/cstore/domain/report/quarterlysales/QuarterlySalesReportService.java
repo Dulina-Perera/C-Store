@@ -1,4 +1,4 @@
-package com.cstore.domain.report.sales;
+package com.cstore.domain.report.quarterlysales;
 
 import com.cstore.dao.product.ProductDao;
 import com.cstore.dao.property.PropertyDao;
@@ -14,7 +14,7 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-public class SalesReportService {
+public class QuarterlySalesReportService {
     private final ProductDao productDao;
     private final PropertyDao propertyDao;
     private final ReportDao reportDao;
@@ -23,13 +23,12 @@ public class SalesReportService {
         Short year,
         Short quarter
     ) throws DataAccessException {
-        Body body;
         Optional<SalesReport> salesReport = reportDao.findSalesReport(year, quarter);
 
         if (salesReport.isEmpty()) {
             throw new NoSuchQuarterException("Invalid quarter!");
         }
-        body = Body
+        Body body = Body
             .builder()
             .year(year)
             .quarter(quarter)

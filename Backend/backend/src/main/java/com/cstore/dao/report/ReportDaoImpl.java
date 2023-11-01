@@ -6,6 +6,7 @@ import com.cstore.model.report.SalesItem;
 import com.cstore.model.report.SalesReport;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -26,14 +27,18 @@ public class ReportDaoImpl implements ReportDao {
     ) throws DataAccessException {
         String sql = "SELECT * " +
                      "FROM \"sales_report\" " +
-                     "WHERE (\"year\", \"quarter\" = ?, ?);";
+                     "WHERE (\"year\", \"quarter\") = (?, ?);";
 
-        return Optional.ofNullable(jdbcTemplate.queryForObject(
-            sql,
-            new BeanPropertyRowMapper<>(SalesReport.class),
-            year,
-            quarter
-        ));
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(
+                sql,
+                new BeanPropertyRowMapper<>(SalesReport.class),
+                year,
+                quarter
+            ));
+        } catch (EmptyResultDataAccessException erdae) {
+            return Optional.empty();
+        }
     }
 
     @Override

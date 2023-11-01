@@ -16,7 +16,7 @@ public enum Permission {
     ORDER_BUYNOW("order:buynow"),
     ORDER_CHECKOUT("order:checkout"),
     REPORT_CUSTOMER_ORDER("report:customer-order"),
-    REPORT_QUARTERLY_SALES("report:quarterly-sales"),
+    REPORT_QUARTERLY_SALES("report:quarterly-quarterlysales"),
     REPORT_GENERAL("report:general");
 
     private final String permission;

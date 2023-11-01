@@ -1,4 +1,4 @@
-package com.cstore.domain.report.sales;
+package com.cstore.domain.report.quarterlysales;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/reports/quarterly-sales")
+@RequestMapping("/api/v1/admin/reports/quarterly-sales")
 @RequiredArgsConstructor
-public class SalesReportController {
-    private final SalesReportService salesReportService;
+public class QuarterlySalesReportController {
+    private final QuarterlySalesReportService quarterlySalesReportService;
 
     @RequestMapping(
         method = RequestMethod.GET,
@@ -33,13 +33,18 @@ public class SalesReportController {
     ) {
         try {
             return new ResponseEntity<>(
-                salesReportService.getSalesReport(year, quadrant),
+                quarterlySalesReportService.getSalesReport(year, quadrant),
                 HttpStatus.OK
             );
         } catch (DataAccessException dae) {
             return new ResponseEntity<>(
                 null,
                 HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        } catch (NoSuchQuarterException nsqe) {
+            return new ResponseEntity<>(
+                null,
+                HttpStatus.BAD_REQUEST
             );
         }
     }

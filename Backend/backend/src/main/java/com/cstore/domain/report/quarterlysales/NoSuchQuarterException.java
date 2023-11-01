@@ -1,4 +1,4 @@
-package com.cstore.domain.report.sales;
+package com.cstore.domain.report.quarterlysales;
 
 public class NoSuchQuarterException extends RuntimeException {
     public NoSuchQuarterException() {

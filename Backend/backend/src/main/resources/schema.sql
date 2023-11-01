@@ -827,6 +827,6 @@ EXECUTE FUNCTION "update_variant"();
 /*SELECT lc.*, vo."variant_id", COUNT(DISTINCT o."order_id")
 FROM "leaf_category" AS lc NATURAL LEFT OUTER JOIN "belongs_to" AS bt NATURAL LEFT OUTER JOIN "varies_on" AS vo NATURAL LEFT OUTER JOIN "order_item" AS oi NATURAL LEFT OUTER JOIN "order" AS o
 GROUP BY lc."category_id", lc."category_name", lc."category_description", vo."variant_id";*/
-
-
-
+SELECT *
+FROM "sales_item"
+WHERE "year" = 2023 AND "quarter" = 1;
