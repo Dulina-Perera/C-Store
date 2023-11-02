@@ -77,7 +77,7 @@ public class SecurityConfig {
                     "/webjars/**",
                     "/swagger-ui.html"
                 ).permitAll()
-                .requestMatchers(
+                /*.requestMatchers(
                     "/api/v1/cust/orders/buy-now",
                     "/api/v1/cust/orders/buy-now/**"
                 ).hasAnyRole(GUEST_CUST.name(), REG_CUST.name())
@@ -91,7 +91,7 @@ public class SecurityConfig {
                     "/api/v1/products/edit",
                     "/api/v1/variant/stock",
                     "/api/v1/admin/reports/quarterly-sales"
-                ).hasRole(ADMIN.name())
+                ).hasRole(ADMIN.name())*/
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session

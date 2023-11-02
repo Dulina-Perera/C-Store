@@ -1,7 +1,6 @@
 package com.cstore.domain.order;
 
 import com.cstore.dto.order.OrderDetailsDto;
-import com.cstore.model.order.Order;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +17,7 @@ public class OrderController {
         method = RequestMethod.POST,
         path = "/confirm/{order_id}"
     )
-    public Order confirmOrder(
+    public ModifiedOrder confirmOrder(
         @PathVariable(
             name = "order_id",
             required = true

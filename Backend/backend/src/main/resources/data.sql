@@ -1388,7 +1388,7 @@ INSERT INTO "user" ("role") VALUES
 INSERT INTO "registered_user" ("user_id", "email", "password", "first_name", "last_name", "locked", "enabled") VALUES
 	(1, 'dulinaperera@gmail.com', '$2a$12$30sxNzqbLjZsSpDLIUzcTOtHGa0mmYChcjdZLk9ykJW/JMF9st5Yy', 'Dulina', 'Perera', FALSE, TRUE),
 	(2, 'himindukulasinghe@gmail.com', '$2a$12$IwCmc/Wi2uSFcZY.rO.Fn.BYriKbOBsrhItttQR4Q6zc9t/pHukuS', 'Himindu', 'Kulasinghe', FALSE, TRUE),
-	(3, 'methminimadhushika@gmail.com', '$2a$12$Q7Nyi1V3QEBfU7DCWbsSUOQo25vk.Obol2cqfD2eJoQls5kNEMFcS', 'Methmini', 'Madhushika', FALSE, TRUE),
+    (3, 'methminimadhushika@gmail.com', '$2a$12$Q7Nyi1V3QEBfU7DCWbsSUOQo25vk.Obol2cqfD2eJoQls5kNEMFcS', 'Methmini', 'Madhushika', FALSE, TRUE),
 	(4, 'nethumrathnayake@gmail.com', '$2a$12$ZOSQAnZjAg0m7trF7tnQBOkpF/OG1nTVzIS1bKYcdTQMDBGYkz/o.', 'Nethum', 'Rathnayake', FALSE, TRUE),
 	(5, 'nivishkamanchanayake@gmail.com', '$2a$12$QVGlJLUSMLP.pEmjeJTWhOmWT5G2W4ryNLVCdUuC.QJ0r6jArfVgO', 'Nivishka', 'Manchanayake', FALSE, TRUE);
 
@@ -1457,8 +1457,8 @@ INSERT INTO "order" ("status", "date", "total_payment", "payment_method", "deliv
 	('PROCESSED', '2023-01-15 08:30:00', 149.97, 'Credit Card', 'Express Shipping', 1, 'dulinaperera@gmail.com', '456', 'Godagama', 'Kaluthara', 98765, '0702632639'),
 	('PROCESSED', '2023-03-20 10:00:00', 239.97, 'Credit Card', 'Express Shipping', 2, 'nethumrathnayake@gmail.com', '456', 'Kawdana', 'Dehiwala', 98765, '0705654028');
 
--- SELECT *
--- FROM "order";
+SELECT *
+FROM "order";
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- "order_item"
