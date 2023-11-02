@@ -1392,8 +1392,8 @@ INSERT INTO "registered_user" ("user_id", "email", "password", "first_name", "la
 	(4, 'nethumrathnayake@gmail.com', '$2a$12$ZOSQAnZjAg0m7trF7tnQBOkpF/OG1nTVzIS1bKYcdTQMDBGYkz/o.', 'Nethum', 'Rathnayake', FALSE, TRUE),
 	(5, 'nivishkamanchanayake@gmail.com', '$2a$12$QVGlJLUSMLP.pEmjeJTWhOmWT5G2W4ryNLVCdUuC.QJ0r6jArfVgO', 'Nivishka', 'Manchanayake', FALSE, TRUE);
 
--- SELECT *
--- FROM "registered_user";
+SELECT *
+FROM "registered_user";
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- "customer_contact"
@@ -1435,8 +1435,8 @@ INSERT INTO "cart" ("user_id", "total_price") VALUES
 	(2, 0),
 	(3, 0);
 
-SELECT *
-FROM "cart";
+-- SELECT *
+-- FROM "cart";
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- "cart_item" table

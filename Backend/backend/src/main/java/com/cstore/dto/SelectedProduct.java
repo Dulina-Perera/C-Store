@@ -1,7 +1,5 @@
 package com.cstore.dto;
 
-import com.cstore.domain.product.select.PropertySelectionMap;
-import com.cstore.dto.ProductSelectionCategory;
 import com.cstore.model.product.Image;
 import com.cstore.model.product.Property;
 import lombok.AllArgsConstructor;

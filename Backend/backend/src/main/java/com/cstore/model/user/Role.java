@@ -21,13 +21,11 @@ public enum Role {
             PRODUCT_BROWSE,
             PRODUCT_SELECT,
             PRODUCT_EDIT,
-            CART_UPDATE,
             INVENTORY_UPDATE,
-            ORDER_BUYNOW,
-            ORDER_CHECKOUT,
             REPORT_CUSTOMER_ORDER,
             REPORT_QUARTERLY_SALES,
-            REPORT_GENERAL
+            REPORT_GENERAL,
+            USER_DETAILS
         )
     ),
 
@@ -36,6 +34,7 @@ public enum Role {
             CATEGORY_BROWSE,
             PRODUCT_BROWSE,
             PRODUCT_SELECT,
+            ORDER_BUYNOW,
             REPORT_GENERAL
         )
     ),
@@ -48,7 +47,8 @@ public enum Role {
             ORDER_BUYNOW,
             ORDER_CHECKOUT,
             REPORT_CUSTOMER_ORDER,
-            REPORT_GENERAL
+            REPORT_GENERAL,
+            USER_DETAILS
         )
     );
 
@@ -57,8 +57,8 @@ public enum Role {
     public List<SimpleGrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorities = getPermissions()
             .stream()
-            .map(permission -> new SimpleGrantedAuthority(permission.name()))
-            .toList();
+            .map(permission -> new SimpleGrantedAuthority(permission.getPermission()))
+            .collect(Collectors.toList());
 
         authorities.add(new SimpleGrantedAuthority("ROLE_" + this.name()));
 

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(path = "api/v1/products/select")
+@RequestMapping(path = "/api/v1/products/select")
 @Tag(name = "Select Product", description = "Provides controller methods for selecting products.")
 @RequiredArgsConstructor
 public class ProductSelectionController {

@@ -22,6 +22,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.cstore.model.user.Role.*;
+
 @Configuration
 @EnableMethodSecurity @EnableWebSecurity
 @RequiredArgsConstructor
@@ -56,11 +58,12 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(
-                    "/api/v1/**",
-                    /*"/api/v1/auth/**",
-                    "/api/v1/categories/browse",
+                    "/api/v1/auth/**",
+                    "/api/v1/categories/browse/**",
                     "/api/v1/products/browse",
-                    "/api/v1/products/select",*/
+                    "/api/v1/products/browse/**",
+                    "/api/v1/products/select/**",
+                    "/api/v1/all/reports/**", // Haven't checked yet.
 
                     "/v2/api-docs",
                     "/v3/api-docs",
@@ -74,22 +77,31 @@ public class SecurityConfig {
                     "/webjars/**",
                     "/swagger-ui.html"
                 ).permitAll()
+                .requestMatchers(
+                    "/api/v1/cust/orders/buy-now",
+                    "/api/v1/cust/orders/buy-now/**"
+                ).hasAnyRole(GUEST_CUST.name(), REG_CUST.name())
+                .requestMatchers(
+                    "/api/v1/reg-user/carts/**",
+                    "/api/v1/reg-cust/orders/checkout/**",
+                    "/api/v1/reg-cust/orders/confirm/**",
+                    "/api/v1/reg-cust/reports/customer-order/**"
+                ).hasRole(REG_CUST.name())
+                .requestMatchers(
+                    "/api/v1/products/edit",
+                    "/api/v1/variant/stock",
+                    "/api/v1/admin/reports/quarterly-sales"
+                ).hasRole(ADMIN.name())
                 .anyRequest().authenticated()
-            );
-
-        http
+            )
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            );
-
-        http
+            )
             .authenticationProvider(authProvider)
             .addFilterBefore(
                 authFilter,
                 UsernamePasswordAuthenticationFilter.class
-            );
-
-        http
+            )
             .logout()
             .logoutUrl("/api/v1/auth/logout")
             .addLogoutHandler(logoutHandler)

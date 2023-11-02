@@ -14,6 +14,7 @@ import java.util.List;
 @ToString
 public class RegUser implements UserDetails {
     private User user;
+    private Role role;
     private String email;
     private String password;
     private String firstName;

@@ -82,6 +82,7 @@ public class AuthenticationService {
         RegUser regUser = RegUser
             .builder()
             .user(user)
+            .role(Role.REG_CUST)
             .firstName(request.getFirstName())
             .lastName(request.getLastName())
             .email(request.getEmail())

@@ -71,10 +71,10 @@ public class ProductBrowsingController {
             },
             summary = "Returns all products (with properties of non-monetary value) matching a given name."
     )
-    @RequestMapping(method = RequestMethod.GET, path = "/{product_name}")
+    @RequestMapping(method = RequestMethod.GET, path = "/{query}")
     public ResponseEntity<List<ProductCard>> getProductsByName(
         @PathVariable(
-            name = "product_name",
+            name = "query",
             required = true
         )
         String productName
