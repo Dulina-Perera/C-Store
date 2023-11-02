@@ -35,6 +35,7 @@ public enum Role {
         Set.of(
             CATEGORY_BROWSE,
             PRODUCT_BROWSE,
+            PRODUCT_SELECT,
             REPORT_GENERAL
         )
     ),
