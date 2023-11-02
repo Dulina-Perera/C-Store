@@ -1,6 +1,10 @@
 package com.cstore.dao.user.contact;
 
 import com.cstore.model.user.UserContact;
+import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.ColumnMapRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -8,13 +12,26 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.List;
 
 @Repository
+@RequiredArgsConstructor
 public class UserContactDaoImpl implements UserContactDao {
     private final JdbcTemplate jdbcTemplate;
 
-    public UserContactDaoImpl(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    @Override
+    public List<String> findAllByUserId(
+        Long userId
+    ) throws DataAccessException {
+        String sql = "SELECT * " +
+                     "FROM \"user_contact\" " +
+                     "WHERE \"user_id\" = ?;";
+
+        return jdbcTemplate.query(
+            sql,
+            new BeanPropertyRowMapper<>(String.class),
+            userId
+        );
     }
 
     @Override

@@ -1,6 +1,9 @@
 package com.cstore.dao.user.address;
 
+import com.cstore.domain.user.Address;
 import com.cstore.model.user.UserAddress;
+import lombok.RequiredArgsConstructor;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -8,13 +11,26 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.List;
 
 @Repository
+@RequiredArgsConstructor
 public class UserAddressDaoImpl implements UserAddressDao {
     private final JdbcTemplate jdbcTemplate;
 
-    public UserAddressDaoImpl(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    @Override
+    public List<Address> findAllByUserId(
+        Long userId
+    ) {
+        String sql = "SELECT * " +
+                     "FROM \"user_address\" " +
+                     "WHERE \"user_id\" = ?;";
+
+        return jdbcTemplate.query(
+            sql,
+            ps -> ps.setLong(1, userId),
+            new BeanPropertyRowMapper<>(Address.class)
+        );
     }
 
     @Override

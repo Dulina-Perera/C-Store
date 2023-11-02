@@ -1434,8 +1434,8 @@ INSERT INTO "cart_item" ("user_id", "variant_id", "quantity") VALUES
 	(2, 3, 1),
 	(3, 5, 3);
 
-SELECT *
-FROM "cart_item";
+-- SELECT *
+-- FROM "cart_item";
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- "order" table
