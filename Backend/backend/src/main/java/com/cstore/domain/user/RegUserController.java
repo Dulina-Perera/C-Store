@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = {"/api/v1/reg-cust", "/api/v1/admin"})
+@RequestMapping(path = {"/api/v1/users"})
 public class RegUserController {
     private final RegUserService regUserService;
 

@@ -23,13 +23,13 @@ public class UserContactDaoImpl implements UserContactDao {
     public List<String> findAllByUserId(
         Long userId
     ) throws DataAccessException {
-        String sql = "SELECT * " +
+        String sql = "SELECT \"telephone_number\" " +
                      "FROM \"user_contact\" " +
                      "WHERE \"user_id\" = ?;";
 
-        return jdbcTemplate.query(
+        return jdbcTemplate.queryForList(
             sql,
-            new BeanPropertyRowMapper<>(String.class),
+            String.class,
             userId
         );
     }
