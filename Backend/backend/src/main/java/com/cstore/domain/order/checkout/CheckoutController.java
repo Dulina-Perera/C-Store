@@ -17,7 +17,7 @@ public class CheckoutController {
     private final CheckoutService checkoutService;
 
     @RequestMapping(
-        method = RequestMethod.POST,
+        method = RequestMethod.GET,
         path = "/{user_id}"
     )
     public Long placeOrder(
