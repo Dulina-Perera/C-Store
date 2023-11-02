@@ -45,12 +45,14 @@ public class AuthenticationService {
 
     private static AuthenticationResponse buildToken(
         String accessToken,
-        String refreshToken
+        String refreshToken,
+        Long userId
     ) {
         return AuthenticationResponse
             .builder()
             .accessToken(accessToken)
             .refreshToken(refreshToken)
+            .userId(userId)
             .build();
     }
 
@@ -117,7 +119,7 @@ public class AuthenticationService {
         String refreshToken = jwtService.generateRefreshToken(regUser);
         persistContent(user, accessToken);
 
-        return buildToken(accessToken, refreshToken);
+        return buildToken(accessToken, refreshToken, user.getUserId());
     }
 
     public AuthenticationResponse authenticate(
@@ -142,7 +144,7 @@ public class AuthenticationService {
         tokenDao.revokeAllTokens(regUser.getUser());
         persistContent(regUser.getUser(), accessToken);
 
-        return buildToken(accessToken, refreshToken);
+        return buildToken(accessToken, refreshToken, regUser.getUser().getUserId());
     }
 
     public void refreshToken(
@@ -184,6 +186,7 @@ public class AuthenticationService {
                     .builder()
                     .accessToken(accessToken)
                     .refreshToken(refreshToken)
+                    .userId(regUser.getUser().getUserId())
                     .build();
 
                 new ObjectMapper()
