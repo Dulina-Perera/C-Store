@@ -23,7 +23,8 @@ public class RegUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return user.getRole().getAuthorities();
+//        return user.getRole().getAuthorities();
+        return List.of(new SimpleGrantedAuthority(user.getRole().name()));
     }
 
     @Override

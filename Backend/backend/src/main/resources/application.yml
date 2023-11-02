@@ -2,7 +2,7 @@ application:
   security:
     token:
       access:
-        expiration-ms: 3600000 # an hour
+        expiration-ms: 30000 # an hour 3600000
       refresh:
         expiration-ms: 43200000 # 12 hours
       secret-key: ${SECRET_KEY}

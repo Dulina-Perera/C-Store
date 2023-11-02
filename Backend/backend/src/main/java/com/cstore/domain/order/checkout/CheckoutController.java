@@ -12,18 +12,21 @@ import java.sql.SQLIntegrityConstraintViolationException;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "/api/v1/orders/checkout")
+@RequestMapping(path = "/api/v1/reg-cust/orders/checkout")
 public class CheckoutController {
-    private final CheckoutService serv;
+    private final CheckoutService checkoutService;
 
     @RequestMapping(
         method = RequestMethod.POST,
-        path = "/place/{user_id}"
+        path = "/{user_id}"
     )
     public Long placeOrder(
-        @PathVariable(name = "user_id", required = true)
+        @PathVariable(
+            name = "user_id",
+            required = true
+        )
         Long userId
     ) throws DataAccessException, SparseStocksException, SQLIntegrityConstraintViolationException {
-        return serv.placeOrder(userId);
+        return checkoutService.placeOrder(userId);
     }
 }

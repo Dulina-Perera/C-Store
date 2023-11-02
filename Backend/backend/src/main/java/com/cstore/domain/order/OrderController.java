@@ -9,7 +9,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "/api/v1/orders")
+@RequestMapping(path = "/api/v1/reg-cust/orders")
 public class OrderController {
     private final OrderService serv;
 
