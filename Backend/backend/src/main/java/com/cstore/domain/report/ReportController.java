@@ -1,6 +1,8 @@
 package com.cstore.domain.report;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,14 +16,15 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/all/reports")
 @RequiredArgsConstructor
+@Slf4j
 public class ReportController {
     private final ReportService reportService;
 
     @RequestMapping(
         method = RequestMethod.GET,
         path = {
-            "/sales/products/max/{period}/{limit}",
-            "/sales/products/max/{period}"}
+            "/products/sales/max/{period}/{limit}",
+            "/products/sales/max/{period}"}
     )
     public ResponseEntity<List<Product>> getProductsWithMostSales(
         @PathVariable(
@@ -35,6 +38,7 @@ public class ReportController {
         )
         Short limit
     ) {
+        log.info("{}", limit);
         limit = limit == null ? 5 : limit;
 
         try {
@@ -52,7 +56,7 @@ public class ReportController {
 
     @RequestMapping(
         method = RequestMethod.GET,
-        path = "/orders/categories/max"
+        path = "/categories/orders/max"
     )
     public ResponseEntity<List<Category>> getCategoriesWithMostOrders(
     ) {
@@ -67,5 +71,18 @@ public class ReportController {
                 HttpStatus.INTERNAL_SERVER_ERROR
             );
         }
+    }
+
+    @RequestMapping(
+        method = RequestMethod.GET,
+        path = "/quarters/max/{product_id}"
+    )
+   public Pair<Short, Short> getQuartersWithMostInterest(
+    @PathVariable(
+        name = "product_id",
+        required = true
+    ) Long productId
+   ) {
+        return reportService.getQuartersWithMostInterest(productId);
     }
 }

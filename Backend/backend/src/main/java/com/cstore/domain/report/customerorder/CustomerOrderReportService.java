@@ -100,7 +100,7 @@ public class CustomerOrderReportService {
                 ReportVariant reportVariant = ReportVariant
                     .builder()
                     .productName(productDao.findByVariantId(orderItem.getVariantId()).get().getProductName())
-                    .quantity(orderItem.getCount())
+                    .quantity(orderItem.getQuantity())
                     .price(orderItem.getPrice())
                     .build();
 

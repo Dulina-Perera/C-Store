@@ -718,8 +718,8 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION "quarters_with_most_interest"(p_id BIGINT)
     RETURNS TABLE (
-        "year"     SMALLINT,
-        "quarter"  SMALLINT,
+        "year"           SMALLINT,
+        "quarter"        SMALLINT,
         "total_sales"    INTEGER,
         "total_earnings" NUMERIC(10, 2)
     ) AS $$
@@ -727,17 +727,19 @@ BEGIN
     RETURN QUERY
         SELECT si."year",
                si."quarter",
-               SUM(si."sales") AS "total_sales",
+               CAST(SUM(si."sales") AS INTEGER) AS "total_sales",
                SUM(si."earnings") AS "total_earnings"
-        FROM "varies_on" AS vo NATURAL RIGHT OUTER JOIN "sales_item" si
+        FROM "varies_on" AS vo
+                 RIGHT OUTER JOIN "sales_item" AS si ON vo."variant_id" = si."variant_id"
         WHERE vo."product_id" = p_id
-        GROUP BY ("year", "quarter")
-        ORDER BY ("total_sales", "total_earnings") DESC;
+        GROUP BY si."year", si."quarter"
+        ORDER BY "total_sales" DESC, "total_earnings" DESC;
 END
 $$ LANGUAGE plpgsql;
 
+
 -- SELECT *
--- FROM "time_period_with_most_interest"(1);
+-- FROM "quarters_with_most_interest"(1);
 
 ------------------------------------------------------------------------------------------------------------------------
 

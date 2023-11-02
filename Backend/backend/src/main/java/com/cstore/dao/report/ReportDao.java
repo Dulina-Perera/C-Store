@@ -4,6 +4,7 @@ import com.cstore.domain.report.Category;
 import com.cstore.domain.report.Product;
 import com.cstore.model.report.SalesItem;
 import com.cstore.model.report.SalesReport;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.dao.DataAccessException;
 
 import java.sql.Timestamp;
@@ -18,4 +19,6 @@ public interface ReportDao {
     List<Product> findProductsWithMostSales(Timestamp from, Timestamp till, Short limit) throws DataAccessException;
 
     List<Category> findCategoriesWithMostOrders() throws DataAccessException;
+
+    Pair<Short, Short> findQuartersWithMostInterest(Long productId) throws DataAccessException;
 }

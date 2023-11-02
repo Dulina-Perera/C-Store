@@ -2,6 +2,7 @@ package com.cstore.domain.report;
 
 import com.cstore.dao.report.ReportDao;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -54,5 +55,11 @@ public class ReportService {
     public List<Category> getCategoriesWithMostOrders(
     ) throws DataAccessException {
         return reportDao.findCategoriesWithMostOrders();
+    }
+
+    public Pair<Short, Short> getQuartersWithMostInterest(
+        Long productId
+    ) {
+        return reportDao.findQuartersWithMostInterest(productId);
     }
 }

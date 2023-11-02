@@ -5,6 +5,7 @@ import com.cstore.domain.report.Product;
 import com.cstore.model.report.SalesItem;
 import com.cstore.model.report.SalesReport;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -66,7 +67,7 @@ public class ReportDaoImpl implements ReportDao {
         Timestamp till,
         Short limit
     ) throws DataAccessException {
-        String sql = "SELECT p.\"product_id\", p.\"product_name\", p.\"main_image\", SUM(oi.\"count\") AS \"sales\" " +
+        String sql = "SELECT p.\"product_id\", p.\"product_name\", p.\"main_image\", SUM(oi.\"quantity\") AS \"sales\" " +
                      "FROM \"order\" AS o NATURAL LEFT OUTER JOIN " +
                      "     \"order_item\" AS oi NATURAL LEFT OUTER JOIN " +
                      "     (SELECT DISTINCT \"product_id\", \"variant_id\" " +
@@ -97,5 +98,15 @@ public class ReportDaoImpl implements ReportDao {
             sql,
             new BeanPropertyRowMapper<>(Category.class)
         );
+    }
+
+    @Override
+    public Pair<Short, Short> findQuartersWithMostInterest(
+        Long productId
+    ) throws DataAccessException {
+        String sql = "SELECT \"year\", \"quarter\" " +
+                     "FROM \"quarters_with_most_interest\"(?);";
+
+        return null;
     }
 }
