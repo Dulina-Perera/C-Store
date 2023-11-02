@@ -1,5 +1,6 @@
 package com.cstore.domain.user;
 
+import com.cstore.model.user.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,6 +12,7 @@ import java.util.List;
 @Builder @AllArgsConstructor @NoArgsConstructor
 public class RegUser {
     private Long userId;
+    private Role role;
     private String firstName;
     private String lastName;
 

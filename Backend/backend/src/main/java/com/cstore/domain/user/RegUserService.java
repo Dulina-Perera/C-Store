@@ -4,6 +4,7 @@ import com.cstore.dao.user.UserDao;
 import com.cstore.dao.user.address.UserAddressDao;
 import com.cstore.dao.user.contact.UserContactDao;
 import com.cstore.exception.NoSuchUserException;
+import com.cstore.model.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ public class RegUserService {
     public RegUser getAllUserDetails(
         Long userId
     ) {
+        Optional<User> user = userDao.findUserById(userId);
         Optional<com.cstore.model.user.RegUser> regUserOptional = userDao.findRegUserById(userId);
 
         if (regUserOptional.isEmpty()) {
@@ -28,6 +30,7 @@ public class RegUserService {
         RegUser regUser = RegUser
             .builder()
             .userId(userId)
+            .role(user.get().getRole())
             .firstName(regUserOptional.get().getFirstName())
             .lastName(regUserOptional.get().getLastName())
             .build();
