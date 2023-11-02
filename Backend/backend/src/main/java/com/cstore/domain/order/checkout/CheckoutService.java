@@ -5,6 +5,7 @@ import com.cstore.dao.order.OrderDao;
 import com.cstore.exception.sparsestocks.SparseStocksException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.datasource.init.ScriptParseException;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
@@ -20,27 +21,20 @@ public class CheckoutService {
 
     public Long placeOrder(
         Long userId
-    ) throws DataAccessException, SQLIntegrityConstraintViolationException {
+    ) throws DataAccessException, SparseStocksException, SQLIntegrityConstraintViolationException {
         Long orderId = orderDao.placeOrder(userId);
 
         try {
             inventoryDao.updateInventory(userId, orderId);
             return orderId;
         } catch (
-            RuntimeException e
+            DataAccessException dae
         ) {
-            orderDao.deleteByID(orderId);
-
-            Throwable rootCause = getRootCause(e);
-            if (rootCause instanceof SQLException) {
-                /*
-                 * When no warehouse has at least one variant the customer requests.
-                 */
-                if ("23502".equals(((SQLException) rootCause).getSQLState())) {
-                    throw new SparseStocksException("Some user requested variants are out of stock.");
-                }
+            if (dae.getMessage().startsWith("For variant with id")) {
+                throw new SparseStocksException("Not enough stocks!");
+            } else {
+                throw dae;
             }
-            throw new SparseStocksException("Not enough stocks.");
         }
     }
 }

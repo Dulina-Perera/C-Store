@@ -232,7 +232,7 @@ DROP TABLE IF EXISTS "cart_item";
 CREATE TABLE "cart_item" (
      "user_id"    BIGINT,
      "variant_id" BIGINT,
-     "count"      INTEGER,
+     "quantity"   INTEGER,
      PRIMARY KEY ("user_id", "variant_id"),
      FOREIGN KEY ("user_id") REFERENCES "cart" ("user_id") ON DELETE CASCADE,
      FOREIGN KEY ("variant_id") REFERENCES "variant" ("variant_id") ON DELETE CASCADE
@@ -347,11 +347,11 @@ BEGIN
         FROM cart_item
         WHERE user_id = u_id AND variant_id = v_id
     ) THEN
-        INSERT INTO cart_item (user_id, variant_id, count)
+        INSERT INTO cart_item (user_id, variant_id, "quantity")
         VALUES (u_id, v_id, cnt);
     ELSE
         UPDATE cart_item
-        SET count = count + cnt
+        SET "quantity" = "quantity" + cnt
         WHERE user_id = u_id AND variant_id = v_id;
     END IF;
 END
@@ -385,39 +385,65 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE PROCEDURE "update_inventory"(u_id BIGINT, o_id BIGINT) AS $$
 DECLARE
-    row_record cart_item%ROWTYPE;
-    query      TEXT;
+    c_rec      RECORD;
+    i_rec      RECORD;
+    needed     INTEGER;
     v_price    NUMERIC (10, 2);
-    w_id       BIGINT;
 BEGIN
-    query := 'SELECT * ' ||
-             'FROM "cart_item" ' ||
-             'WHERE "user_id" = ' || u_id;
-
-    FOR row_record IN EXECUTE query LOOP
+    FOR c_rec IN
+        SELECT *
+        FROM "cart_item"
+        WHERE "user_id" = u_id
+    LOOP
         SELECT "price" INTO v_price
         FROM "variant"
-        WHERE "variant_id" = row_record."variant_id";
+        WHERE "variant_id" = c_rec."variant_id";
 
-        SELECT "warehouse_id" INTO w_id
-        FROM "inventory"
-        WHERE "variant_id" = row_record."variant_id" AND quantity = (SELECT MAX(quantity)
-                                                                    FROM "inventory"
-                                                                    WHERE "variant_id" = row_record."variant_id")
-        LIMIT 1;
+        needed := c_rec."quantity";
 
-        UPDATE "inventory"
-        SET quantity = quantity - row_record."count"
-        WHERE "variant_id" = row_record."variant_id" AND "warehouse_id" = w_id;
+        FOR i_rec IN
+            SELECT *
+            FROM "inventory"
+            WHERE "variant_id" = c_rec."variant_id"
+            ORDER BY "quantity" DESC
+        LOOP
+            IF needed <= 0 THEN
+                -- The order has been fulfilled.
+                EXIT;
+            END IF;
 
-        INSERT INTO "order_item"
-        VALUES (o_id, w_id, row_record."variant_id", row_record."count", row_record."count" * v_price);
+            IF i_rec."quantity" >= needed THEN
+                INSERT INTO "order_item"
+                VALUES (o_id, i_rec."variant_id", i_rec."warehouse_id", needed, v_price * needed);
+
+                UPDATE "inventory"
+                SET "quantity" = "quantity" - needed
+                WHERE ("warehouse_id", "variant_id") = (i_rec."warehouse_id", i_rec."variant_id");
+
+                needed := 0;
+            ELSE
+                INSERT INTO "order_item"
+                VALUES (o_id, i_rec."variant_id", i_rec."warehouse_id", i_rec."quantity", v_price * i_rec."quantity");
+
+                UPDATE "inventory"
+                SET "quantity" = 0
+                WHERE ("warehouse_id", "variant_id") = (i_rec."warehouse_id", i_rec."variant_id");
+
+                needed := needed - i_rec."quantity";
+            END IF;
+        END LOOP;
+
+        IF needed > 0 THEN
+            RAISE EXCEPTION 'For variant with id %, requested quantity: % exceeds available quantity: %.',
+                c_rec."variant_id",
+                c_rec."quantity",
+                c_rec."quantity" - needed;
+        END IF;
     END LOOP;
-    COMMIT;
 END
 $$ LANGUAGE plpgsql;
 
--- CALL "update_inventory"(1, 1);
+CALL "update_inventory"(1, 1);
 
 
 ------------------------------------------------------------------------------------------------------------------------

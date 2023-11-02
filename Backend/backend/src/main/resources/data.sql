@@ -1429,7 +1429,7 @@ INSERT INTO "cart" ("user_id", "total_price") VALUES
 -- ---------------------------------------------------------------------------------------------------------------------
 -- "cart_item" table
 
-INSERT INTO "cart_item" ("user_id", "variant_id", "count") VALUES
+INSERT INTO "cart_item" ("user_id", "variant_id", "quantity") VALUES
 	(1, 1, 2),
 	(2, 3, 1),
 	(3, 5, 3);
@@ -1440,7 +1440,8 @@ INSERT INTO "cart_item" ("user_id", "variant_id", "count") VALUES
 -- ---------------------------------------------------------------------------------------------------------------------
 -- "order" table
 
-INSERT INTO "order" ("status", "date", "total_payment", "payment_method", "delivery_method", "customer_id", "email", "street_number", "street_name", "city", "zipcode", "telephone_number") VALUES
+INSERT INTO "order" ("status", "date", "total_payment", "payment_method", "delivery_method", "customer_id", "email",
+                     "street_number", "street_name", "city", "zipcode", "telephone_number") VALUES
 	('PROCESSED', '2023-01-15 08:30:00', 149.97, 'Credit Card', 'Express Shipping', 1, 'dulinaperera@gmail.com', '456', 'Godagama', 'Kaluthara', 98765, '0702632639'),
 	('PROCESSED', '2023-03-20 10:00:00', 239.97, 'Credit Card', 'Express Shipping', 2, 'nethumrathnayake@gmail.com', '456', 'Kawdana', 'Dehiwala', 98765, '0705654028');
 
