@@ -81,7 +81,7 @@ DROP TABLE IF EXISTS "product";
 CREATE TABLE "product" (
     "product_id"   BIGSERIAL,
     "product_name" VARCHAR (100),
-    "base_price"   NUMERIC (10, 2) DEFAULT 0,
+    "base_price"   NUMERIC (14, 2) DEFAULT 0,
     "brand"        VARCHAR (40),
     "description"  VARCHAR,
     "main_image"    VARCHAR (100),
@@ -105,7 +105,7 @@ CREATE TABLE "property" (
     "property_name"   VARCHAR (40),
     "value"           VARCHAR (40),
     "url"             VARCHAR (100),
-    "price_increment" NUMERIC (10, 2) DEFAULT 0,
+    "price_increment" NUMERIC (14, 2) DEFAULT 0,
     PRIMARY KEY ("property_id")
 );
 
@@ -113,7 +113,7 @@ CREATE TABLE "property" (
 DROP TABLE IF EXISTS "variant";
 CREATE TABLE "variant" (
     "variant_id" BIGSERIAL,
-    "price"      NUMERIC (10, 2) DEFAULT 0,
+    "price"      NUMERIC (14, 2) DEFAULT 0,
     "weight"     NUMERIC (8, 2),
     PRIMARY KEY ("variant_id")
 );
@@ -222,7 +222,7 @@ CREATE TABLE "token" (
 DROP TABLE IF EXISTS "cart";
 CREATE TABLE "cart" (
      "user_id"     BIGINT,
-     "total_price" NUMERIC (12, 2),
+     "total_price" NUMERIC (14, 2),
      PRIMARY KEY ("user_id"),
      FOREIGN KEY ("user_id") REFERENCES "user" ("user_id") ON DELETE CASCADE
 );
@@ -246,7 +246,7 @@ CREATE TABLE "order" (
     "status"          VARCHAR (20) CHECK ("status" IN ('PLACED', 'PROCESSING', 'PROCESSED')),
 
     "date"            TIMESTAMP,
-    "total_payment"   NUMERIC (12, 2),
+    "total_payment"   NUMERIC (14, 2),
     "payment_method"  VARCHAR (20),
     "delivery_method" VARCHAR (40),
 
@@ -269,7 +269,7 @@ CREATE TABLE "order_item" (
     "variant_id"   BIGINT,
     "warehouse_id" BIGINT,
     "quantity"     INTEGER,
-    "price"        NUMERIC (10, 2),
+    "price"        NUMERIC (14, 2),
     PRIMARY KEY ("order_id", "variant_id", "warehouse_id"),
     FOREIGN KEY ("order_id") REFERENCES "order" ("order_id") ON DELETE CASCADE,
     FOREIGN KEY ("variant_id") REFERENCES "variant" ("variant_id"),
@@ -282,7 +282,7 @@ CREATE TABLE "sales_report" (
     "year"           SMALLINT,
     "quarter"        SMALLINT CHECK ("quarter" IN (1, 2, 3, 4)),
     "total_sales"    INTEGER DEFAULT 0,
-    "total_earnings" NUMERIC (10, 2) DEFAULT 0,
+    "total_earnings" NUMERIC (14, 2) DEFAULT 0,
     PRIMARY KEY ("year", "quarter")
 );
 
@@ -293,7 +293,7 @@ CREATE TABLE "sales_item" (
     "quarter"    SMALLINT,
     "variant_id" BIGINT,
     "sales"      INTEGER DEFAULT 0,
-    "earnings"   NUMERIC (10, 2) DEFAULT 0,
+    "earnings"   NUMERIC (14, 2) DEFAULT 0,
     PRIMARY KEY ("year", "quarter", "variant_id"),
     FOREIGN KEY ("year", "quarter") REFERENCES "sales_report" ("year", "quarter") ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY ("variant_id") REFERENCES "variant" ("variant_id") ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -388,7 +388,7 @@ DECLARE
     c_rec      RECORD;
     i_rec      RECORD;
     needed     INTEGER;
-    v_price    NUMERIC (10, 2);
+    v_price    NUMERIC (14, 2);
 BEGIN
     FOR c_rec IN
         SELECT *
@@ -456,7 +456,7 @@ DECLARE
     needed  INTEGER := qty;
     o_id    BIGINT;
     i_rec   RECORD;
-    v_price NUMERIC (10, 2);
+    v_price NUMERIC (14, 2);
 BEGIN
     INSERT INTO "order" ("status", "date", "customer_id")
     VALUES ('PLACED', CURRENT_TIMESTAMP, u_id)
@@ -597,7 +597,7 @@ CREATE OR REPLACE FUNCTION "customer_order_report"(c_id BIGINT)
     RETURNS TABLE (
         "order_id"      BIGINT,
         "date"          TIMESTAMP,
-        "total_payment" NUMERIC (12, 2),
+        "total_payment" NUMERIC (14, 2),
         "variant_id"    BIGINT,
         "quantity"         INTEGER
     ) AS $$
@@ -637,7 +637,7 @@ CREATE OR REPLACE FUNCTION "products_from_category"(c_id BIGINT)
     RETURNS TABLE (
         "product_id"   BIGINT,
         "product_name" VARCHAR(100),
-        "base_price"   NUMERIC(10, 2),
+        "base_price"   NUMERIC (14, 2),
         "brand"        VARCHAR(40),
         "description"  VARCHAR,
         "image_url"    VARCHAR(100)
@@ -675,7 +675,7 @@ CREATE OR REPLACE FUNCTION "products_with_most_sales"(y SMALLINT, q SMALLINT)
     RETURNS TABLE(
         "product_id"     BIGINT,
         "total_sales"    INTEGER,
-        "total_earnings" NUMERIC (10, 2)
+        "total_earnings" NUMERIC (14, 2)
     ) AS $$
 BEGIN
     RETURN QUERY
@@ -700,7 +700,7 @@ CREATE OR REPLACE FUNCTION "properties_from_product"(p_id BIGINT)
         "property_name"   VARCHAR (40),
         "value"           VARCHAR (40),
         "image_url"       VARCHAR (400),
-        "price_increment" NUMERIC (10, 2)
+        "price_increment" NUMERIC (14, 2)
     ) AS $$
 BEGIN
     RETURN QUERY
@@ -721,7 +721,7 @@ CREATE OR REPLACE FUNCTION "quarters_with_most_interest"(p_id BIGINT)
         "year"           SMALLINT,
         "quarter"        SMALLINT,
         "total_sales"    INTEGER,
-        "total_earnings" NUMERIC(10, 2)
+        "total_earnings" NUMERIC (14, 2)
     ) AS $$
 BEGIN
     RETURN QUERY
@@ -748,7 +748,7 @@ CREATE OR REPLACE FUNCTION "search_products_by_name"(p_name VARCHAR (100))
     RETURNS TABLE (
         "product_id"   BIGINT,
         "product_name" VARCHAR (100),
-        "base_price"   NUMERIC (10, 2),
+        "base_price"   NUMERIC (14, 2),
         "brand"        VARCHAR (40),
         "description"  VARCHAR,
         "main_image"   VARCHAR (100)
@@ -793,7 +793,7 @@ CREATE OR REPLACE FUNCTION "unmarketable_properties"(p_id BIGINT)
         "property_name"   VARCHAR (40),
         "value"           VARCHAR (40),
         "image_url"       VARCHAR (100),
-        "price_increment" NUMERIC (10, 2)
+        "price_increment" NUMERIC (14, 2)
     ) AS $$
 BEGIN
     RETURN QUERY
@@ -840,7 +840,7 @@ EXECUTE FUNCTION "delete_order_items"();
 ------------------------------------------------------------------------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION "update_cart"() RETURNS TRIGGER AS $$
-    DECLARE variantPrice NUMERIC (10, 2);
+    DECLARE variantPrice NUMERIC (14, 2);
 BEGIN
     variantPrice := 0;
 
@@ -871,9 +871,9 @@ EXECUTE FUNCTION "update_cart"();
 ------------------------------------------------------------------------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION "update_variant"() RETURNS TRIGGER AS $$
-DECLARE productPrice NUMERIC (10, 2);
-    DECLARE propertyPrice NUMERIC (10, 2);
-    DECLARE variantPrice NUMERIC (10, 2);
+    DECLARE productPrice NUMERIC (14, 2);
+    DECLARE propertyPrice NUMERIC (14, 2);
+    DECLARE variantPrice NUMERIC (14, 2);
 BEGIN
     productPrice := 0;
     propertyPrice := 0;

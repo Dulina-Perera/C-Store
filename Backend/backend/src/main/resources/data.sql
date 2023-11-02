@@ -1392,8 +1392,8 @@ INSERT INTO "registered_user" ("user_id", "email", "password", "first_name", "la
 	(4, 'nethumrathnayake@gmail.com', '$2a$12$ZOSQAnZjAg0m7trF7tnQBOkpF/OG1nTVzIS1bKYcdTQMDBGYkz/o.', 'Nethum', 'Rathnayake', FALSE, TRUE),
 	(5, 'nivishkamanchanayake@gmail.com', '$2a$12$QVGlJLUSMLP.pEmjeJTWhOmWT5G2W4ryNLVCdUuC.QJ0r6jArfVgO', 'Nivishka', 'Manchanayake', FALSE, TRUE);
 
-SELECT *
-FROM "registered_user";
+-- SELECT *
+-- FROM "registered_user";
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- "customer_contact"
@@ -1457,16 +1457,70 @@ INSERT INTO "order" ("status", "date", "total_payment", "payment_method", "deliv
 	('PROCESSED', '2023-01-15 08:30:00', 149.97, 'Credit Card', 'Express Shipping', 1, 'dulinaperera@gmail.com', '456', 'Godagama', 'Kaluthara', 98765, '0702632639'),
 	('PROCESSED', '2023-03-20 10:00:00', 239.97, 'Credit Card', 'Express Shipping', 2, 'nethumrathnayake@gmail.com', '456', 'Kawdana', 'Dehiwala', 98765, '0705654028');
 
-SELECT *
-FROM "order";
+-- SELECT *
+-- FROM "order";
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- "order_item"
 
-INSERT INTO "order_item" ("order_id", "variant_id", "warehouse_id", "quantity", "price") VALUES
+INSERT INTO "order_item" ("order_id", "variant_id", "warehouse_id", "quantity", "price")
+VALUES
     (1, 13, 1, 5, 1799500.00),
 	(2, 3, 1, 1, 409900.00),
 	(2, 78, 1, 2, 8000.00);
 
 -- SELECT *
 -- FROM "order_item";
+
+-- ---------------------------------------------------------------------------------------------------------------------
+-- "sales_report"
+
+INSERT INTO "sales_report" ("year", "quarter", "total_sales", "total_earnings")
+VALUES
+    (2023, 1, 81, 11654149.95),
+    (2023, 2, 96, 7249539.98),
+    (2023, 3, 97, 7996337.00);
+
+-- SELECT *
+-- FROM "sales_report";
+
+-- ---------------------------------------------------------------------------------------------------------------------
+-- "sales_item"
+
+INSERT INTO "sales_item" ("year", "quarter", "variant_id", "sales", "earnings")
+VALUES
+    (2023, 1, 84, 7, 66150.00),
+    (2023, 1, 57, 5, 295000.00),
+    (2023, 1, 123, 12, 152400.00),
+    (2023, 1, 11, 13, 5328700.00),
+    (2023, 1, 150, 1, 145900.00),
+    (2023, 1, 95, 8, 60000.00),
+    (2023, 1, 37, 8, 9600.00),
+    (2023, 1, 9, 7, 2519300.00),
+    (2023, 1, 76, 15, 2835000.00),
+    (2023, 1, 163, 5, 242099.95),
+
+    (2023, 2, 49, 8, 440000.00),
+    (2023, 2, 172, 14, 42000.00),
+    (2023, 2, 34, 13, 21450.00),
+    (2023, 2, 84, 7, 66150.00),
+    (2023, 2, 99, 13, 215800.00),
+    (2023, 2, 11, 3, 1229700.00),
+    (2023, 2, 95, 4, 30000.00),
+    (2023, 2, 9, 6, 2159400.00),
+    (2023, 2, 163, 12, 581039.98),
+    (2023, 2, 155, 16, 2464000.00),
+
+    (2023, 3, 102, 1, 3500.00),
+    (2023, 3, 37, 6, 7200.00),
+    (2023, 3, 34, 9, 14850.00),
+    (2023, 3, 84, 18, 170100.00),
+    (2023, 3, 49, 12, 660000.00),
+    (2023, 3, 131, 13, 80587.00),
+    (2023, 3, 150, 8, 1167200.00),
+    (2023, 3, 98, 9, 149400.00),
+    (2023, 3, 95, 6, 45000.00),
+    (2023, 3, 2, 15, 5698500.00);
+
+-- SELECT *
+-- FROM "sales_item";
