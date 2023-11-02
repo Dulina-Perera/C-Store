@@ -1373,9 +1373,11 @@ INSERT INTO "inventory" ("warehouse_id", "variant_id", "sku", "quantity") VALUES
 --  "user"
 
 INSERT INTO "user" ("role") VALUES
-	('REG_CUST'),
-	('REG_CUST'),
-	('GUEST_CUST');
+	('ADMIN'),
+	('ADMIN'),
+	('ADMIN'),
+	('ADMIN'),
+	('ADMIN');
 
 -- SELECT *
 -- FROM "user";
@@ -1384,8 +1386,11 @@ INSERT INTO "user" ("role") VALUES
 -- "registered_customer"
 
 INSERT INTO "registered_user" ("user_id", "email", "password", "first_name", "last_name", "locked", "enabled") VALUES
-	(1, 'dulinaperera@gmail.com', 'password123', 'Dulina', 'Perera', FALSE, TRUE),
-	(2, 'nethumrathnayake@gmail.com', 'IloveMethmini', 'Nethum', 'Rathnayake', FALSE, TRUE);
+	(1, 'dulinaperera@gmail.com', '$2a$12$30sxNzqbLjZsSpDLIUzcTOtHGa0mmYChcjdZLk9ykJW/JMF9st5Yy', 'Dulina', 'Perera', FALSE, TRUE),
+	(2, 'himindukulasinghe@gmail.com', '$2a$12$IwCmc/Wi2uSFcZY.rO.Fn.BYriKbOBsrhItttQR4Q6zc9t/pHukuS', 'Himindu', 'Kulasinghe', FALSE, TRUE),
+	(3, 'methminimadhushika@gmail.com', '$2a$12$Q7Nyi1V3QEBfU7DCWbsSUOQo25vk.Obol2cqfD2eJoQls5kNEMFcS', 'Methmini', 'Madhushika', FALSE, TRUE),
+	(4, 'nethumrathnayake@gmail.com', '$2a$12$ZOSQAnZjAg0m7trF7tnQBOkpF/OG1nTVzIS1bKYcdTQMDBGYkz/o.', 'Nethum', 'Rathnayake', FALSE, TRUE),
+	(5, 'nivishkamanchanayake@gmail.com', '$2a$12$QVGlJLUSMLP.pEmjeJTWhOmWT5G2W4ryNLVCdUuC.QJ0r6jArfVgO', 'Nivishka', 'Manchanayake', FALSE, TRUE);
 
 -- SELECT *
 -- FROM "registered_user";
@@ -1395,7 +1400,11 @@ INSERT INTO "registered_user" ("user_id", "email", "password", "first_name", "la
 
 INSERT INTO "user_contact" ("user_id", "telephone_number") VALUES
 	(1, '0702632639'),
-	(2, '0714283876');
+	(1, '0770533508'),
+	(2, '0776969481'),
+	(3, '0764314659'),
+	(4, '0704267365'),
+	(5, '0714283876');
 
 -- SELECT *
 -- FROM "user_contact";
@@ -1404,8 +1413,11 @@ INSERT INTO "user_contact" ("user_id", "telephone_number") VALUES
 -- "customer_address"
 
 INSERT INTO "user_address" ("user_id", "street_number", "street_name", "city", "zipcode") VALUES
-	(1, '5/16', 'Sri Dhammaruchi Mawatha', 'Wadduwa', 12560),
-	(2, '123', 'Kesbewa Road', 'Kesbewaa', 12345);
+    (1, '5/16', 'Sri Dhammaruchi Mawatha', 'Wadduwa', 12560),
+    (2, '123', 'Kesbewa Road', 'Kesbewa', 12345),
+    (3, '25/7', 'Galle Road', 'Colombo', 00300),
+    (4, '42', 'Havelock Road', 'Kandy', 20000),
+    (5, '15/3', 'Gampaha Road', 'Negombo', 11500);
 
 -- SELECT *
 -- FROM "user_address";
