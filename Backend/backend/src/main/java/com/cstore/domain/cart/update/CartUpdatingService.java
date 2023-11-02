@@ -52,7 +52,6 @@ public class CartUpdatingService {
         cartDao.addToCart(userId, variant.getVariantId(), properties.getQuantity());
 
         return variant.getVariantId();
-
     }
 
     public CartItemDto updateVariant(Long userId, CartItemUpdateRequest request) {
@@ -78,26 +77,16 @@ public class CartUpdatingService {
             .build();
     }
 
-    public List<CartItemDto> refresh(Long userId, List<CartItemDto> cartItems) {
+    public List<CartItemResponse> refresh(
+        Long userId
+    ) {
+        List<CartItemResponse> cartItems = cartItemDao.findByUserId(userId);
 
-        // TODO: Find if the user's cart contains the variants in CARTITEMS.
-
-        List<CartItemDto> erroneousCartItems = new ArrayList<>();
-
-        for (CartItemDto cartItemDto : cartItems) {
-            Integer availableCount = inventoryDao.findCountByVariantId(cartItemDto.getVariantId());
-
-            if (availableCount == null) {
-                cartItemDto.setCount(0);
-                erroneousCartItems.add(cartItemDto);
-            }
-            else if (availableCount < cartItemDto.getCount()) {
-                cartItemDto.setCount(availableCount);
-                erroneousCartItems.add(cartItemDto);
-            }
+        for (CartItemResponse cartItemResponse : cartItems) {
+            cartItemResponse.setQuantity(variantDao.countStocks(cartItemResponse.getVariantId()));
         }
 
-        return erroneousCartItems;
+        return cartItems;
     }
 
 }

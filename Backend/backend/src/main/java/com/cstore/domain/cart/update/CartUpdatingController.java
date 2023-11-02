@@ -5,26 +5,28 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/api/v1/carts/{user_id}")
+@RequestMapping(path = "/api/v1/reg-user/carts/{user_id}")
+@RequiredArgsConstructor
 @Tag(name = "Update Cart")
 public class CartUpdatingController {
-
     private final CartUpdatingService cartUpdatingService;
 
-    @Autowired
-    public CartUpdatingController(CartUpdatingService cartUpdatingService) {
-        this.cartUpdatingService = cartUpdatingService;
-    }
-
-    @RequestMapping(method = RequestMethod.GET, path = "")
+    @RequestMapping(
+        method = RequestMethod.GET,
+        path = ""
+    )
     public List<CartItemResponse> getItems(
-        @PathVariable(name = "user_id", required = true)
+        @PathVariable(
+            name = "user_id",
+            required = true
+        )
         Long userId
     ) {
         return cartUpdatingService.getItems(userId);
@@ -49,7 +51,10 @@ public class CartUpdatingController {
     )
     @RequestMapping(method = RequestMethod.POST, path = "/add")
     public Long addVariant(
-        @PathVariable(name = "user_id", required = true)
+        @PathVariable(
+            name = "user_id",
+            required = true
+        )
         Long userId,
         @RequestBody(required = true)
         VariantProperiesDto properties
@@ -82,14 +87,17 @@ public class CartUpdatingController {
         return cartUpdatingService.updateVariant(userId, request);
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/refresh")
-    public List<CartItemDto> refresh(
-        @PathVariable(name = "user_id", required = true) Long userId,
-        @RequestBody(required = true) List<CartItemDto> cartItems
+    @RequestMapping(
+        method = RequestMethod.GET,
+        path = "/refresh"
+    )
+    public List<CartItemResponse> refresh(
+        @PathVariable(
+            name = "user_id",
+            required = true
+        )
+        Long userId
     ) {
-
-        return cartUpdatingService.refresh(userId, cartItems);
-
+        return cartUpdatingService.refresh(userId);
     }
-
 }

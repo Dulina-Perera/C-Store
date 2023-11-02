@@ -599,7 +599,7 @@ CREATE OR REPLACE FUNCTION "customer_order_report"(c_id BIGINT)
         "date"          TIMESTAMP,
         "total_payment" NUMERIC (12, 2),
         "variant_id"    BIGINT,
-        "count"         INTEGER
+        "quantity"         INTEGER
     ) AS $$
 BEGIN
     RETURN QUERY
@@ -848,11 +848,11 @@ BEGIN
 
     IF (TG_OP = 'INSERT') THEN
         UPDATE "cart"
-        SET "total_price" = "total_price" + variantPrice * NEW."count"
+        SET "total_price" = "total_price" + variantPrice * NEW."quantity"
         WHERE "user_id" = NEW."user_id";
     ELSIF (TG_OP = 'UPDATE') THEN
         UPDATE "cart"
-        SET "total_price" = "total_price" + variantPrice * NEW."count" - OLD."count"
+        SET "total_price" = "total_price" + variantPrice * NEW."quantity" - OLD."quantity"
         WHERE "user_id" = NEW."user_id";
     END IF;
 

@@ -21,7 +21,7 @@ public class CartItemDaoImpl implements CartItemDao {
     public List<CartItemResponse> findByUserId(
         Long userId
     ) throws DataAccessException {
-        String sql = "SELECT DISTINCT ci.\"variant_id\", p.\"product_name\", p.\"main_image\", v.\"price\" AS \"variant_price\", ci.\"count\" " +
+        String sql = "SELECT DISTINCT ci.\"variant_id\", p.\"product_name\", p.\"main_image\", v.\"price\" AS \"variant_price\", ci.\"quantity\" " +
                      "FROM \"cart_item\" AS ci NATURAL LEFT OUTER JOIN " +
                      "     \"variant\" AS v NATURAL LEFT OUTER JOIN " +
                      "     \"varies_on\" AS vo NATURAL LEFT OUTER JOIN " +
@@ -58,21 +58,23 @@ public class CartItemDaoImpl implements CartItemDao {
     }
 
     @Override
-    public int updateCount(Long userId, Long variantId, Integer count) throws DataAccessException {
-
+    public int updateCount(
+        Long userId,
+        Long variantId,
+        Integer quantity
+    ) throws DataAccessException {
         String sql = "UPDATE \"cart_item\" " +
-                     "SET \"count\" = ? " +
+                     "SET \"quantity\" = ? " +
                      "WHERE (\"user_id\", \"variant_id\") = (?, ?);";
 
         return jdbcTemplate.update(
             sql,
             preparedStatement -> {
-                preparedStatement.setInt(1, count);
+                preparedStatement.setInt(1, quantity);
                 preparedStatement.setLong(2, userId);
                 preparedStatement.setLong(3, variantId);
             }
         );
-
     }
 
     @Override

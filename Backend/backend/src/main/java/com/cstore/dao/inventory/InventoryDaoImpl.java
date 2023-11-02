@@ -36,7 +36,7 @@ public class InventoryDaoImpl implements InventoryDao {
 
     @Override
     public Integer findCountByVariantId(Long variantId) {
-        String sql = "SELECT SUM(\"count\") " +
+        String sql = "SELECT SUM(\"quantity\") " +
                      "FROM \"inventory\" " +
                      "WHERE \"variant_id\" = ? ";
 

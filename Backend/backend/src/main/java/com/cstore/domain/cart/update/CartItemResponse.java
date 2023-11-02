@@ -14,5 +14,5 @@ public class CartItemResponse {
     private String productName;
     private String mainImage;
     private BigDecimal variantPrice;
-    private Integer count;
+    private Integer quantity;
 }
