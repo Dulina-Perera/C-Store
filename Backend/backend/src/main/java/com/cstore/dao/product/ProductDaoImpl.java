@@ -3,6 +3,7 @@ package com.cstore.dao.product;
 import com.cstore.model.product.Product;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -67,13 +68,17 @@ public class ProductDaoImpl implements ProductDao {
                      "FROM \"product\" " +
                      "WHERE \"product_id\" = ?;";
 
-        Product product = jdbcTemplate.queryForObject(
-            sql,
-            new BeanPropertyRowMapper<>(Product.class),
-            productId
-        );
+        try {
+            Product product = jdbcTemplate.queryForObject(
+                sql,
+                new BeanPropertyRowMapper<>(Product.class),
+                productId
+            );
 
-        return Optional.ofNullable(product);
+            return Optional.ofNullable(product);
+        } catch (EmptyResultDataAccessException erdae) {
+            return Optional.empty();
+        }
     }
 
     @Override

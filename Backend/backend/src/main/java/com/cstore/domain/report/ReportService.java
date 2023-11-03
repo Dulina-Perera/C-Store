@@ -1,6 +1,8 @@
 package com.cstore.domain.report;
 
+import com.cstore.dao.product.ProductDao;
 import com.cstore.dao.report.ReportDao;
+import com.cstore.exception.NoSuchProductException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.dao.DataAccessException;
@@ -9,12 +11,14 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static com.cstore.domain.report.Period.*;
 
 @Service
 @RequiredArgsConstructor
 public class ReportService {
+    private final ProductDao productDao;
     private final ReportDao reportDao;
 
     public List<Product> getProductsWithMostSales(
@@ -57,9 +61,24 @@ public class ReportService {
         return reportDao.findCategoriesWithMostOrders();
     }
 
-    public Pair<Short, Short> getQuartersWithMostInterest(
+    public Interest getQuartersWithMostInterest(
         Long productId
     ) {
-        return reportDao.findQuartersWithMostInterest(productId);
+        Optional<com.cstore.model.product.Product> tempProduct = productDao.findById(productId);
+        if (tempProduct.isEmpty()) {
+            throw new NoSuchProductException("Product with id " + productId + " does not exist!");
+        }
+        com.cstore.model.product.Product product = tempProduct.get();
+
+        List<Quarter> quarters = reportDao.findQuartersWithMostInterest(productId);
+
+        return Interest
+            .builder()
+            .productName(product.getProductName())
+            .brand(product.getBrand())
+            .description(product.getDescription())
+            .mainImage(product.getMainImage())
+            .quarters(quarters)
+            .build();
     }
 }

@@ -24,6 +24,10 @@ DROP PROCEDURE IF EXISTS "add_to_cart" CASCADE;
 DROP VIEW IF EXISTS "leaf_category" CASCADE;
 DROP VIEW IF EXISTS "root_category" CASCADE;
 
+DROP INDEX IF EXISTS "index_sales_item_year_quarter";
+DROP INDEX IF EXISTS "index_property_price_increment";
+DROP INDEX IF EXISTS "index_product_product_name";
+
 DROP TABLE IF EXISTS "sales_item" CASCADE;
 DROP TABLE IF EXISTS "sales_report" CASCADE;
 DROP TABLE IF EXISTS "order_item" CASCADE;
@@ -299,6 +303,19 @@ CREATE TABLE "sales_item" (
     FOREIGN KEY ("variant_id") REFERENCES "variant" ("variant_id") ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
+
+------------------------------------------------------------------------------------------------------------------------
+-- INDICES--------------------------------------------------------------------------------------------------------------
+
+
+DROP INDEX IF EXISTS "index_product_product_name";
+CREATE INDEX "index_product_product_name" ON "product" ("product_name");
+
+DROP INDEX IF EXISTS "index_property_price_increment";
+CREATE INDEX "index_property_price_increment" ON "property" ("price_increment");
+
+DROP INDEX IF EXISTS "index_sales_item_year_quarter";
+CREATE INDEX "index_sales_item_year_quarter" ON "sales_item" ("year", "quarter");
 
 ------------------------------------------------------------------------------------------------------------------------
 -- VIEWS----------------------------------------------------------------------------------------------------------------
@@ -716,30 +733,33 @@ $$ LANGUAGE plpgsql;
 
 ------------------------------------------------------------------------------------------------------------------------
 
+DROP FUNCTION IF EXISTS "quarters_with_most_interest";
 CREATE OR REPLACE FUNCTION "quarters_with_most_interest"(p_id BIGINT)
     RETURNS TABLE (
         "year"           SMALLINT,
         "quarter"        SMALLINT,
-        "total_sales"    INTEGER,
-        "total_earnings" NUMERIC (14, 2)
+        "sales"          INTEGER,
+        "earnings"       NUMERIC (14, 2)
     ) AS $$
 BEGIN
     RETURN QUERY
         SELECT si."year",
                si."quarter",
-               CAST(SUM(si."sales") AS INTEGER) AS "total_sales",
-               SUM(si."earnings") AS "total_earnings"
-        FROM "varies_on" AS vo
-                 RIGHT OUTER JOIN "sales_item" AS si ON vo."variant_id" = si."variant_id"
-        WHERE vo."product_id" = p_id
+               CAST(SUM(si."sales") AS INTEGER) AS "sales",
+               SUM(si."earnings") AS "earnings"
+        FROM (SELECT vo."variant_id"
+              FROM "varies_on" AS vo
+              WHERE vo."product_id" = p_id
+              GROUP BY vo."variant_id", vo."product_id"
+              ORDER BY vo."variant_id" ASC, vo."product_id" ASC) AS temp NATURAL RIGHT OUTER JOIN "sales_item" AS si
+        WHERE si."variant_id" = temp."variant_id"
         GROUP BY si."year", si."quarter"
-        ORDER BY "total_sales" DESC, "total_earnings" DESC;
+        ORDER BY "sales" DESC, "earnings" DESC;
 END
 $$ LANGUAGE plpgsql;
 
-
 -- SELECT *
--- FROM "quarters_with_most_interest"(1);
+-- FROM "quarters_with_most_interest"(5);
 
 ------------------------------------------------------------------------------------------------------------------------
 

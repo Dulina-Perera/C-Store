@@ -2,6 +2,7 @@ package com.cstore.dao.report;
 
 import com.cstore.domain.report.Category;
 import com.cstore.domain.report.Product;
+import com.cstore.domain.report.Quarter;
 import com.cstore.model.report.SalesItem;
 import com.cstore.model.report.SalesReport;
 import org.apache.commons.lang3.tuple.Pair;
@@ -20,5 +21,5 @@ public interface ReportDao {
 
     List<Category> findCategoriesWithMostOrders() throws DataAccessException;
 
-    Pair<Short, Short> findQuartersWithMostInterest(Long productId) throws DataAccessException;
+    List<Quarter> findQuartersWithMostInterest(Long productId) throws DataAccessException;
 }

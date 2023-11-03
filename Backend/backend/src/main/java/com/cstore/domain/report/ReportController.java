@@ -77,7 +77,7 @@ public class ReportController {
         method = RequestMethod.GET,
         path = "/quarters/max/{product_id}"
     )
-   public Pair<Short, Short> getQuartersWithMostInterest(
+   public Interest getQuartersWithMostInterest(
     @PathVariable(
         name = "product_id",
         required = true

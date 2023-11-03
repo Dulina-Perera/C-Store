@@ -2,6 +2,7 @@ package com.cstore.dao.report;
 
 import com.cstore.domain.report.Category;
 import com.cstore.domain.report.Product;
+import com.cstore.domain.report.Quarter;
 import com.cstore.model.report.SalesItem;
 import com.cstore.model.report.SalesReport;
 import lombok.RequiredArgsConstructor;
@@ -101,12 +102,16 @@ public class ReportDaoImpl implements ReportDao {
     }
 
     @Override
-    public Pair<Short, Short> findQuartersWithMostInterest(
+    public List<Quarter> findQuartersWithMostInterest(
         Long productId
     ) throws DataAccessException {
-        String sql = "SELECT \"year\", \"quarter\" " +
+        String sql = "SELECT * " +
                      "FROM \"quarters_with_most_interest\"(?);";
 
-        return null;
+        return jdbcTemplate.query(
+            sql,
+            ps -> ps.setLong(1, productId),
+            new BeanPropertyRowMapper<>(Quarter.class)
+        );
     }
 }

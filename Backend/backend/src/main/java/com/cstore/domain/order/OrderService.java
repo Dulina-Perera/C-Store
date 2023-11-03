@@ -4,6 +4,7 @@ import com.cstore.dao.order.OrderDao;
 import com.cstore.dto.order.OrderDetailsDto;
 import com.cstore.model.order.Order;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OrderService {
     private final OrderDao orderDao;
 
@@ -54,6 +56,7 @@ public class OrderService {
         if (mainCities.contains(order.getCity())) {
             modifiedOrder.setDeliveryEstimate(Date.from(
                 LocalDate.now().plusDays(5).atStartOfDay(ZoneId.systemDefault()).toInstant()
+
             ));
         } else {
             modifiedOrder.setDeliveryEstimate(Date.from(
