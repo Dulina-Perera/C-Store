@@ -8,5 +8,5 @@ public class Inventory {
     private Long warehouseId;
     private Long variantId;
     private String sku;
-    private Integer count;
+    private Integer quantity;
 }

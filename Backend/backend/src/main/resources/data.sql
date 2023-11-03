@@ -1365,9 +1365,9 @@ INSERT INTO "inventory" ("warehouse_id", "variant_id", "sku", "quantity") VALUES
 	-- (2, 180, 'SKU02180', 27),
 	(2, 181, 'SKU02181', 21);
 
--- SELECT *
--- FROM "inventory"
--- ORDER BY "variant_id" ASC;
+SELECT *
+FROM "inventory"
+ORDER BY "variant_id" ASC;
 
 -- ---------------------------------------------------------------------------------------------------------------------
 --  "user"
@@ -1457,8 +1457,8 @@ INSERT INTO "order" ("status", "date", "total_payment", "payment_method", "deliv
 	('PROCESSED', '2023-01-15 08:30:00', 149.97, 'Credit Card', 'Express Shipping', 1, 'dulinaperera@gmail.com', '456', 'Godagama', 'Kaluthara', 98765, '0702632639'),
 	('PROCESSED', '2023-03-20 10:00:00', 239.97, 'Credit Card', 'Express Shipping', 2, 'nethumrathnayake@gmail.com', '456', 'Kawdana', 'Dehiwala', 98765, '0705654028');
 
-SELECT *
-FROM "order";
+-- SELECT *
+-- FROM "order";
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- "order_item"

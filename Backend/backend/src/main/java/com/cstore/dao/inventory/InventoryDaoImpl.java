@@ -59,7 +59,7 @@ public class InventoryDaoImpl implements InventoryDao {
                 ps.setLong(1, newStock.getWarehouseId());
                 ps.setLong(2, newStock.getVariantId());
                 ps.setString(3, newStock.getSku());
-                ps.setInt(4, newStock.getCount());
+                ps.setInt(4, newStock.getQuantity());
             }
         );
     }
