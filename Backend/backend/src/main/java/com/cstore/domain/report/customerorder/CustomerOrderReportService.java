@@ -61,11 +61,6 @@ public class CustomerOrderReportService {
         return "Report generated successfully.";
     }
 
-    @Scheduled(cron = "00 00 00 01 1,4,7,10 *")
-    public void quarterlySalesReport() {
-
-    }
-
     public List<ReportItem> getCustomerOrderReport(
         Long customerId
     ) {

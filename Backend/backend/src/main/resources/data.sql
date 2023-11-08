@@ -1365,9 +1365,9 @@ INSERT INTO "inventory" ("warehouse_id", "variant_id", "sku", "quantity") VALUES
 	-- (2, 180, 'SKU02180', 27),
 	(2, 181, 'SKU02181', 21);
 
-SELECT *
-FROM "inventory"
-ORDER BY "variant_id" ASC;
+-- SELECT *
+-- FROM "inventory"
+-- ORDER BY "variant_id" ASC;
 
 -- ---------------------------------------------------------------------------------------------------------------------
 --  "user"

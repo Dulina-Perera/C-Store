@@ -22,4 +22,6 @@ public interface ReportDao {
     List<Category> findCategoriesWithMostOrders() throws DataAccessException;
 
     List<Quarter> findQuartersWithMostInterest(Long productId) throws DataAccessException;
+
+    int saveQuarterlySalesReport(Timestamp quarterStart, Timestamp quarterEnd) throws DataAccessException;
 }

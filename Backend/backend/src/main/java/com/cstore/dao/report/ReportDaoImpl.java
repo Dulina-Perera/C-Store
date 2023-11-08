@@ -114,4 +114,20 @@ public class ReportDaoImpl implements ReportDao {
             new BeanPropertyRowMapper<>(Quarter.class)
         );
     }
+
+    @Override
+    public int saveQuarterlySalesReport(
+        Timestamp quarterStart,
+        Timestamp quarterEnd
+    ) throws DataAccessException {
+        String sql = "CALL \"quarterly_sales_report\"(?, ?);";
+
+        return jdbcTemplate.update(
+            sql,
+            preparedStatement -> {
+                preparedStatement.setTimestamp(1, quarterStart);
+                preparedStatement.setTimestamp(2, quarterEnd);
+            }
+        );
+    }
 }

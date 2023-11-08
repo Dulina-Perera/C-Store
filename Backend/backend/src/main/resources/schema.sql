@@ -19,6 +19,7 @@ DROP FUNCTION IF EXISTS "buy_now" CASCADE;
 
 DROP PROCEDURE IF EXISTS "update_inventory" CASCADE;
 DROP PROCEDURE IF EXISTS "stock" CASCADE;
+DROP PROCEDURE IF EXISTS "quarterly_sales_report" CASCADE;
 DROP PROCEDURE IF EXISTS "add_to_cart" CASCADE;
 
 DROP VIEW IF EXISTS "leaf_category" CASCADE;
@@ -375,6 +376,33 @@ END
 $$ LANGUAGE plpgsql;
 
 -- CALL "add_to_cart"(1, 1, 7);
+
+------------------------------------------------------------------------------------------------------------------------
+
+CREATE OR REPLACE PROCEDURE "quarterly_sales_report"(st TIMESTAMP, en TIMESTAMP, qt SMALLINT) AS $$
+    DECLARE
+        tot_sales    INTEGER;
+        tot_earnings NUMERIC (14, 2);
+BEGIN
+    INSERT INTO "sales_report" ("year", "quarter")
+    VALUES (EXTRACT (YEAR FROM st), qt);
+
+    INSERT INTO "sales_item"
+        SELECT EXTRACT(YEAR FROM st), qt, oi."variant_id", SUM(oi."quantity") AS "sales", SUM(oi."price") AS "earnings"
+        FROM "order" AS o NATURAL LEFT OUTER JOIN "order_item" AS oi
+        WHERE o."date" BETWEEN st AND en
+        GROUP BY oi."variant_id";
+
+    SELECT SUM("sales"), SUM("earnings") INTO tot_sales, tot_earnings
+    FROM "sales_report"
+    WHERE ("year", "quarter") = (EXTRACT(YEAR FROM st), qt)
+    GROUP BY "year", "quarter";
+
+    UPDATE "sales_report"
+    SET "total_sales" = tot_sales, "total_earnings" = tot_earnings
+    WHERE ("year", "quarter") = (EXTRACT(YEAR FROM st), qt);
+END
+$$ LANGUAGE plpgsql;
 
 ------------------------------------------------------------------------------------------------------------------------
 
